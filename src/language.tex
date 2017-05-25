@@ -597,7 +597,7 @@ For example:
 	mov    rax,__float64__(3.141592653589793238462)
 \end{lstlisting}
 
-... would assign the binary representation of pi as a 64-bit floating
+would assign the binary representation of pi as a 64-bit floating
 point number into \c{RAX}. This is exactly equivalent to:
 
 \begin{lstlisting}
@@ -647,3 +647,95 @@ For example:
 	dt +0p33
 	dt 33p
 \end{lstlisting}
+
+\section{\textindex{Expressions}}
+\label{sec:expr}
+
+Expressions in NASM are similar in syntax to those in C. Expressions
+are evaluated as 64-bit integers which are then adjusted to the
+appropriate size.
+
+NASM supports two special tokens in expressions, allowing
+calculations to involve the current assembly position: the
+\index{\$}\index{here}\code{\$} and \codeindex{\$\$} tokens.
+\code{\$} evaluates to the assembly position at the beginning
+of the line containing the expression; so you can code an
+\textindex{infinite loop} using \code{JMP \$}. \code{\$\$}
+evaluates to the beginning of the current section; so you can
+tell how far into the section you are by using \code{(\$-\$\$)}.
+
+The arithmetic \textindex{operators} provided by NASM are listed here,
+in increasing order of \textindex{precedence}.
+
+\subsection{\codeindex{|}: \textindexlc{Bitwise OR} Operator}
+\label{subsec:expor}
+
+The \code{|} operator gives a bitwise OR, exactly as performed by the
+\code{OR} machine instruction. Bitwise OR is the lowest-priority
+arithmetic operator supported by NASM.
+
+\subsection{\codeindex{\textasciicircum}: \textindexlc{Bitwise XOR} Operator}
+\label{subsec:expxor}
+
+The \code{\textasciicircum} operator provides the bitwise XOR operation.
+
+\subsection{\codeindex{\&}: \textindexlc{Bitwise AND} Operator}
+\label{subsec:expand}
+
+The \code{\&} operator provides the bitwise AND operation.
+
+\subsection{\codeindex{<<} and \codeindex{>>}: \textindexlc{Bit Shift} Operators}
+\label{subsec:expshift}
+
+\code{<<} gives a bit-shift to the left, just as it does in C.
+So \code{5<<3} evaluates to 5 times 8, or 40. \code{>>} gives
+a bit-shift to the right; in NASM, such a shift is \emph{always}
+unsigned, so that the bits shifted in from the left-hand end
+are filled with zero rather than a sign-extension of the
+previous highest bit.
+
+\subsection{\index{+ opaddition}\codeindex{+} and \index{- opsubtraction}\codeindex{-}:
+\textindexlc{Addition} and \textindexlc{Subtraction} Operators}
+\label{subsec:expplmi}
+
+The \code{+} and \code{-} operators do perfectly ordinary addition
+and subtraction.
+
+\subsection{\codeindex{*}, \codeindex{/}, \codeindex{//} and \codeindex{\%\%}:
+\textindexlc{Multiplication} and \textindexlc{Division}}
+\label{subsec:expmul}
+
+\code{*} is the multiplication operator. \code{/} and \code{//} are both
+division operators: \code{/} is \textindex{unsigned division} and
+\code{//} is \textindex{signed division}. Similarly, \code{\%} and
+\code{\%\%} provide \index{unsigned modulo}\index{modulo operators}unsigned
+and \textindex{signed modulo} operators respectively.
+
+NASM, like ANSI C, provides no guarantees about the sensible
+operation of the signed modulo operator.
+
+Since the \code{\%} character is used extensively by the macro
+\textindex{preprocessor}, you should ensure that both the signed
+and unsigned modulo operators are followed by white space wherever
+they appear.
+
+\subsection{\textindex{Unary Operators}}
+\label{subsec:expmul}
+
+The highest-priority operators in NASM's expression grammar are those
+which only apply to one argument. These are \index{+ opunary}\code{+},
+\index{- opunary}\code{-}, \codeindex{\textasciitilde},
+\index{! opunary}\code{!}, \codeindex{SEG}, and the
+\textindex{integer functions} operators.
+
+\code{-} negates its operand, \code{+} does nothing (it's provided for
+symmetry with \code{-}), \code{\textasciitilde} computes the
+\textindex{one's complement} of its operand, \code{!} is the
+\textindex{logical negation} operator.
+
+\code{SEG} provides the \textindex{segment address}
+of its operand (explained in more detail in \fullref{sec:segwrt}).
+
+A set of additional operators with leading and trailing double
+underscores are used to implement the integer functions of the
+\code{ifunc} macro package, see \fullref{sec:pkg_ifunc}.
