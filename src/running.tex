@@ -331,7 +331,7 @@ Therefore the trailing backslash in the above example is necessary.
 Under Unix, a trailing forward slash is similarly necessary.
 
 (You can use this to your advantage, if you're really \textindex{perverse},
-by noting that the option \code{-ifoo} will cause \code{\%include \"bar.i\"}
+by noting that the option \code{-ifoo} will cause \code{\%include "bar.i"}
 to search for the file \code{foobar.i}...)
 
 If you want to define a \emph{standard} \textindex{include search path},
@@ -353,7 +353,7 @@ your source file, by the use of the \code{-p} option. So running
 \end{lstlisting}
 
 is equivalent to running \code{nasm myfile.asm} and placing the
-directive \code{\%include \"myinc.inc\"} at the start of the file.
+directive \code{\%include "myinc.inc"} at the start of the file.
 
 For consistency with the \code{-I}, \code{-D} and \code{-U} options,
 this option can also be specified as \code{-P}.
@@ -361,7 +361,7 @@ this option can also be specified as \code{-P}.
 \subsection{The \hcodeindex{-d}\indexcode{-D} Option: \index{pre-defining macros}Pre-Define a Macro}
 \label{subsec:opt-d}
 
-\index{\%define}Just as the \code{-p} option gives an alternative to placing
+\indexcode{\%define}Just as the \code{-p} option gives an alternative to placing
 \code{\%include} directives at the start of a source file, the \code{-d}
 option gives an alternative to placing a \code{\%define} directive. You
 could code
@@ -387,7 +387,7 @@ be specified as \code{-D}.
 \subsection{The \hcodeindex{-u}\indexcode{-U} Option: \index{undefining macros}Undefine a Macro}
 \label{subsec:opt-u}
 
-\index{\%undef}The \code{-u} option undefines a macro that would otherwise
+\indexcode{\%undef}The \code{-u} option undefines a macro that would otherwise
 have been pre-defined, either automatically or by a \code{-p} or \code{-d}
 option specified earlier on the command lines.
 
