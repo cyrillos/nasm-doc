@@ -651,19 +651,20 @@ standard search directories for include files, by putting \code{-i}
 options in the \code{NASMENV} variable.
 
 The value of the variable is split up at white space, so that the
-value \code{-s -ic:\\nasmlib\\} will be treated as two separate options.
-However, that means that the value \code{-dNAME="my name"} won't do
-what you might want, because it will be split at the space and the
-NASM command-line processing will get confused by the two
-nonsensical words \code{-dNAME="my} and \code{name"}.
+value \code{-s -ic:\textbackslash nasmlib\textbackslash} will be
+treated as two separate options. However, that means that the value
+\code{-dNAME="my name"} won't do what you might want, because it
+will be split at the space and the NASM command-line processing
+will get confused by the two nonsensical words \code{-dNAME="my}
+and \code{name"}.
 
 To get round this, NASM provides a feature whereby, if you begin the
 \code{NASMENV} environment variable with some character that isn't
 a minus sign, then NASM will treat this character as the
 \textindex{separator character} for options. So setting the \code{NASMENV}
-variable to the value \code{!-s!-ic:\\nasmlib\\} is equivalent to
-setting it to \code{-s -ic:\\nasmlib\\}, but \code{!-dNAME=\"my name\"}
-will work.
+variable to the value \code{!-s!-ic:\textbackslash nasmlib\textbackslash}
+is equivalent to setting it to \code{-s -ic:\textbackslash nasmlib\textbackslash},
+but \code{!-dNAME="my name"} will work.
 
 This environment variable was previously called \code{NASM}. This was
 changed with version 0.98.31.
