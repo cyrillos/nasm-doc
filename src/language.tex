@@ -319,7 +319,7 @@ it will also split \code{[eax*2+offset]} into \code{[eax+eax+offset]}.
 You can combat this behaviour by the use of the \code{NOSPLIT} keyword:
 \code{[nosplit eax*2]} will force \code{[eax*2+0]} to be generated literally.
 \code{[nosplit eax*1]} also has the same effect. In another way, a split EA
-form \code{[0, eax*2]} can be used, too.  However, \code{NOSPLIT} in
+form \code{[0, eax*2]} can be used, too. However, \code{NOSPLIT} in
 \code{[nosplit eax+eax]} will be ignored because user's intention here
 is considered as \code{[eax+eax]}.
 
@@ -416,10 +416,10 @@ Some examples (all producing exactly the same code):
 
 A character string consists of up to eight characters enclosed in
 either single quotes (\code{'...'}), double quotes (\code{"..."}) or
-backquotes (\code{`...`}).  Single or double quotes are equivalent to
+backquotes (\code{`...`}). Single or double quotes are equivalent to
 NASM (except of course that surrounding the constant with single
 quotes allows double quotes to appear within it and vice versa); the
-contents of those are represented verbatim.  Strings enclosed in
+contents of those are represented verbatim. Strings enclosed in
 backquotes support C-style \code{\\}-escapes for special characters.
 
 The following \textindex{escape sequences} are recognized by backquoted strings:
@@ -456,4 +456,194 @@ are all equivalent:
 	db `\u263a`            ; UTF-8 smiley face
 	db `\xe2\x98\xba`      ; UTF-8 smiley face
 	db 0E2h, 098h, 0BAh    ; UTF-8 smiley face
+\end{lstlisting}
+
+\subsection{\htextindex{Character Constants}}
+\label{subsec:chrconst}
+
+A character constant consists of a string up to eight bytes long, used
+in an expression context. It is treated as if it was an integer.
+
+A character constant with more than one byte will be arranged
+with \i{little-endian} order in mind: if you code
+
+\begin{lstlisting}
+	mov eax,'abcd'
+\end{lstlisting}
+
+then the constant generated is not \code{0x61626364}, but \code{0x64636261},
+so that if you were then to store the value into memory, it would read
+\code{abcd} rather than \code{dcba}. This is also the sense of character
+constants understood by the Pentium's \codeindex{CPUID} instruction.
+
+\subsection{\htextindex{String Constants}}
+\label{subsec:strconst}
+
+String constants are character strings used in the context of some
+pseudo-instructions, namely the \indexcode{DW}\indexcode{DD}\indexcode{DQ}
+\indexcode{DT}\indexcode{DO}\indexcode{DY}\codeindex{DB} family and
+\codeindex{INCBIN} (where it represents a filename.) They are also used in
+certain preprocessor directives.
+
+A string constant looks like a character constant, only longer. It
+is treated as a concatenation of maximum-size character constants
+for the conditions. So the following are equivalent:
+
+\begin{lstlisting}
+	db    'hello'               ; string constant
+	db    'h','e','l','l','o'   ; equivalent character constants
+\end{lstlisting}
+
+And the following are also equivalent:
+
+\begin{lstlisting}
+	dd    'ninechars'           ; doubleword string constant
+	dd    'nine','char','s'     ; becomes three doublewords
+	db    'ninechars',0,0,0     ; and really looks like this
+\end{lstlisting}
+
+Note that when used in a string-supporting context, quoted strings are
+treated as a string constants even if they are short enough to be a
+character constant, because otherwise \code{db 'ab'} would have the same
+effect as \code{db 'a'}, which would be silly. Similarly, three-character
+or four-character constants are treated as strings when they are
+operands to \code{DW}, and so forth.
+
+\subsection{\index{UTF-16}\index{UTF-32}\htextindex{Unicode} Constants}
+\label{subsec:unicode}
+
+The special operators \codeindex{\_\_utf16\_\_}, \codeindex{\_\_utf16le\_\_},
+\codeindex{\_\_utf16be\_\_}, \codeindex{\_\_utf32\_\_}, \codeindex{\_\_utf32le\_\_}
+and \codeindex{\_\_utf32be\_\_} allows definition of Unicode strings.
+They take a string in UTF-8 format and converts it to UTF-16 or UTF-32,
+respectively. Unless the \code{be} forms are specified, the output is
+littleendian.
+
+For example:
+
+\begin{lstlisting}
+	%define u(x) __utf16__(x)
+	%define w(x) __utf32__(x)
+
+	      dw u('C:\WINDOWS'), 0       ; Pathname in UTF-16
+	      dd w(`A + B = \u206a`), 0   ; String in UTF-32
+\end{lstlisting}
+
+The UTF operators can be applied either to strings passed to the
+\code{DB} family instructions, or to character constants in an expression
+context.
+
+\subsection{\index{floating-point, constants}Floating-Point Constants}
+\label{subsec:fltconst}
+
+\htextindex{Floating-point} constants are acceptable only as arguments to
+\codeindex{DB}, \codeindex{DW}, \codeindex{DD}, \codeindex{DQ}, \codeindex{DT},
+and \codeindex{DO}, or as arguments to the special operators \codeindex{\_\_float8\_\_},
+\codeindex{\_\_float16\_\_}, \codeindex{\_\_float32\_\_}, \codeindex{\_\_float64\_\_},
+\codeindex{\_\_float80m\_\_}, \codeindex{\_\_float80e\_\_}, \codeindex{\_\_float128l\_\_},
+and \codeindex{\_\_float128h\_\_}.
+
+Floating-point constants are expressed in the traditional form:
+digits, then a period, then optionally more digits, then optionally an
+\code{E} followed by an exponent. The period is mandatory, so that NASM
+can distinguish between \code{dd 1}, which declares an integer constant,
+and \code{dd 1.0} which declares a floating-point constant.
+
+NASM also support C99-style hexadecimal floating-point: \code{0x},
+hexadecimal digits, period, optionally more hexadeximal digits, then
+optionally a \code{P} followed by a \emph{binary} (not hexadecimal)
+exponent in decimal notation. As an extension, NASM additionally
+supports the \code{0h} and \code{\$} prefixes for hexadecimal,
+as well binary and octal floating-point, using the \code{0b} or
+\code{0y} and \code{0o} or \code{0q} prefixes, respectively.
+
+Underscores to break up groups of digits are permitted in
+floating-point constants as well.
+
+Some examples:
+
+\begin{lstlisting}
+	db    -0.2                    ; "Quarter precision"
+	dw    -0.5                    ; IEEE 754r/SSE5 half precision
+	dd    1.2                     ; an easy one
+	dd    1.222_222_222           ; underscores are permitted
+	dd    0x1p+2                  ; 1.0x2^2 = 4.0
+	dq    0x1p+32                 ; 1.0x2^32 = 4 294 967 296.0
+	dq    1.e10                   ; 10 000 000 000.0
+	dq    1.e+10                  ; synonymous with 1.e10
+	dq    1.e-10                  ; 0.000 000 000 1
+	dt    3.141592653589793238462 ; pi
+	do    1.e+4000                ; IEEE 754r quad precision
+\end{lstlisting}
+
+The 8-bit "quarter-precision" floating-point format is
+sign:exponent:mantissa = 1:4:3 with an exponent bias of 7. This
+appears to be the most frequently used 8-bit floating-point format,
+although it is not covered by any formal standard. This is sometimes
+called a ``\textindex{minifloat}''.
+
+The special operators are used to produce floating-point numbers in
+other contexts. They produce the binary representation of a specific
+floating-point number as an integer, and can use anywhere integer
+constants are used in an expression. \code{\_\_float80m\_\_} and
+\code{\_\_float80e\_\_} produce the 64-bit mantissa and 16-bit
+exponent of an 80-bit floating-point number, and \code{\_\_float128l\_\_}
+and \code{\_\_float128h\_\_} produce the lower and upper 64-bit halves
+of a 128-bit floating-point number, respectively.
+
+For example:
+
+\begin{lstlisting}
+	mov    rax,__float64__(3.141592653589793238462)
+\end{lstlisting}
+
+... would assign the binary representation of pi as a 64-bit floating
+point number into \c{RAX}. This is exactly equivalent to:
+
+\begin{lstlisting}
+	mov    rax,0x400921fb54442d18
+\end{lstlisting}
+
+NASM cannot do compile-time arithmetic on floating-point constants.
+This is because NASM is designed to be portable - although it always
+generates code to run on x86 processors, the assembler itself can
+run on any system with an ANSI C compiler. Therefore, the assembler
+cannot guarantee the presence of a floating-point unit capable of
+handling the \textindex{Intel number formats}, and so for NASM
+to be able to do floating arithmetic it would have to include its
+own complete set of floating-point routines, which would significantly
+increase the size of the assembler for very little benefit.
+
+The special tokens \codeindex{\_\_Infinity\_\_}, \codeindex{\_\_QNaN\_\_} (or
+\codeindex{\_\_NaN\_\_}) and \codeindex{\_\_SNaN\_\_} can be used to generate
+\index{infinity}infinities, quiet \textindex{NaN}s, and signalling NaNs,
+respectively. These are normally used as macros:
+
+\begin{lstlisting}
+	%define Inf __Infinity__
+	%define NaN __QNaN__
+
+	      dq    +1.5, -Inf, NaN         ; Double-precision constants
+\end{lstlisting}
+
+The \code{\%use fp} standard macro package contains a set of convenience
+macros. See \fullref{sec:pkg_fp}.
+
+\subsection{\index{floating-point, packed BCD constants}Packed BCD Constants}
+\label{subsec:bcdconst}
+
+x87-style packed BCD constants can be used in the same contexts as
+80-bit floating-point numbers. They are suffixed with \code{p} or
+prefixed with \code{0p}, and can include up to 18 decimal digits.
+
+As with other numeric constants, underscores can be used
+to separate digits.
+
+For example:
+
+\begin{lstlisting}
+	dt 12_345_678_901_245_678p
+	dt -12_345_678_901_245_678p
+	dt +0p33
+	dt 33p
 \end{lstlisting}
