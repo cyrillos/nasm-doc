@@ -443,7 +443,7 @@ with a \textindex{stub preprocessor} which does nothing.
 \label{subsec:opt-O-cap}
 
 Using the \code{-O} option, you can tell NASM to carry out different
-levels of optimization.  The syntax is:
+levels of optimization. The syntax is:
 
 \begin{itemize}
 	\item \code{-O0}: No optimization. All operands take their
@@ -452,15 +452,15 @@ levels of optimization.  The syntax is:
 
 	\item \code{-O1}: Minimal optimization. As above, but immediate
 	operands which will fit in a signed byte are optimized,
-        unless the long form is specified. Conditional jumps default
-        to the long form unless otherwise specified.
+	unless the long form is specified. Conditional jumps default
+	to the long form unless otherwise specified.
 
 	\item \code{-Ox} (where \code{x} is the actual letter \code{x}):
 	Multipass optimization. Minimize branch offsets and signed immediate
 	bytes, overriding size specification unless the \code{strict} keyword
-        has been used (see \fullref{sec:strict}). For compatibility with earlier
-        releases, the letter \code{x} may also be any number greater than
-        one. This number has no effect on the actual number of passes.
+	has been used (see \fullref{sec:strict}). For compatibility with earlier
+	releases, the letter \code{x} may also be any number greater than
+	one. This number has no effect on the actual number of passes.
 \end{itemize}
 
 The \code{-Ox} mode is recommended for most uses, and is the default
@@ -565,10 +565,10 @@ The current \textindex{warning classes} are:
 	Enabled by default.
 
 	\item \codeindex{zext-reloc} warns that a relocation has been
-	zero-extended due to limitations in the output format. Enabled by default.  
+	zero-extended due to limitations in the output format. Enabled by default.
 
 	\item \codeindex{ptr} warns about keywords used in other assemblers that might
-	indicate a mistake in the source code.  Currently only the MASM
+	indicate a mistake in the source code. Currently only the MASM
 	\code{PTR} keyword is recognized. Enabled by default.
 
 	\item \codeindex{bad-pragma} warns about a malformed or otherwise unparsable
@@ -596,7 +596,7 @@ Since version 2.00, NASM has also supported the \code{gcc}-like syntax
 syntaxes work identically.
 
 The option \code{-w+error} or \codeindex{-Werror} can be used to treat warnings
-as errors.  This can be controlled on a per warning class basis
+as errors. This can be controlled on a per warning class basis
 (\code{-w+error=}\emph{warning-class} or \code{-Werror=}\emph{warning-class});
 if no \emph{warning-class} is specified NASM treats it as
 \code{-w+error=all}; the same applies to \code{-w-error} or
