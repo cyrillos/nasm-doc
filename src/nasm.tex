@@ -1,0 +1,72 @@
+\documentclass[oneside,openany]{book}
+
+\usepackage[a4paper,margin=72pt]{geometry}
+
+\usepackage{listings}		% nasm listings
+\usepackage{imakeidx}		% indexing
+\usepackage{hyperref}		% pdf bookmarks and such
+\usepackage[Sonny]{fncychap}	% chapter style
+\usepackage{parskip}		% no indent on first line
+\usepackage{fontspec}		% selecting fonts
+\usepackage{xunicode}		% unicode support
+\usepackage{xcolor}		% coloring
+\usepackage{xspace}		% spacing
+\usepackage{sectsty}		% colors for sections
+
+%
+% No rectangles
+\hypersetup{
+	hidelinks,
+}
+
+%
+% Up to 4 levels nesting in menu
+\setcounter{tocdepth}{4}
+
+%
+% Highlight listings
+\definecolor{light-gray}{gray}{0.96}
+
+%
+% Setup document fonts
+\setmainfont{Source Sans Pro}
+\setmonofont{Latin Modern Mono}
+
+% Listings font and settings
+\newfontfamily{\lstsansserif}{Latin Modern Mono}
+\lstset{
+	keepspaces=true,
+	backgroundcolor=\color{light-gray},
+	basicstyle=\lstsansserif,
+	breaklines=true,
+	breakatwhitespace=true,
+}
+
+%
+% Heading colors (same as on website)
+\definecolor{hcolor}{RGB}{59,89,152}
+\chapterfont{\color{hcolor}}
+\sectionfont{\color{hcolor}}
+\subsectionfont{\color{hcolor}}
+
+%
+% Index into TOC
+\makeindex[title=Index, intoc]
+
+\begin{document}
+
+\title{NASM --- The Netwide Assembler}
+\date{1996 --- 2017}
+\author{The NASM Development Team}
+
+\maketitle
+\tableofcontents
+\addtocontents{toc}{~\hfill\textbf{Page}\par}
+
+%
+% Document chapters
+\input{src/intro.tex}
+
+\printindex
+
+\end{document}
