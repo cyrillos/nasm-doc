@@ -50,6 +50,16 @@
 \subsectionfont{\color{hcolor}}
 
 %
+% Formatting macros
+\newcommand{\textindex}[1]{#1\index{#1}\xspace}
+\newcommand{\htextindex}[1]{#1\index{\MakeLowercase{#1}}\xspace}
+\newcommand{\code}[1]{\colorbox{light-gray}{\texttt{#1}}\xspace}
+\newcommand{\codeindex}[1]{\code{#1}\index{#1@\texttt{#1}}\xspace}
+\newcommand{\indexcode}[1]{\index{#1@\texttt{#1}}\xspace}
+\newcommand{\hcodeindex}[1]{\texttt{#1}\index{#1@\texttt{#1}}\xspace}
+\newcommand{\fullref}[1]{``\hyperref[{#1}]{\ref*{#1}\xspace\nameref*{#1}}''\xspace}
+
+%
 % Index into TOC
 \makeindex[title=Index, intoc]
 
@@ -66,6 +76,7 @@
 %
 % Document chapters
 \input{src/intro.tex}
+\input{src/running.tex}
 
 \printindex
 
