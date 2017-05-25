@@ -25,6 +25,7 @@ XELATEX-OPTS	?= -output-driver="xdvipdfmx -V 3" -8bit
 
 tex-d		+= src/intro.tex
 tex-d		+= src/running.tex
+tex-d		+= src/language.tex
 tex-y		+= src/nasm.tex
 
 $(tex-y): $(tex-d)
