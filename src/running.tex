@@ -1,6 +1,6 @@
 \chapter{Running NASM}
 
-\section{NASM \htextindex{Command-Line} Syntax}
+\section{NASM \textindexlc{Command-Line} Syntax}
 
 To assemble a file, you issue a command of the form
 
@@ -69,7 +69,7 @@ Like Unix compilers and assemblers, NASM is silent unless it
 goes wrong: you won't see any output at all, unless it gives error
 messages.
 
-\subsection{The \codeindex{-o} Option: Specifying the \htextindex{Output File Name}}
+\subsection{The \codeindex{-o} Option: Specifying the \textindexlc{Output File Name}}
 \label{subsec:opt-o}
 
 NASM will normally choose the name of your output file for you;
@@ -107,7 +107,7 @@ Note that this is a small \code{-o}, and is different from a capital
 \code{-O}, which is used to specify the number of optimisation passes
 required. See \fullref{subsec:opt-O-cap}.
 
-\subsection{The \codeindex{-f} Option: Specifying the \htextindex{Output File Format}}
+\subsection{The \codeindex{-f} Option: Specifying the \textindexlc{Output File Format}}
 \label{subsec:opt-f}
 
 If you do not supply the \code{-f} option to NASM, it will choose an
@@ -122,7 +122,7 @@ file format is optional; so \code{-f elf} and \code{-felf} are both valid.
 A complete list of the available output file formats can be given by
 issuing the command \codeindex{nasm -hf}.
 
-\subsection{The \codeindex{-l} Option: Generating a \htextindex{Listing File}}
+\subsection{The \codeindex{-l} Option: Generating a \textindexlc{Listing File}}
 \label{subsec:opt-l}
 
 If you supply the \code{-l} option to NASM, followed (with the usual
@@ -142,7 +142,7 @@ source with \code{[list -]}, and turn it back on with \code{[list +]},
 This can be used to list only sections of interest, avoiding excessively
 long listings.
 
-\subsection{The \codeindex{-M} Option: Generate \htextindex{Makefile Dependencies}}
+\subsection{The \codeindex{-M} Option: Generate \textindexlc{Makefile Dependencies}}
 \label{subsec:opt-M-cap}
 
 This option can be used to generate makefile dependencies on stdout.
@@ -152,7 +152,7 @@ This can be redirected to a file for further processing. For example:
 	nasm -M myfile.asm > myfile.dep
 \end{lstlisting}
 
-\subsection{The \codeindex{-MG} Option: Generate \htextindex{Makefile Dependencies}}
+\subsection{The \codeindex{-MG} Option: Generate \textindexlc{Makefile Dependencies}}
 \label{subsec:opt-MG-cap}
 
 This option can be used to generate makefile dependencies on stdout.
@@ -208,7 +208,7 @@ When used with any of the dependency generation options, the
 dependencies for each header file. This prevents Make from
 complaining if a header file has been removed.
 
-\subsection{The \codeindex{-F} Option: Selecting a \htextindex{Debug Information Format}}
+\subsection{The \codeindex{-F} Option: Selecting a \textindexlc{Debug Information Format}}
 \label{subsec:opt-F-cap}
 
 This option is used to select the format of the debug information
@@ -227,7 +227,7 @@ This should not be confused with the \code{-f dbg} output format
 option which is not built into NASM by default. For information on how
 to enable it when building from the sources, see \fullref{sec:dbgfmt}.
 
-\subsection{The \codeindex{-g} Option: Enabling \htextindex{Debug Information}}
+\subsection{The \codeindex{-g} Option: Enabling \textindexlc{Debug Information}}
 \label{subsec:opt-g}
 
 This option can be used to generate debugging information in the specified
@@ -236,7 +236,7 @@ results in emitting debug info in the default format, if any, for the
 selected output format. If no debug information is currently implemented
 in the selected output format, \code{-g} is \emph{silently ignored}.
 
-\subsection{The \codeindex{-X} Option: Selecting an \htextindex{Error Reporting Format}}
+\subsection{The \codeindex{-X} Option: Selecting an \textindexlc{Error Reporting Format}}
 \label{subsec:opt-X-cap}
 
 This option can be used to select an error reporting format for any
@@ -295,7 +295,7 @@ See \fullref{subsec:opt-E-cap}.
 \subsection{The \codeindex{-s} Option: Send Errors to \codeindex{stdout}}
 \label{subsec:opt-s}
 
-The \code{-s} option redirects \htextindex{error messages} to
+The \code{-s} option redirects \textindexlc{error messages} to
 \code{stdout} rather than \code{stderr}, so it can be redirected
 under ``MS-\textindex{DOS}''. To assemble the file \code{myfile.asm}
 and pipe its output to the \code{more} program, you can type:
@@ -439,7 +439,7 @@ and increase compilation speeds. The \code{-a} option, requiring no
 argument, instructs NASM to replace its powerful \textindex{preprocessor}
 with a \textindex{stub preprocessor} which does nothing.
 
-\subsection{The \codeindex{-O} Option: Specifying \htextindex{Multipass Optimization}}
+\subsection{The \codeindex{-O} Option: Specifying \textindexlc{Multipass Optimization}}
 \label{subsec:opt-O-cap}
 
 Using the \code{-O} option, you can tell NASM to carry out different
@@ -490,7 +490,7 @@ When NASM's \code{-t} option is used, the following changes are made:
 	\code{ifndef}, \code{include}, \code{local}).
 \end{itemize}
 
-\subsection{The \codeindex{-w} and \codeindex{-W} Options: Enable or Disable Assembly \htextindex{Warnings}}
+\subsection{The \codeindex{-w} and \codeindex{-W} Options: Enable or Disable Assembly \textindexlc{Warnings}}
 \label{subsec:opt-w}
 
 NASM can observe many conditions during the course of assembly which
@@ -605,7 +605,7 @@ if no \emph{warning-class} is specified NASM treats it as
 In addition, you can control warnings in the source code itself, using
 the \codeindex{[WARNING]} directive. See \fullref{sec:asmdir-warning}.
 
-\subsection{The \codeindex{-v} Option: Display \htextindex{Version} Info}
+\subsection{The \codeindex{-v} Option: Display \textindexlc{Version} Info}
 \label{subsec:opt-v}
 
 Typing \code{NASM -v} will display the version of NASM which you are using,
@@ -689,7 +689,7 @@ code modules are forced to be upper case; but even then, \emph{within}
 a single module, NASM will distinguish between labels differing only
 in case.
 
-\subsection{NASM Requires \htextindex{Square Brackets} For \htextindex{Memory References}}
+\subsection{NASM Requires \textindexlc{Square Brackets} For \textindexlc{Memory References}}
 \label{subsec:qsbrackets}
 
 NASM was designed with simplicity of syntax in mind. One of the
@@ -744,7 +744,7 @@ portion outside square brackets and another portion inside. The
 correct syntax for the above is \code{mov ax,[table+bx]}. Likewise,
 \code{mov ax,es:[di]} is wrong and \code{mov ax,[es:di]} is right.
 
-\subsection{NASM Doesn't Store \htextindex{Variable Types}}
+\subsection{NASM Doesn't Store \textindexlc{Variable Types}}
 \label{subsec:qstypes}
 
 NASM, by design, chooses not to remember the types of variables you
@@ -769,7 +769,7 @@ As part of NASM's drive for simplicity, it also does not support the
 choose to put in your segment registers, and will never \emph{automatically}
 generate a \textindex{segment override} prefix.
 
-\subsection{NASM Doesn't Support \htextindex{Memory Models}}
+\subsection{NASM Doesn't Support \textindexlc{Memory Models}}
 \label{subsec:qsmodel}
 
 NASM also does not have any directives to support different 16-bit
@@ -783,7 +783,7 @@ necessary when calling \emph{external} functions, and must also keep
 track of which external variable definitions are far and which are
 near.
 
-\subsection{\htextindex{Floating-Point} Differences}
+\subsection{\textindexlc{Floating-Point} Differences}
 \label{subsec:qsfpu}
 
 NASM uses different names to refer to floating-point registers from

@@ -96,7 +96,7 @@ use one of the prefixes \codeindex{DWORD}, \codeindex{QWORD} or
 \codeindex{TWORD} to indicate what size of \textindex{memory operand}
 it refers to.
 
-\section{\htextindex{Pseudo-Instructions}}
+\section{\textindexlc{Pseudo-Instructions}}
 \label{sec:pseudop}
 
 Pseudo-instructions are things which, though not real x86 machine
@@ -138,7 +138,7 @@ the output file. They can be invoked in a wide range of ways:
 \code{DT}, \code{DO}, \code{DY} and \code{DZ} do not accept
 \textindex{numeric constants} as operands.
 
-\subsection{RESB and Friends: Declaring \htextindex{Uninitialized} Data}
+\subsection{RESB and Friends: Declaring \textindexlc{Uninitialized} Data}
 \label{subsec:resb}
 
 \codeindex{RESB}, \codeindex{RESW}, \codeindex{RESD}, \codeindex{RESQ},
@@ -162,7 +162,7 @@ For example:
 	zmmvals:        resz    32              ; 32 ZMM registers
 \end{lstlisting}
 
-\subsection{\codeindex{INCBIN}: Including External \htextindex{Binary Files}}
+\subsection{\codeindex{INCBIN}: Including External \textindexlc{Binary Files}}
 \label{subsec:incbin}
 
 \code{INCBIN} is borrowed from the old Amiga assembler \textindex{DevPac}:
@@ -204,7 +204,7 @@ of \code{\$}) at the point of definition, rather than being evaluated
 wherever it is referenced and using the value of \code{\$} at
 the point of reference.
 
-\subsection{\codeindex{TIMES}: \htextindex{Repeating} Instructions or Data}
+\subsection{\codeindex{TIMES}: \textindexlc{Repeating} Instructions or Data}
 \label{subsec:times}
 
 The \code{TIMES} prefix causes the instruction to be assembled multiple
@@ -361,13 +361,13 @@ the size of each element.
 	VDIVPS zmm4, zmm5, zword [rbx]          ; packed 512 bit memory
 \end{lstlisting}
 
-\section{\htextindex{Constants}}
+\section{\textindexlc{Constants}}
 \label{sec:const}
 
 NASM understands four different types of constant: numeric,
 character, string and floating-point.
 
-\subsection{\htextindex{Numeric Constants}}
+\subsection{\textindexlc{Numeric Constants}}
 \label{subsec:numconst}
 
 A numeric constant is simply a number. NASM allows you to specify
@@ -411,7 +411,7 @@ Some examples (all producing exactly the same code):
 	mov     ax,0y1100_1000  ; same binary constant yet again
 \end{lstlisting}
 
-\subsection{\index{Strings}\htextindex{Character Strings}}
+\subsection{\index{Strings}\textindexlc{Character Strings}}
 \label{subsec:strings}
 
 A character string consists of up to eight characters enclosed in
@@ -458,7 +458,7 @@ are all equivalent:
 	db 0E2h, 098h, 0BAh    ; UTF-8 smiley face
 \end{lstlisting}
 
-\subsection{\htextindex{Character Constants}}
+\subsection{\textindexlc{Character Constants}}
 \label{subsec:chrconst}
 
 A character constant consists of a string up to eight bytes long, used
@@ -476,7 +476,7 @@ so that if you were then to store the value into memory, it would read
 \code{abcd} rather than \code{dcba}. This is also the sense of character
 constants understood by the Pentium's \codeindex{CPUID} instruction.
 
-\subsection{\htextindex{String Constants}}
+\subsection{\textindexlc{String Constants}}
 \label{subsec:strconst}
 
 String constants are character strings used in the context of some
@@ -509,7 +509,7 @@ effect as \code{db 'a'}, which would be silly. Similarly, three-character
 or four-character constants are treated as strings when they are
 operands to \code{DW}, and so forth.
 
-\subsection{\index{UTF-16}\index{UTF-32}\htextindex{Unicode} Constants}
+\subsection{\index{UTF-16}\index{UTF-32}\textindexlc{Unicode} Constants}
 \label{subsec:unicode}
 
 The special operators \codeindex{\_\_utf16\_\_}, \codeindex{\_\_utf16le\_\_},
@@ -536,7 +536,7 @@ context.
 \subsection{\index{floating-point, constants}Floating-Point Constants}
 \label{subsec:fltconst}
 
-\htextindex{Floating-point} constants are acceptable only as arguments to
+\textindexlc{Floating-point} constants are acceptable only as arguments to
 \codeindex{DB}, \codeindex{DW}, \codeindex{DD}, \codeindex{DQ}, \codeindex{DT},
 and \codeindex{DO}, or as arguments to the special operators \codeindex{\_\_float8\_\_},
 \codeindex{\_\_float16\_\_}, \codeindex{\_\_float32\_\_}, \codeindex{\_\_float64\_\_},
