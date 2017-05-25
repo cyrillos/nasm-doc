@@ -69,7 +69,7 @@ Like Unix compilers and assemblers, NASM is silent unless it
 goes wrong: you won't see any output at all, unless it gives error
 messages.
 
-\subsection{The \hcodeindex{-o} Option: Specifying the \htextindex{Output File Name}}
+\subsection{The \codeindex{-o} Option: Specifying the \htextindex{Output File Name}}
 \label{subsec:opt-o}
 
 NASM will normally choose the name of your output file for you;
@@ -107,7 +107,7 @@ Note that this is a small \code{-o}, and is different from a capital
 \code{-O}, which is used to specify the number of optimisation passes
 required. See \fullref{subsec:opt-O-cap}.
 
-\subsection{The \hcodeindex{-f} Option: Specifying the \htextindex{Output File Format}}
+\subsection{The \codeindex{-f} Option: Specifying the \htextindex{Output File Format}}
 \label{subsec:opt-f}
 
 If you do not supply the \code{-f} option to NASM, it will choose an
@@ -122,7 +122,7 @@ file format is optional; so \code{-f elf} and \code{-felf} are both valid.
 A complete list of the available output file formats can be given by
 issuing the command \codeindex{nasm -hf}.
 
-\subsection{The \hcodeindex{-l} Option: Generating a \htextindex{Listing File}}
+\subsection{The \codeindex{-l} Option: Generating a \htextindex{Listing File}}
 \label{subsec:opt-l}
 
 If you supply the \code{-l} option to NASM, followed (with the usual
@@ -142,7 +142,7 @@ source with \code{[list -]}, and turn it back on with \code{[list +]},
 This can be used to list only sections of interest, avoiding excessively
 long listings.
 
-\subsection{The \hcodeindex{-M} Option: Generate \htextindex{Makefile Dependencies}}
+\subsection{The \codeindex{-M} Option: Generate \htextindex{Makefile Dependencies}}
 \label{subsec:opt-M-cap}
 
 This option can be used to generate makefile dependencies on stdout.
@@ -152,7 +152,7 @@ This can be redirected to a file for further processing. For example:
 	nasm -M myfile.asm > myfile.dep
 \end{lstlisting}
 
-\subsection{The \hcodeindex{-MG} Option: Generate \htextindex{Makefile Dependencies}}
+\subsection{The \codeindex{-MG} Option: Generate \htextindex{Makefile Dependencies}}
 \label{subsec:opt-MG-cap}
 
 This option can be used to generate makefile dependencies on stdout.
@@ -160,7 +160,7 @@ This differs from the \code{-M} option in that if a nonexisting file is
 encountered, it is assumed to be a generated file and is added to the
 dependency list without a prefix.
 
-\subsection{The \hcodeindex{-MF} Option: Set Makefile Dependency File}
+\subsection{The \codeindex{-MF} Option: Set Makefile Dependency File}
 \label{subsec:opt-MF-cap}
 
 This option can be used with the \code{-M} or \code{-MG} options
@@ -170,7 +170,7 @@ to send the output to a file, rather than to stdout. For example:
 	nasm -M -MF myfile.dep myfile.asm
 \end{lstlisting}
 
-\subsection{The \hcodeindex{-MD} Option: Assemble and Generate Dependencies}
+\subsection{The \codeindex{-MD} Option: Assemble and Generate Dependencies}
 \label{subsec:opt-MD-cap}
 
 The \code{-MD} option acts as the combination of the \code{-M}
@@ -184,14 +184,14 @@ every assembly session. For example:
 	nasm -f elf -o myfile.o -MD myfile.dep myfile.asm
 \end{lstlisting}
 
-\subsection{The \hcodeindex{-MT} Option: Dependency Target Name}
+\subsection{The \codeindex{-MT} Option: Dependency Target Name}
 \label{subsec:opt-MT-cap}
 
 The \code{-MT} option can be used to override the default name of the
 dependency target. This is normally the same as the output filename,
 specified by the \code{-o} option.
 
-\subsection{The \hcodeindex{-MQ} Option: Dependency Target Name (Quoted)}
+\subsection{The \codeindex{-MQ} Option: Dependency Target Name (Quoted)}
 \label{subsec:opt-MQ-cap}
 
 The \code{-MQ} option acts as the \code{-MT} option, except
@@ -200,7 +200,7 @@ syntax. This is not foolproof, as not all characters with special
 meaning are quotable in Make. The default output (if no \code{-MT} or
 \code{-MQ} option is specified) is automatically quoted.
 
-\subsection{The \hcodeindex{-MP} Option: Emit phony targets}
+\subsection{The \codeindex{-MP} Option: Emit phony targets}
 \label{subsec:opt-MP-cap}
 
 When used with any of the dependency generation options, the
@@ -208,7 +208,7 @@ When used with any of the dependency generation options, the
 dependencies for each header file. This prevents Make from
 complaining if a header file has been removed.
 
-\subsection{The \hcodeindex{-F} Option: Selecting a \htextindex{Debug Information Format}}
+\subsection{The \codeindex{-F} Option: Selecting a \htextindex{Debug Information Format}}
 \label{subsec:opt-F-cap}
 
 This option is used to select the format of the debug information
@@ -227,7 +227,7 @@ This should not be confused with the \code{-f dbg} output format
 option which is not built into NASM by default. For information on how
 to enable it when building from the sources, see \fullref{sec:dbgfmt}.
 
-\subsection{The \hcodeindex{-g} Option: Enabling \htextindex{Debug Information}}
+\subsection{The \codeindex{-g} Option: Enabling \htextindex{Debug Information}}
 \label{subsec:opt-g}
 
 This option can be used to generate debugging information in the specified
@@ -236,7 +236,7 @@ results in emitting debug info in the default format, if any, for the
 selected output format. If no debug information is currently implemented
 in the selected output format, \code{-g} is \emph{silently ignored}.
 
-\subsection{The \hcodeindex{-X} Option: Selecting an \htextindex{Error Reporting Format}}
+\subsection{The \codeindex{-X} Option: Selecting an \htextindex{Error Reporting Format}}
 \label{subsec:opt-X-cap}
 
 This option can be used to select an error reporting format for any
@@ -269,7 +269,7 @@ instead of being delimited by colons.
 
 See also the \code{Visual C++} output format, \fullref{sec:win32fmt}.
 
-\subsection{The \hcodeindex{-Z} Option: Send Errors to a File}
+\subsection{The \codeindex{-Z} Option: Send Errors to a File}
 \label{subsec:opt-Z-cap}
 
 Under ``MS-\textindex{DOS}'' it can be difficult (though there are
@@ -292,7 +292,7 @@ but it was changed since \code{-E} is an option conventionally
 used for preprocessing only, with disastrous results.
 See \fullref{subsec:opt-E-cap}.
 
-\subsection{The \hcodeindex{-s} Option: Send Errors to \hcodeindex{stdout}}
+\subsection{The \codeindex{-s} Option: Send Errors to \codeindex{stdout}}
 \label{subsec:opt-s}
 
 The \code{-s} option redirects \htextindex{error messages} to
@@ -306,7 +306,7 @@ and pipe its output to the \code{more} program, you can type:
 
 See also the \code{-Z} option, \fullref{subsec:opt-Z-cap}.
 
-\subsection{The \hcodeindex{-i}\indexcode{-I} Option: Include File Search Directories}
+\subsection{The \codeindex{-i}\indexcode{-I} Option: Include File Search Directories}
 \label{subsec:opt-i}
 
 When NASM sees the \codeindex{\%include} or \codeindex{\%pathsearch} directive
@@ -342,7 +342,7 @@ more \code{-i} directives in the \code{NASMENV} environment variable (see
 For Makefile compatibility with many C compilers, this option can also
 be specified as \code{-I}.
 
-\subsection{The \hcodeindex{-p}\indexcode{-P} Option: \index{pre-including files}Pre-Include a File}
+\subsection{The \codeindex{-p}\indexcode{-P} Option: \index{pre-including files}Pre-Include a File}
 \label{subsec:opt-p}
 
 \index{\%include}NASM allows you to specify files to be \emph{pre-included} into
@@ -358,7 +358,7 @@ directive \code{\%include "myinc.inc"} at the start of the file.
 For consistency with the \code{-I}, \code{-D} and \code{-U} options,
 this option can also be specified as \code{-P}.
 
-\subsection{The \hcodeindex{-d}\indexcode{-D} Option: \index{pre-defining macros}Pre-Define a Macro}
+\subsection{The \codeindex{-d}\indexcode{-D} Option: \index{pre-defining macros}Pre-Define a Macro}
 \label{subsec:opt-d}
 
 \indexcode{\%define}Just as the \code{-p} option gives an alternative to placing
@@ -384,7 +384,7 @@ options} which are then tested using \code{\%ifdef}, for example \code{-dDEBUG}.
 For Makefile compatibility with many C compilers, this option can also
 be specified as \code{-D}.
 
-\subsection{The \hcodeindex{-u}\indexcode{-U} Option: \index{undefining macros}Undefine a Macro}
+\subsection{The \codeindex{-u}\indexcode{-U} Option: \index{undefining macros}Undefine a Macro}
 \label{subsec:opt-u}
 
 \indexcode{\%undef}The \code{-u} option undefines a macro that would otherwise
@@ -404,7 +404,7 @@ point in a Makefile.
 For Makefile compatibility with many C compilers, this option can also
 be specified as \code{-U}.
 
-\subsection{The \hcodeindex{-E}\indexcode{-e} Option: Preprocess Only}
+\subsection{The \codeindex{-E}\indexcode{-e} Option: Preprocess Only}
 \label{subsec:opt-E-cap}
 
 NASM allows the \textindex{preprocessor} to be run on its own, up to a
@@ -429,7 +429,7 @@ For compatiblity with older version of NASM, this option can also be
 written \code{-e}. \code{-E} in older versions of NASM was the equivalent
 of the current \code{-Z} option, \fullref{subsec:opt-Z-cap}.
 
-\subsection{The \hcodeindex{-a} Option: Don't Preprocess At All}
+\subsection{The \codeindex{-a} Option: Don't Preprocess At All}
 \label{subsec:opt-a}
 
 If NASM is being used as the back end to a compiler, it might be
@@ -439,7 +439,7 @@ and increase compilation speeds. The \code{-a} option, requiring no
 argument, instructs NASM to replace its powerful \textindex{preprocessor}
 with a \textindex{stub preprocessor} which does nothing.
 
-\subsection{The \hcodeindex{-O} Option: Specifying \htextindex{Multipass Optimization}}
+\subsection{The \codeindex{-O} Option: Specifying \htextindex{Multipass Optimization}}
 \label{subsec:opt-O-cap}
 
 Using the \code{-O} option, you can tell NASM to carry out different
@@ -469,7 +469,7 @@ since NASM 2.09.
 Note that this is a capital \code{O}, and is different from a small \code{o},
 which is used to specify the output file name. See \fullref{subsec:opt-o}.
 
-\subsection{The \hcodeindex{-t} Option: Enable TASM Compatibility Mode}
+\subsection{The \codeindex{-t} Option: Enable TASM Compatibility Mode}
 \label{subsec:opt-t}
 
 NASM includes a limited form of compatibility with Borland's \textindex{TASM}.
@@ -490,7 +490,7 @@ When NASM's \code{-t} option is used, the following changes are made:
 	\code{ifndef}, \code{include}, \code{local}).
 \end{itemize}
 
-\subsection{The \hcodeindex{-w} and \hcodeindex{-W} Options: Enable or Disable Assembly \htextindex{Warnings}}
+\subsection{The \codeindex{-w} and \codeindex{-W} Options: Enable or Disable Assembly \htextindex{Warnings}}
 \label{subsec:opt-w}
 
 NASM can observe many conditions during the course of assembly which
@@ -605,7 +605,7 @@ if no \emph{warning-class} is specified NASM treats it as
 In addition, you can control warnings in the source code itself, using
 the \codeindex{[WARNING]} directive. See \fullref{sec:asmdir-warning}.
 
-\subsection{The \hcodeindex{-v} Option: Display \htextindex{Version} Info}
+\subsection{The \codeindex{-v} Option: Display \htextindex{Version} Info}
 \label{subsec:opt-v}
 
 Typing \code{NASM -v} will display the version of NASM which you are using,
@@ -616,7 +616,7 @@ You will need the version number if you report a bug.
 For command-line compatibility with Yasm, the form \codeindex{--v} is also
 accepted for this option starting in NASM version 2.11.05.
 
-\subsection{The \hcodeindex{-y} Option: Display Available Debug Info Formats}
+\subsection{The \codeindex{-y} Option: Display Available Debug Info Formats}
 \label{subsec:opt-y}
 
 Typing \code{nasm -f <option> -y} will display a list of the available
@@ -632,7 +632,7 @@ is indicated by an asterisk. For example:
 	  dwarf     elf32 (i386) dwarf debug format for Linux
 \end{lstlisting}
 
-\subsection{The \hcodeindex{--prefix} and \hcodeindex{--postfix} Options}
+\subsection{The \codeindex{--prefix} and \codeindex{--postfix} Options}
 \label{subsec:opt-pfix}
 
 The \code{--prefix} and \code{--postfix} options prepend or append
@@ -641,7 +641,7 @@ The \code{--prefix} and \code{--postfix} options prepend or append
 underscore to all global and external variables, as C requires it in
 some, but not all, system calling conventions.
 
-\subsection{The \hcodeindex{NASMENV} \textindex{Environment} Variable}
+\subsection{The \codeindex{NASMENV} \textindex{Environment} Variable}
 \label{subsec:nasmenv}
 
 If you define an environment variable called \code{NASMENV}, the program
@@ -761,7 +761,7 @@ instructions, but only supports the forms such as \code{LODSB},
 \code{MOVSW}, and \code{SCASD}, which explicitly specify the size
 of the components of the strings being manipulated.
 
-\subsection{NASM Doesn't \hcodeindex{ASSUME}}
+\subsection{NASM Doesn't \codeindex{ASSUME}}
 \label{subsec:qsassume}
 
 As part of NASM's drive for simplicity, it also does not support the
