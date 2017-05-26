@@ -8,7 +8,8 @@ extra macro power. Preprocessor directives all begin with a \code{\%}
 sign.
 
 The preprocessor collapses all lines which end with a backslash
-\code{\textbackslash\textbackslash} character into a single line.  Thus:
+\code{\textbackslash\textbackslash} character into a single line.
+Thus:
 
 \begin{lstlisting}
 	%define THIS_VERY_LONG_MACRO_NAME_IS_DEFINED_TO \\
@@ -100,8 +101,8 @@ then no other definition of \code{foo} will be accepted: a macro with
 no parameters prohibits the definition of the same name as a macro
 \emph{with} parameters, and vice versa.
 
-This doesn't prevent single-line macros being \emph{redefined}: you can
-perfectly well define a macro with
+This doesn't prevent single-line macros being \emph{redefined}:
+you can perfectly well define a macro with
 
 \begin{lstlisting}
 	%define foo bar
@@ -119,4 +120,4 @@ when defining single-line macros with \code{\%assign}
 (see \fullref{sec:assign}).
 
 You can \textindex{pre-define} single-line macros using the \code{-d}
-option on the NASM command line: see \fullref{sec:opt-d}.
+option on the NASM command line: see \fullref{subsec:opt-d}.
