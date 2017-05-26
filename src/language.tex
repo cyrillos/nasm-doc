@@ -739,3 +739,212 @@ of its operand (explained in more detail in \fullref{sec:segwrt}).
 A set of additional operators with leading and trailing double
 underscores are used to implement the integer functions of the
 \code{ifunc} macro package, see \fullref{sec:pkg_ifunc}.
+
+\section{\codeindex{SEG} and \codeindex{WRT}}
+\label{sec:segwrt}
+
+When writing large 16-bit programs, which must be split into
+multiple \textindex{segments}, it is often necessary to be able
+to refer to the \index{segment address}segment part of the address
+of a symbol. NASM supports the \code{SEG} operator to perform
+this function.
+
+The \code{SEG} operator returns the \emph{\textindex{preferred}}
+segment base of a symbol, defined as the segment base relative
+to which the offset of the symbol makes sense. So the code
+
+\begin{lstlisting}
+	mov     ax,seg symbol
+	mov     es,ax
+	mov     bx,symbol
+\end{lstlisting}
+
+will load \code{ES:BX} with a valid pointer to the symbol
+\code{symbol}.
+
+Things can be more complex than this: since 16-bit segments and
+\textindex{groups} may \index{overlapping segments}overlap,
+you might occasionally want to refer to some symbol using
+a different segment base from the preferred one. NASM lets you
+do this, by the use of the \code{WRT} (With Reference To) keyword.
+So you can do things like
+
+\begin{lstlisting}
+	mov     ax,weird_seg        ; weird_seg is a segment base
+	mov     es,ax
+	mov     bx,symbol wrt weird_seg
+\end{lstlisting}
+
+to load \code{ES:BX} with a different, but functionally equivalent,
+pointer to the symbol \code{symbol}.
+
+NASM supports far (inter-segment) calls and jumps by means of the
+syntax \code{call segment:offset}, where \code{segment}
+and \code{offset} both represent immediate values. So to call
+a far procedure, you could code either of
+
+\begin{lstlisting}
+	call    (seg procedure):procedure
+	call    weird_seg:(procedure wrt weird_seg)
+\end{lstlisting}
+
+(The parentheses are included for clarity, to show the intended
+parsing of the above instructions. They are not necessary in
+practice.)
+
+NASM supports the syntax \indexcode{CALL FAR}\code{call far procedure}
+as a synonym for the first of the above usages. \code{JMP} works
+identically to \code{CALL} in these examples.
+
+To declare a \textindex{far pointer} to a data item in a data
+segment, you must code
+
+\begin{lstlisting}
+	dw      symbol, seg symbol
+\end{lstlisting}
+
+NASM supports no convenient synonym for this, though you can always
+invent one using the macro processor.
+
+\section{\codeindex{STRICT}: Inhibiting Optimization}
+\label{sec:strict}
+
+When assembling with the optimizer set to level 2 or higher (see
+\fullref{sec:opt-O-cap}), NASM will use size specifiers (\code{BYTE},
+\code{WORD}, \code{DWORD}, \code{QWORD}, \code{TWORD}, \code{OWORD},
+\code{YWORD} or \code{ZWORD}), but will give them the smallest possible
+size. The keyword \code{STRICT} can be used to inhibit optimization
+and force a particular operand to be emitted in the specified size.
+For example, with the optimizer on, and in \code{BITS 16} mode,
+
+\begin{lstlisting}
+	push dword 33
+\end{lstlisting}
+
+is encoded in three bytes \c{66 6A 21}, whereas
+
+\begin{lstlisting}
+	push strict dword 33
+\end{lstlisting}
+
+is encoded in six bytes, with a full dword immediate operand
+\code{66 68 21 00 00 00}.
+
+With the optimizer off, the same code (six bytes) is generated whether
+the \code{STRICT} keyword was used or not.
+
+
+\section{\textindexlc{Critical Expressions}}
+\label{sec:crit}
+
+Although NASM has an optional multi-pass optimizer, there are some
+expressions which must be resolvable on the first pass. These are
+called \emph{Critical Expressions}.
+
+The first pass is used to determine the size of all the assembled
+code and data, so that the second pass, when generating all the
+code, knows all the symbol addresses the code refers to. So one
+thing NASM can't handle is code whose size depends on the value
+of a symbol declared after the code in question. For example,
+
+\begin{lstlisting}
+	times (label-$) db 0
+label:	db      'Where am I?'
+\end{lstlisting}
+
+The argument to \codeindex{TIMES} in this case could equally legally
+evaluate to anything at all; NASM will reject this example because
+it cannot tell the size of the \code{TIMES} line when it first sees it.
+It will just as firmly reject the slightly \index{paradox}paradoxical
+code
+
+\begin{lstlisting}
+	times (label-$+1) db 0
+label:  db      'NOW where am I?'
+\end{lstlisting}
+
+in which \emph{any} value for the \code{TIMES} argument
+is by definition wrong!
+
+NASM rejects these examples by means of a concept called a
+\emph{critical expression}, which is defined to be an
+expression whose value is required to be computable in
+the first pass, and which must therefore depend only
+on symbols defined before it. The argument to the \code{TIMES}
+prefix is a critical expression.
+
+\section{\textindexlc{Local Labels}}
+\label{sec:locallab}
+
+NASM gives special treatment to symbols beginning with a \textindex{period}.
+A label beginning with a single period is treated as a \emph{local}
+label, which means that it is associated with the previous non-local
+label. So, for example:
+
+\begin{lstlisting}
+label1	; some code
+
+.loop
+	; some more code
+
+	jne     .loop
+	ret
+
+label2	; some code
+
+.loop
+	; some more code
+
+	jne     .loop
+	ret
+\end{lstlisting}
+
+In the above code fragment, each \code{JNE} instruction jumps to the
+line immediately before it, because the two definitions of
+\code{.loop} are kept separate by virtue of each being associated
+with the previous non-local label.
+
+This form of local label handling is borrowed from the old Amiga
+assembler \textindex{DevPac}; however, NASM goes one step further,
+in allowing access to local labels from other parts of the code. This
+is achieved by means of \emph{defining} a local label in terms of the
+previous non-local label: the first definition of \code{.loop} above is
+really defining a symbol called \code{label1.loop}, and the second
+defines a symbol called \code{label2.loop}. So, if you really needed
+to, you could write
+
+\begin{lstlisting}
+label3	; some more code
+	; and some more
+
+	jmp label1.loop
+\end{lstlisting}
+
+Sometimes it is useful - in a macro, for instance - to be able to
+define a label which can be referenced from anywhere but which
+doesn't interfere with the normal local-label mechanism. Such a
+label can't be non-local because it would interfere with subsequent
+definitions of, and references to, local labels; and it can't be
+local because the macro that defined it wouldn't know the label's
+full name. NASM therefore introduces a third type of label, which is
+probably only useful in macro definitions: if a label begins with
+the \index{label prefix}special prefix \codeindex{..@}, then it
+does nothing to the local label mechanism. So you could code
+
+\begin{lstlisting}
+label1:                         ; a non-local label
+.local:                         ; this is really label1.local
+..@foo:                         ; this is a special symbol
+label2:                         ; another non-local label
+.local:                         ; this is really label2.local
+
+	jmp     ..@foo          ; this will jump three lines up
+\end{lstlisting}
+
+NASM has the capacity to define other special symbols beginning with
+a double period: for example, \code{..start} is used to specify the
+entry point in the \code{obj} output format (see \fullref{sec:dotdotstart}),
+\code{..imagebase} is used to find out the offset from a base address
+of the current image in the \code{win64} output format
+(see \fullref{sec:win64pic}). So just keep in mind that symbols
+beginning with a double period are special.
