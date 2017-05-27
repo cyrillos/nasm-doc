@@ -12,15 +12,23 @@
 \usepackage{xcolor}		% coloring
 \usepackage{xspace}		% spacing
 \usepackage{sectsty}		% colors for sections
+\usepackage{graphicx}		% images
+
+\title{NASM -- The Netwide Assembler}
+\author{The NASM Development Team}
+\date{1996 -- 2017}
+\input{src/version.tex}
 
 %
 % No rectangles
+\makeatletter
 \hypersetup{
-	pdfauthor={The NASM Development Team},
-	pdftitle={NASM --- The Netwide Assembler},
+	pdfauthor=\@author,
+	pdftitle=\@title,
 	pdfkeywords={NASM,Netwide Assembler},
 	hidelinks,
 }
+\makeatother
 
 %
 % Up to 4 levels nesting in menu
@@ -67,11 +75,22 @@
 
 \begin{document}
 
-\title{NASM --- The Netwide Assembler}
-\date{1996 --- 2017}
-\author{The NASM Development Team}
+\makeatletter
+\begin{titlepage}
+	\begin{center} \vspace*{\fill}
+		\begin{flushleft}
+		{\huge \bfseries {\@title}}				\\
+		\end{flushleft}
+		\noindent\makebox[\linewidth]{\rule{\textwidth}{2pt}}	\\
+		\begin{flushright}
+		{\large \bfseries version \version}			\\[8ex]
+		\end{flushright}
+		\includegraphics[width=6cm]{src/nasmlogo.eps}
+	\vspace*{\fill} \end{center}
+   \end{titlepage}
+\makeatother
+\thispagestyle{empty}
 
-\maketitle
 \tableofcontents
 \addtocontents{toc}{~\hfill\textbf{Page}\par}
 

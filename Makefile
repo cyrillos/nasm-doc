@@ -23,6 +23,7 @@ RM		?= rm -f
 XELATEX		?= xelatex
 XELATEX-OPTS	?= -output-driver="xdvipdfmx -V 3" -8bit
 
+tex-d		+= src/version.tex
 tex-d		+= src/intro.tex
 tex-d		+= src/running.tex
 tex-d		+= src/language.tex
