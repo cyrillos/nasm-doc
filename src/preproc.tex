@@ -121,3 +121,126 @@ when defining single-line macros with \code{\%assign}
 
 You can \textindex{pre-define} single-line macros using the \code{-d}
 option on the NASM command line: see \fullref{subsec:opt-d}.
+
+\subsection{Resolving \code{\%define}: \indexcode{\%ixdefine}\codeindex{\%xdefine}}
+\label{subsec:xdefine}
+
+To have a reference to an embedded single-line macro resolved at the
+time that the embedding macro is \emph{defined}, as opposed to when the
+embedding macro is \emph{expanded}, you need a different mechanism to the
+one offered by \code{\%define}. The solution is to use \code{\%xdefine}, or
+it's \index{case sensitive}case-insensitive counterpart \code{\%ixdefine}.
+
+Suppose you have the following code:
+
+\begin{lstlisting}
+	%define  isTrue  1
+	%define  isFalse isTrue
+	%define  isTrue  0
+
+	val1:    db      isFalse
+
+	%define  isTrue  1
+
+	val2:    db      isFalse
+\end{lstlisting}
+
+In this case, \code{val1} is equal to 0, and \code{val2} is equal to 1.
+This is because, when a single-line macro is defined using \code{\%define},
+it is expanded only when it is called. As \code{isFalse} expands to \code{isTrue},
+the expansion will be the current value of \c{isTrue}. The first time it is called
+that is 0, and the second time it is 1.
+
+If you wanted \code{isFalse} to expand to the value assigned to the
+embedded macro \code{isTrue} at the time that \code{isFalse} was defined,
+you need to change the above code to use \code{\%xdefine}.
+
+\begin{lstlisting}
+	%xdefine isTrue  1
+	%xdefine isFalse isTrue
+	%xdefine isTrue  0
+
+	val1:    db      isFalse
+
+	%xdefine isTrue  1
+
+	val2:    db      isFalse
+\end{lstlisting}
+
+Now, each time that \code{isFalse} is called, it expands to 1,
+as that is what the embedded macro \code{isTrue} expanded to at
+the time that \c{isFalse} was defined.
+
+\subsection{\textindexlc{Macro Indirection}: \indexcode{\%[}\code{\%[...]}}
+\label{subsec:indmacro}
+
+The \code{\%[...]} construct can be used to expand macros in contexts
+where macro expansion would otherwise not occur, including in the
+names other macros. For example, if you have a set of macros named
+\code{Foo16}, \code{Foo32} and \code{Foo64}, you could write:
+
+\begin{lstlisting}
+	mov ax,Foo%[__BITS__]	; The Foo value
+\end{lstlisting}
+
+to use the builtin macro \code{\_\_BITS\_\_} (see \fullref{sec:bitsm})
+to automatically select between them. Similarly, the two statements:
+
+\begin{lstlisting}
+	%xdefine Bar		Quux	; Expands due to %xdefine
+	%define  Bar		%[Quux]	; Expands due to %[...]
+\end{lstlisting}
+
+have, in fact, exactly the same effect.
+
+\code{\%[...]} concatenates to adjacent tokens in the same way that
+multi-line macro parameters do, see \fullref{sec:concat} for details.
+
+\subsection{Concatenating Single Line Macro Tokens: \codeindex{\%+}}
+\label{subsec:concat_macro}
+
+Individual tokens in single line macros can be concatenated, to produce
+longer tokens for later processing. This can be useful if there are
+several similar macros that perform similar functions.
+
+Please note that a space is required after \code{\%+}, in order to
+disambiguate it from the syntax \code{\%+1} used in multiline macros.
+
+As an example, consider the following:
+
+\begin{lstlisting}
+	%define BDASTART 400h                ; Start of BIOS data area
+
+	struc   tBIOSDA                      ; its structure
+		.COM1addr       RESW    1
+		.COM2addr       RESW    1
+		; ..and so on
+	endstruc
+\end{lstlisting}
+
+Now, if we need to access the elements of tBIOSDA in different places,
+we can end up with:
+
+\begin{lstlisting}
+	mov     ax,BDASTART + tBIOSDA.COM1addr
+	mov     bx,BDASTART + tBIOSDA.COM2addr
+\end{lstlisting}
+
+This will become pretty ugly (and tedious) if used in many places, and
+can be reduced in size significantly by using the following macro:
+
+\begin{lstlisting}
+	; Macro to access BIOS variables by their names (from tBDA):
+
+	%define BDA(x)  BDASTART + tBIOSDA. %+ x
+\end{lstlisting}
+
+Now the above code can be written as:
+
+\begin{lstlisting}
+	mov     ax,BDA(COM1addr)
+	mov     bx,BDA(COM2addr)
+\end{lstlisting}
+
+Using this feature, we can simplify references to a lot of macros
+(and, in turn, reduce typing errors).
