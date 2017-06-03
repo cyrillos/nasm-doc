@@ -598,7 +598,7 @@ For example:
 \end{lstlisting}
 
 would assign the binary representation of pi as a 64-bit floating
-point number into \c{RAX}. This is exactly equivalent to:
+point number into \code{RAX}. This is exactly equivalent to:
 
 \begin{lstlisting}
 	mov    rax,0x400921fb54442d18
@@ -821,7 +821,7 @@ For example, with the optimizer on, and in \code{BITS 16} mode,
 	push dword 33
 \end{lstlisting}
 
-is encoded in three bytes \c{66 6A 21}, whereas
+is encoded in three bytes \code{66 6A 21}, whereas
 
 \begin{lstlisting}
 	push strict dword 33
