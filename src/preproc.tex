@@ -339,3 +339,49 @@ The expression passed to \code{\%assign} is a \textindex{critical expression}
 (see \fullref{sec:crit}), and must also evaluate to a pure number
 (rather than a relocatable reference such as a code or data address,
 or anything involving a register).
+
+\subsection{Defining Strings: \indexcode{\%idefstr}\codeindex{\%defstr}}
+\label{subsec:defstr}
+
+\code{\%defstr}, and its case-insensitive counterpart \code{\%idefstr},
+define or redefine a single-line macro without parameters but converts
+the entire right-hand side, after macro expansion, to a quoted string
+before definition.
+
+For example:
+
+\begin{lstlisting}
+	%defstr test TEST
+\end{lstlisting}
+
+is equivalent to
+
+\begin{lstlisting}
+	%define test 'TEST'
+\end{lstlisting}
+
+This can be used, for example, with the \code{\%!} construct
+(see \fullref{subsec:getenv}):
+
+\begin{lstlisting}
+	%defstr PATH %!PATH          ; The operating system PATH variable
+\end{lstlisting}
+
+\subsection{Defining Tokens: \indexcode{\%ideftok}\codeindex{\%deftok}}
+\label{subsec:deftok}
+
+\code{\%deftok}, and its case-insensitive counterpart \code{\%ideftok},
+define or redefine a single-line macro without parameters but converts
+the second parameter, after string conversion, to a sequence of tokens.
+
+For example:
+
+\begin{lstlisting}
+	%deftok test 'TEST'
+\end{lstlisting}
+
+is equivalent to
+
+\begin{lstlisting}
+	%define test TEST
+\end{lstlisting}
