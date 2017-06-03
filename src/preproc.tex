@@ -171,6 +171,7 @@ Now, each time that \code{isFalse} is called, it expands to 1,
 as that is what the embedded macro \code{isTrue} expanded to at
 the time that \c{isFalse} was defined.
 
+% FIXME the keys
 \subsection{\textindexlc{Macro Indirection}: \indexcode{\%[}\code{\%[...]}}
 \label{subsec:indmacro}
 
@@ -196,6 +197,7 @@ have, in fact, exactly the same effect.
 \code{\%[...]} concatenates to adjacent tokens in the same way that
 multi-line macro parameters do, see \fullref{sec:concat} for details.
 
+% FIXME concat_macro key
 \subsection{Concatenating Single Line Macro Tokens: \codeindex{\%+}}
 \label{subsec:concat_macro}
 
@@ -244,3 +246,96 @@ Now the above code can be written as:
 
 Using this feature, we can simplify references to a lot of macros
 (and, in turn, reduce typing errors).
+
+% FIXME they key
+\subsection{The Macro Name Itself: \codeindex{\%?} and \codeindex{\%??}}
+\label{subsec:selfref}
+
+The special symbols \code{\%?} and \code{\%??} can be used to
+reference the macro name itself inside a macro expansion,
+this is supported for both single-and multi-line macros.
+\code{\%?} refers to the macro name as \emph{invoked}, whereas
+\code{\%??} refers to the macro name as \emph{declared}.
+The two are always the same for case-sensitive macros, but
+for case-insensitive macros, they can differ.
+
+For example:
+
+\begin{lstlisting}
+	%idefine Foo mov %?,%??
+
+		foo
+		FOO
+\end{lstlisting}
+
+will expand to:
+
+\begin{lstlisting}
+	mov foo,Foo
+	mov FOO,Foo
+\end{lstlisting}
+
+The sequence:
+
+\begin{lstlisting}
+	%idefine keyword $%?
+\end{lstlisting}
+
+can be used to make a keyword ``disappear'', for example in case a new
+instruction has been used as a label in older code.  For example:
+
+\begin{lstlisting}
+	%idefine pause $%?		; Hide the PAUSE instruction
+\end{lstlisting}
+
+\subsection{Undefining Single-Line Macros: \codeindex{\%undef}}
+\label{subsec:undef}
+
+Single-line macros can be removed with the \code{\%undef} directive.
+For example, the following sequence:
+
+\begin{lstlisting}
+	%define foo bar
+	%undef  foo
+
+		mov     eax, foo
+\end{lstlisting}
+
+will expand to the instruction \code{mov eax, foo}, since after
+\code{\%undef} the macro \code{foo} is no longer defined.
+
+Macros that would otherwise be pre-defined can be undefined on the
+command-line using the \code{-u} option on the NASM command line:
+see \fullref{subsec:opt-u}.
+
+\subsection{\textindex{Preprocessor Variables}: \codeindex{\%assign}}
+\label{subsec:assign}
+
+An alternative way to define single-line macros is by means of the
+\code{\%assign} command (and its \index{case sensitive}case-insensitive
+counterpart \codeindex{\%iassign}, which differs from \code{\%assign} in
+exactly the same way that \code{\%idefine} differs from \code{\%define}).
+
+\code{\%assign} is used to define single-line macros which take no
+parameters and have a numeric value. This value can be specified in
+the form of an expression, and it will be evaluated once, when the
+\code{\%assign} directive is processed.
+
+Like \code{\%define}, macros defined using \code{\%assign} can be
+re-defined later, so you can do things like
+
+\begin{lstlisting}
+	%assign i i+1
+\end{lstlisting}
+
+to increment the numeric value of a macro.
+
+\code{\%assign} is useful for controlling the termination of \code{\%rep}
+preprocessor loops: see \fullref{subsec:rep} for an example of this. Another
+use for \code{\%assign} is given in \fullref{subsec:16c} and
+\fullref{subse:32c}.
+
+The expression passed to \code{\%assign} is a \textindex{critical expression}
+(see \fullref{sec:crit}), and must also evaluate to a pure number
+(rather than a relocatable reference such as a code or data address,
+or anything involving a register).
