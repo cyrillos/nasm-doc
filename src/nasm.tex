@@ -13,6 +13,7 @@
 \usepackage{xspace}		% spacing
 \usepackage{sectsty}		% colors for sections
 \usepackage{graphicx}		% images
+\usepackage[titles]{tocloft}		% coloring TOC
 
 \title{NASM -- The Netwide Assembler}
 \author{The NASM Development Team}
@@ -73,6 +74,11 @@
 % Index into TOC
 \makeindex[title=Index,columns=2,intoc,options=-s src/idxconf.ist]
 
+%
+% TOC headers
+\renewcommand{\cftchapfont}{\bfseries\color{hcolor}}
+\renewcommand{\cfttoctitlefont}{\huge\bfseries\color{hcolor}}
+
 \begin{document}
 \raggedright
 
@@ -93,7 +99,7 @@
 \thispagestyle{empty}
 
 \tableofcontents
-\addtocontents{toc}{~\hfill\textbf{Page}\par}
+\addtocontents{toc}{~\hfill\color{hcolor}\textbf{Page}\par}
 
 %
 % Document chapters
