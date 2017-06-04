@@ -420,7 +420,8 @@ backquotes (\code{`...`}). Single or double quotes are equivalent to
 NASM (except of course that surrounding the constant with single
 quotes allows double quotes to appear within it and vice versa); the
 contents of those are represented verbatim. Strings enclosed in
-backquotes support C-style \code{\\}-escapes for special characters.
+backquotes support C-style \code{\textbackslash}-escapes for
+special characters.
 
 The following \textindex{escape sequences} are recognized by backquoted strings:
 
@@ -444,13 +445,13 @@ The following \textindex{escape sequences} are recognized by backquoted strings:
 	\U12345678  8 hexadecimal digits - Unicode character
 \end{lstlisting}
 
-All other escape sequences are reserved. Note that \code{\\0},
+All other escape sequences are reserved. Note that \code{\textbackslash 0},
 meaning a \code{NUL} character (ASCII 0), is a special case of
 the octal escape sequence.
 
-\textindex{Unicode} characters specified with \code{\\u} or \code{\\U}
-are converted to \textindex{UTF-8}. For example, the following lines
-are all equivalent:
+\textindex{Unicode} characters specified with \code{\textbackslash u}
+or \code{\textbackslash U} are converted to \textindex{UTF-8}.
+For example, the following lines are all equivalent:
 
 \begin{lstlisting}
 	db `\u263a`            ; UTF-8 smiley face
