@@ -385,3 +385,216 @@ is equivalent to
 \begin{lstlisting}
 	%define test TEST
 \end{lstlisting}
+
+\section{\textindexlc{String Manipulation in Macros}}
+\label{sec:strlen}
+
+It's often useful to be able to handle strings in macros. NASM
+supports a few simple string handling macro operators from which
+more complex operations can be constructed.
+
+All the string operators define or redefine a value (either a string
+or a numeric value) to a single-line macro. When producing a string
+value, it may change the style of quoting of the input string or
+strings, and possibly use \code{\textbackslash}-escapes inside
+\code{`}-quoted strings.
+
+%fixme ` - listings?!
+\subsection{\textindexlc{Concatenating Strings}: \codeindex{\%strcat}}
+\label{subsec:strcat}
+
+The \code{\%strcat} operator concatenates quoted strings and assign
+them to a single-line macro.
+
+For example:
+
+\begin{lstlisting}
+    %strcat alpha "Alpha: ", '12" screen'
+\end{lstlisting}
+
+would assign the value \code{'Alpha: 12" screen'} to \code{alpha}.
+Similarly:
+
+\begin{lstlisting}
+    %strcat beta '"foo"\', "'bar'"
+\end{lstlisting}
+
+would assign the value \code{'"foo" \textbackslash \textbackslash ''bar''}
+to \code{beta}.
+
+The use of commas to separate strings is permitted but optional.
+
+\subsection{\textindexlc{String Length}: \codeindex{\%strlen}}
+\label{subsec:strlen}
+
+The \code{\%strlen} operator assigns the length of a string to a macro.
+For example:
+
+\begin{lstlisting}
+    %strlen charcnt 'my string'
+\end{lstlisting}
+
+In this example, \code{charcnt} would receive the value 9, just as
+if an \code{\%assign} had been used. In this example, \code{'my string'}
+was a literal string but it could also have been a single-line
+macro that expands to a string, as in the following example:
+
+\begin{lstlisting}
+    %define sometext 'my string'
+    %strlen charcnt sometext
+\end{lstlisting}
+
+As in the first case, this would result in \code{charcnt} being
+assigned the value of 9.
+
+\subsection{\textindexlc{Extracting Substrings}: \codeindex{\%substr}}
+\label{subsec:substr}
+
+Individual letters or substrings in strings can be extracted using the
+\code{\%substr} operator. An example of its use is probably more useful
+than the description:
+
+\begin{lstlisting}
+    %substr mychar 'xyzw' 1     ; equivalent to %define mychar 'x'
+    %substr mychar 'xyzw' 2     ; equivalent to %define mychar 'y'
+    %substr mychar 'xyzw' 3     ; equivalent to %define mychar 'z'
+    %substr mychar 'xyzw' 2,2   ; equivalent to %define mychar 'yz'
+    %substr mychar 'xyzw' 2,-1  ; equivalent to %define mychar 'yzw'
+    %substr mychar 'xyzw' 2,-2  ; equivalent to %define mychar 'yz'
+\end{lstlisting}
+
+As with \code{\%strlen} (see \fullref{subse:strlen}), the first
+parameter is the single-line macro to be created and the second
+is the string. The third parameter specifies the first character
+to be selected, and the optional fourth parameter (preceeded by comma)
+is the length. Note that the first index is 1, not 0 and the last
+index is equal to the value that \code{\%strlen} would assign given
+the same string. Index values out of range result in an empty string.
+A negative length means ``until N-1 characters before the end of string'',
+i.e. \code{-1} means until end of string, \code{-2} until one character
+before, etc.
+
+\section{\textindexlc{Multi-Line Macros}: \indexcode{\%imacro}\codeindex{\%macro}}
+\label{sec:mlmacro}
+
+Multi-line macros are much more like the type of macro seen in MASM
+and TASM: a multi-line macro definition in NASM looks something like
+this.
+
+\begin{lstlisting}
+    %macro  prologue 1
+        push    ebp
+        mov     ebp,esp
+        sub     esp,%1
+    %endmacro
+\end{lstlisting}
+
+This defines a C-like function prologue as a macro: so you would
+invoke the macro with a call such as
+
+\begin{lstlisting}
+    myfunc:   prologue 12
+\end{lstlisting}
+
+which would expand to the three lines of code
+
+\begin{lstlisting}
+    myfunc: push    ebp
+            mov     ebp,esp
+            sub     esp,12
+\end{lstlisting}
+
+The number \code{1} after the macro name in the \code{\%macro} line
+defines the number of parameters the macro \code{prologue} expects
+to receive. The use of \code{\%1} inside the macro definition refers
+to the first parameter to the macro call. With a macro taking more
+than one parameter, subsequent parameters would be referred to as
+\code{\%2}, \code{\%3} and so on.
+
+Multi-line macros, like single-line macros, are \textindex{case-sensitive},
+unless you define them using the alternative directive \code{\%imacro}.
+
+If you need to pass a comma as \emph{part} of a parameter to a
+multi-line macro, you can do that by enclosing the entire parameter
+in \index{braces, around macro parameters}braces. So you could code
+things like
+
+\begin{lstlisting}
+    %macro  silly 2
+        %2: db      %1
+    %endmacro
+
+        silly 'a', letter_a         ; letter_a:  db 'a'
+        silly 'ab', string_ab       ; string_ab: db 'ab'
+        silly {13,10}, crlf         ; crlf:      db 13,10
+\end{lstlisting}
+
+\subsection{Overloading Multi-Line Macros\index{overloading, multi-line macros}}
+\label{subsec:mlmacover}
+
+As with single-line macros, multi-line macros can be overloaded by
+defining the same macro name several times with different numbers of
+parameters. This time, no exception is made for macros with no
+parameters at all. So you could define
+
+\begin{lstlisting}
+    %macro  prologue 0
+        push    ebp
+        mov     ebp,esp
+    %endmacro
+\end{lstlisting}
+
+to define an alternative form of the function prologue which
+allocates no local stack space.
+
+Sometimes, however, you might want to ``overload'' a machine
+instruction; for example, you might want to define
+
+\begin{lstlisting}
+    %macro  push 2
+        push    %1
+        push    %2
+    %endmacro
+\end{lstlisting}
+
+so that you could code
+
+\begin{lstlisting}
+    push    ebx         ; this line is not a macro call
+    push    eax,ecx     ; but this one is
+\end{lstlisting}
+
+Ordinarily, NASM will give a warning for the first of the above two
+lines, since \code{push} is now defined to be a macro, and is being
+invoked with a number of parameters for which no definition has been
+given. The correct code will still be generated, but the assembler
+will give a warning. This warning can be disabled by the use of the
+\code{-w-macro-params} command-line option (see \fullref{subsec:opt-w}).
+
+\subsection{\textindexlc{Macro-Local Labels}}
+\label{subsec:maclocal}
+
+NASM allows you to define labels within a multi-line macro definition
+in such a way as to make them local to the macro call: so calling
+the same macro multiple times will use a different label each time.
+You do this by prefixing \codeindex{\%\%} to the label name.
+So you can invent an instruction which executes a \code{RET} if the
+\code{Z} flag is set by doing this:
+
+\begin{lstlisting}
+    %macro  retz 0
+            jnz     %%skip
+            ret
+        %%skip:
+    %endmacro
+\end{lstlisting}
+
+You can call this macro as many times as you want, and every time
+you call it NASM will make up a different ``real'' name to substitute
+for the label \code{\%\%skip}. The names NASM invents are of the form
+\code{..@2345.skip}, where the number 2345 changes with every macro
+call. The \codeindex{..@} prefix prevents macro-local labels from
+interfering with the local label mechanism, as described in
+\fullref{subsec:locallab}. You should avoid defining your own labels
+in this form (the \code{..@} prefix, then a number, then another period)
+in case they interfere with macro-local labels.
