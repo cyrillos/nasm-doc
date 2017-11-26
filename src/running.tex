@@ -5,20 +5,20 @@
 To assemble a file, you issue a command of the form
 
 \begin{lstlisting}
-	nasm -f <format> <filename> [-o <output>]
+nasm -f <format> <filename> [-o <output>]
 \end{lstlisting}
 
 For example,
 
 \begin{lstlisting}
-	nasm -f elf myfile.asm
+nasm -f elf myfile.asm
 \end{lstlisting}
 
 will assemble \code{myfile.asm} into an ``ELF'' object
 file \code{myfile.o}. And
 
 \begin{lstlisting}
-	nasm -f bin myfile.asm -o myfile.com
+nasm -f bin myfile.asm -o myfile.com
 \end{lstlisting}
 
 will assemble ``myfile.asm'' into a raw binary file ``myfile.com''.
@@ -28,13 +28,13 @@ displayed on the left of the original sources, use the \code{-l}
 option to give a listing file name, for example:
 
 \begin{lstlisting}
-	nasm -f coff myfile.asm -l myfile.lst
+nasm -f coff myfile.asm -l myfile.lst
 \end{lstlisting}
 
 To get further usage instructions from NASM, try typing
 
 \begin{lstlisting}
-	nasm -h
+nasm -h
 \end{lstlisting}
 
 As \code{-hf}, this will also list the available output file formats,
@@ -44,21 +44,21 @@ If you use Linux but aren't sure whether your system is
 ``a.out'' or ``ELF'', type
 
 \begin{lstlisting}
-	file nasm
+file nasm
 \end{lstlisting}
 
 (in the directory in which you put the NASM binary when you
 installed it). If it says something like
 
 \begin{lstlisting}
-	nasm: ELF 32-bit LSB executable i386 (386 and up) Version 1
+nasm: ELF 32-bit LSB executable i386 (386 and up) Version 1
 \end{lstlisting}
 
 then your system is ``ELF'', and you should use the option \code{-f elf}
 when you want NASM to produce Linux object files. If it says
 
 \begin{lstlisting}
-	nasm: Linux/i386 demand-paged executable (QMAGIC)
+nasm: Linux/i386 demand-paged executable (QMAGIC)
 \end{lstlisting}
 
 or something similar, your system is ``a.out'', and you should use
@@ -99,8 +99,8 @@ following it with the name you wish for the output file, either
 with or without an intervening space. For example:
 
 \begin{lstlisting}
-        nasm -f bin program.asm -o program.com
-        nasm -f bin driver.asm -o driver.sys
+nasm -f bin program.asm -o program.com
+nasm -f bin driver.asm -o driver.sys
 \end{lstlisting}
 
 Note that this is a small \code{-o}, and is different from a capital
@@ -133,7 +133,7 @@ specifically request no expansion in source listings: see \fullref{subsec:nolist
 on the right. For example:
 
 \begin{lstlisting}
-        nasm -f elf myfile.asm -l myfile.lst
+nasm -f elf myfile.asm -l myfile.lst
 \end{lstlisting}
 
 If a list file is selected, you may turn off listing for a section of your
@@ -149,7 +149,7 @@ This option can be used to generate makefile dependencies on stdout.
 This can be redirected to a file for further processing. For example:
 
 \begin{lstlisting}
-	nasm -M myfile.asm > myfile.dep
+nasm -M myfile.asm > myfile.dep
 \end{lstlisting}
 
 \subsection{The \codeindex{-MG} Option: Generate \textindexlc{Makefile Dependencies}}
@@ -167,7 +167,7 @@ This option can be used with the \code{-M} or \code{-MG} options
 to send the output to a file, rather than to stdout. For example:
 
 \begin{lstlisting}
-	nasm -M -MF myfile.dep myfile.asm
+nasm -M -MF myfile.dep myfile.asm
 \end{lstlisting}
 
 \subsection{The \codeindex{-MD} Option: Assemble and Generate Dependencies}
@@ -181,7 +181,7 @@ Use this to automatically generate updated dependencies with
 every assembly session. For example:
 
 \begin{lstlisting}
-	nasm -f elf -o myfile.o -MD myfile.dep myfile.asm
+nasm -f elf -o myfile.o -MD myfile.dep myfile.asm
 \end{lstlisting}
 
 \subsection{The \codeindex{-MT} Option: Dependency Target Name}
@@ -247,7 +247,7 @@ the \code{-Xvc} option and the \code{-Xgnu} option.
 The GNU format is the default and looks like this:
 
 \begin{lstlisting}
-	filename.asm:65: error: specific error message
+filename.asm:65: error: specific error message
 \end{lstlisting}
 
 where \code{filename.asm} is the name of the source file in
@@ -261,7 +261,7 @@ The other format, specified by \code{-Xvc} is the style used by
 Microsoft Visual C++ and some other programs. It looks like this:
 
 \begin{lstlisting}
-	filename.asm(65) : error: specific error message
+filename.asm(65) : error: specific error message
 \end{lstlisting}
 
 where the only difference is that the line number is in parentheses
@@ -284,7 +284,7 @@ error. Therefore you can \index{redirecting errors}redirect the errors
 into a file by typing
 
 \begin{lstlisting}
-	nasm -Z myfile.err -f obj myfile.asm
+nasm -Z myfile.err -f obj myfile.asm
 \end{lstlisting}
 
 In earlier versions of NASM, this option was called \code{-E},
@@ -301,7 +301,7 @@ under ``MS-\textindex{DOS}''. To assemble the file \code{myfile.asm}
 and pipe its output to the \code{more} program, you can type:
 
 \begin{lstlisting}
-	nasm -s -f obj myfile.asm | more
+nasm -s -f obj myfile.asm | more
 \end{lstlisting}
 
 See also the \code{-Z} option, \fullref{subsec:opt-Z-cap}.
@@ -317,7 +317,7 @@ line by the use of the \code{-i} option. Therefore you can include files
 from a \textindex{macro library}, for example, by typing
 
 \begin{lstlisting}
-	nasm -ic:\macrolib\ -f obj myfile.asm
+nasm -ic:\macrolib\ -f obj myfile.asm
 \end{lstlisting}
 
 (As usual, a space between \code{-i} and the path name is allowed, and
@@ -349,7 +349,7 @@ be specified as \code{-I}.
 your source file, by the use of the \code{-p} option. So running
 
 \begin{lstlisting}
-	nasm myfile.asm -p myinc.inc
+nasm myfile.asm -p myinc.inc
 \end{lstlisting}
 
 is equivalent to running \code{nasm myfile.asm} and placing the
@@ -367,13 +367,13 @@ option gives an alternative to placing a \code{\%define} directive. You
 could code
 
 \begin{lstlisting}
-	nasm myfile.asm -dFOO=100
+nasm myfile.asm -dFOO=100
 \end{lstlisting}
 
 as an alternative to placing the directive
 
 \begin{lstlisting}
-	%define FOO 100
+%define FOO 100
 \end{lstlisting}
 
 at the start of the file. You can miss off the macro value, as well:
@@ -394,7 +394,7 @@ option specified earlier on the command lines.
 For example, the following command line:
 
 \begin{lstlisting}
-	nasm myfile.asm -dFOO=100 -uFOO
+nasm myfile.asm -dFOO=100 -uFOO
 \end{lstlisting}
 
 would result in \code{FOO} \emph{not} being a predefined macro in the
@@ -420,7 +420,7 @@ preprocessor to evaluate \index{preprocessor expressions}
 so code such as
 
 \begin{lstlisting}
-	%assign tablesize ($-tablestart)
+%assign tablesize ($-tablestart)
 \end{lstlisting}
 
 will cause an error in \textindex{preprocess-only mode}.
@@ -624,12 +624,12 @@ debug info formats for the given output format. The default format
 is indicated by an asterisk. For example:
 
 \begin{lstlisting}
-	nasm -f elf -y
+nasm -f elf -y
 
-	valid debug formats for 'elf32' output format are
-	('*' denotes default):
-	* stabs     ELF32 (i386) stabs debug format for Linux
-	  dwarf     elf32 (i386) dwarf debug format for Linux
+valid debug formats for 'elf32' output format are
+('*' denotes default):
+* stabs     ELF32 (i386) stabs debug format for Linux
+  dwarf     elf32 (i386) dwarf debug format for Linux
 \end{lstlisting}
 
 \subsection{The \codeindex{--prefix} and \codeindex{--postfix} Options}
@@ -700,15 +700,15 @@ NASM code and tell what opcode is generated by it. You can't do
 this in MASM: if you declare, for example,
 
 \begin{lstlisting}
-	foo     equ     1
-	bar     dw      2
+foo     equ     1
+bar     dw      2
 \end{lstlisting}
 
 then the two lines of code
 
 \begin{lstlisting}
-	mov     ax,foo
-	mov     ax,bar
+mov     ax,foo
+mov     ax,bar
 \end{lstlisting}
 
 generate completely different opcodes, despite having

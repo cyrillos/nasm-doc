@@ -12,8 +12,8 @@ The preprocessor collapses all lines which end with a backslash
 Thus:
 
 \begin{lstlisting}
-	%define THIS_VERY_LONG_MACRO_NAME_IS_DEFINED_TO \\
-	        THIS_VALUE
+%define THIS_VERY_LONG_MACRO_NAME_IS_DEFINED_TO \\
+        THIS_VALUE
 \end{lstlisting}
 
 will work like a single-line macro without the backslash-newline
@@ -30,16 +30,16 @@ directive. The definitions work in a similar way to C; so you can do
 things like
 
 \begin{lstlisting}
-	%define ctrl    0x1F &
-	%define param(a,b) ((a)+(a)*(b))
+%define ctrl    0x1F &
+%define param(a,b) ((a)+(a)*(b))
 
-		mov     byte [param(2,ebx)], ctrl 'D'
+        mov     byte [param(2,ebx)], ctrl 'D'
 \end{lstlisting}
 
 which will expand to
 
 \begin{lstlisting}
-	mov     byte [(2)+(2)*(ebx)], 0x1F & 'D'
+        mov     byte [(2)+(2)*(ebx)], 0x1F & 'D'
 \end{lstlisting}
 
 When the expansion of a single-line macro contains tokens which
@@ -47,10 +47,10 @@ invoke another macro, the expansion is performed at invocation time,
 not at definition time. Thus the code
 
 \begin{lstlisting}
-	%define a(x)    1+b(x)
-	%define b(x)    2*x
+%define a(x)    1+b(x)
+%define b(x)    2*x
 
-	mov     ax,a(8)
+        mov     ax,a(8)
 \end{lstlisting}
 
 will evaluate in the expected way to \code{mov ax,1+2*8}, even though
@@ -71,9 +71,9 @@ the preprocessor will only expand the first occurrence of the macro.
 Hence, if you code
 
 \begin{lstlisting}
-	%define a(x)    1+a(x)
+%define a(x)    1+a(x)
 
-		mov     ax,a(3)
+        mov     ax,a(3)
 \end{lstlisting}
 
 the macro \code{a(3)} will expand once, becoming \code{1+a(3)}, and will
@@ -84,8 +84,8 @@ You can \index{overloading, single-line macros}overload single-line
 macros: if you write
 
 \begin{lstlisting}
-	%define foo(x)   1+x
-	%define foo(x,y) 1+x*y
+%define foo(x)   1+x
+%define foo(x,y) 1+x*y
 \end{lstlisting}
 
 the preprocessor will be able to handle both types of macro call,
@@ -94,7 +94,7 @@ by counting the parameters you pass; so \code{foo(3)} will become
 However, if you define
 
 \begin{lstlisting}
-	%define foo bar
+%define foo bar
 \end{lstlisting}
 
 then no other definition of \code{foo} will be accepted: a macro with
@@ -105,13 +105,13 @@ This doesn't prevent single-line macros being \emph{redefined}:
 you can perfectly well define a macro with
 
 \begin{lstlisting}
-	%define foo bar
+%define foo bar
 \end{lstlisting}
 
 and then re-define it later in the same source file with
 
 \begin{lstlisting}
-	%define foo baz
+%define foo baz
 \end{lstlisting}
 
 Then everywhere the macro \code{foo} is invoked, it will be expanded
@@ -134,15 +134,15 @@ it's \index{case sensitive}case-insensitive counterpart \code{\%ixdefine}.
 Suppose you have the following code:
 
 \begin{lstlisting}
-	%define  isTrue  1
-	%define  isFalse isTrue
-	%define  isTrue  0
+%define  isTrue  1
+%define  isFalse isTrue
+%define  isTrue  0
 
-	val1:    db      isFalse
+val1:    db      isFalse
 
-	%define  isTrue  1
+%define  isTrue  1
 
-	val2:    db      isFalse
+val2:    db      isFalse
 \end{lstlisting}
 
 In this case, \code{val1} is equal to 0, and \code{val2} is equal to 1.
@@ -156,15 +156,15 @@ embedded macro \code{isTrue} at the time that \code{isFalse} was defined,
 you need to change the above code to use \code{\%xdefine}.
 
 \begin{lstlisting}
-	%xdefine isTrue  1
-	%xdefine isFalse isTrue
-	%xdefine isTrue  0
+%xdefine isTrue  1
+%xdefine isFalse isTrue
+%xdefine isTrue  0
 
-	val1:    db      isFalse
+val1:    db      isFalse
 
-	%xdefine isTrue  1
+%xdefine isTrue  1
 
-	val2:    db      isFalse
+val2:    db      isFalse
 \end{lstlisting}
 
 Now, each time that \code{isFalse} is called, it expands to 1,
@@ -181,15 +181,15 @@ names other macros. For example, if you have a set of macros named
 \code{Foo16}, \code{Foo32} and \code{Foo64}, you could write:
 
 \begin{lstlisting}
-	mov ax,Foo%[__BITS__]	; The Foo value
+mov ax,Foo%[__BITS__]	; The Foo value
 \end{lstlisting}
 
 to use the builtin macro \code{\_\_BITS\_\_} (see \fullref{sec:bitsm})
 to automatically select between them. Similarly, the two statements:
 
 \begin{lstlisting}
-	%xdefine Bar		Quux	; Expands due to %xdefine
-	%define  Bar		%[Quux]	; Expands due to %[...]
+%xdefine Bar		Quux	; Expands due to %xdefine
+%define  Bar		%[Quux]	; Expands due to %[...]
 \end{lstlisting}
 
 have, in fact, exactly the same effect.
@@ -211,37 +211,37 @@ disambiguate it from the syntax \code{\%+1} used in multiline macros.
 As an example, consider the following:
 
 \begin{lstlisting}
-	%define BDASTART 400h                ; Start of BIOS data area
+%define BDASTART 400h                ; Start of BIOS data area
 
-	struc   tBIOSDA                      ; its structure
-		.COM1addr       RESW    1
-		.COM2addr       RESW    1
-		; ..and so on
-	endstruc
+struc   tBIOSDA                      ; its structure
+        .COM1addr       RESW    1
+        .COM2addr       RESW    1
+        ; ..and so on
+endstruc
 \end{lstlisting}
 
 Now, if we need to access the elements of tBIOSDA in different places,
 we can end up with:
 
 \begin{lstlisting}
-	mov     ax,BDASTART + tBIOSDA.COM1addr
-	mov     bx,BDASTART + tBIOSDA.COM2addr
+mov     ax,BDASTART + tBIOSDA.COM1addr
+mov     bx,BDASTART + tBIOSDA.COM2addr
 \end{lstlisting}
 
 This will become pretty ugly (and tedious) if used in many places, and
 can be reduced in size significantly by using the following macro:
 
 \begin{lstlisting}
-	; Macro to access BIOS variables by their names (from tBDA):
+; Macro to access BIOS variables by their names (from tBDA):
 
-	%define BDA(x)  BDASTART + tBIOSDA. %+ x
+%define BDA(x)  BDASTART + tBIOSDA. %+ x
 \end{lstlisting}
 
 Now the above code can be written as:
 
 \begin{lstlisting}
-	mov     ax,BDA(COM1addr)
-	mov     bx,BDA(COM2addr)
+mov     ax,BDA(COM1addr)
+mov     bx,BDA(COM2addr)
 \end{lstlisting}
 
 Using this feature, we can simplify references to a lot of macros
@@ -262,30 +262,30 @@ for case-insensitive macros, they can differ.
 For example:
 
 \begin{lstlisting}
-	%idefine Foo mov %?,%??
+%idefine Foo mov %?,%??
 
-		foo
-		FOO
+        foo
+        FOO
 \end{lstlisting}
 
 will expand to:
 
 \begin{lstlisting}
-	mov foo,Foo
-	mov FOO,Foo
+        mov foo,Foo
+        mov FOO,Foo
 \end{lstlisting}
 
 The sequence:
 
 \begin{lstlisting}
-	%idefine keyword $%?
+%idefine keyword $%?
 \end{lstlisting}
 
 can be used to make a keyword ``disappear'', for example in case a new
 instruction has been used as a label in older code.  For example:
 
 \begin{lstlisting}
-	%idefine pause $%?		; Hide the PAUSE instruction
+%idefine pause $%?		; Hide the PAUSE instruction
 \end{lstlisting}
 
 \subsection{Undefining Single-Line Macros: \codeindex{\%undef}}
@@ -295,10 +295,10 @@ Single-line macros can be removed with the \code{\%undef} directive.
 For example, the following sequence:
 
 \begin{lstlisting}
-	%define foo bar
-	%undef  foo
+%define foo bar
+%undef  foo
 
-		mov     eax, foo
+        mov     eax, foo
 \end{lstlisting}
 
 will expand to the instruction \code{mov eax, foo}, since after
@@ -325,7 +325,7 @@ Like \code{\%define}, macros defined using \code{\%assign} can be
 re-defined later, so you can do things like
 
 \begin{lstlisting}
-	%assign i i+1
+%assign i i+1
 \end{lstlisting}
 
 to increment the numeric value of a macro.
@@ -351,20 +351,20 @@ before definition.
 For example:
 
 \begin{lstlisting}
-	%defstr test TEST
+%defstr test TEST
 \end{lstlisting}
 
 is equivalent to
 
 \begin{lstlisting}
-	%define test 'TEST'
+%define test 'TEST'
 \end{lstlisting}
 
 This can be used, for example, with the \code{\%!} construct
 (see \fullref{subsec:getenv}):
 
 \begin{lstlisting}
-	%defstr PATH %!PATH          ; The operating system PATH variable
+%defstr PATH %!PATH          ; The operating system PATH variable
 \end{lstlisting}
 
 \subsection{Defining Tokens: \indexcode{\%ideftok}\codeindex{\%deftok}}
@@ -377,13 +377,13 @@ the second parameter, after string conversion, to a sequence of tokens.
 For example:
 
 \begin{lstlisting}
-	%deftok test 'TEST'
+%deftok test 'TEST'
 \end{lstlisting}
 
 is equivalent to
 
 \begin{lstlisting}
-	%define test TEST
+%define test TEST
 \end{lstlisting}
 
 \section{\textindexlc{String Manipulation in Macros}}
@@ -408,14 +408,14 @@ them to a single-line macro.
 For example:
 
 \begin{lstlisting}
-	%strcat alpha "Alpha: ", '12" screen'
+%strcat alpha "Alpha: ", '12" screen'
 \end{lstlisting}
 
 would assign the value \code{'Alpha: 12" screen'} to \code{alpha}.
 Similarly:
 
 \begin{lstlisting}
-	%strcat beta '"foo"\', "'bar'"
+%strcat beta '"foo"\', "'bar'"
 \end{lstlisting}
 
 would assign the value \code{`"foo" \textbackslash \textbackslash 'bar'`}
@@ -430,7 +430,7 @@ The \code{\%strlen} operator assigns the length of a string to a macro.
 For example:
 
 \begin{lstlisting}
-	%strlen charcnt 'my string'
+%strlen charcnt 'my string'
 \end{lstlisting}
 
 In this example, \code{charcnt} would receive the value 9, just as
@@ -439,8 +439,8 @@ was a literal string but it could also have been a single-line
 macro that expands to a string, as in the following example:
 
 \begin{lstlisting}
-	%define sometext 'my string'
-	%strlen charcnt sometext
+%define sometext 'my string'
+%strlen charcnt sometext
 \end{lstlisting}
 
 As in the first case, this would result in \code{charcnt} being
@@ -454,12 +454,12 @@ Individual letters or substrings in strings can be extracted using the
 than the description:
 
 \begin{lstlisting}
-	%substr mychar 'xyzw' 1     ; equivalent to %define mychar 'x'
-	%substr mychar 'xyzw' 2     ; equivalent to %define mychar 'y'
-	%substr mychar 'xyzw' 3     ; equivalent to %define mychar 'z'
-	%substr mychar 'xyzw' 2,2   ; equivalent to %define mychar 'yz'
-	%substr mychar 'xyzw' 2,-1  ; equivalent to %define mychar 'yzw'
-	%substr mychar 'xyzw' 2,-2  ; equivalent to %define mychar 'yz'
+%substr mychar 'xyzw' 1     ; equivalent to %define mychar 'x'
+%substr mychar 'xyzw' 2     ; equivalent to %define mychar 'y'
+%substr mychar 'xyzw' 3     ; equivalent to %define mychar 'z'
+%substr mychar 'xyzw' 2,2   ; equivalent to %define mychar 'yz'
+%substr mychar 'xyzw' 2,-1  ; equivalent to %define mychar 'yzw'
+%substr mychar 'xyzw' 2,-2  ; equivalent to %define mychar 'yz'
 \end{lstlisting}
 
 As with \code{\%strlen} (see \fullref{subsec:strlen}), the first
@@ -481,26 +481,28 @@ and TASM: a multi-line macro definition in NASM looks something like
 this.
 
 \begin{lstlisting}
-	%macro  prologue 1
-		push    ebp
-		mov     ebp,esp
-		sub     esp,%1
-	%endmacro
+%macro  prologue 1
+
+        push    ebp
+        mov     ebp,esp
+        sub     esp,%1
+
+%endmacro
 \end{lstlisting}
 
 This defines a C-like function prologue as a macro: so you would
 invoke the macro with a call such as
 
 \begin{lstlisting}
-	myfunc:   prologue 12
+myfunc:   prologue 12
 \end{lstlisting}
 
 which would expand to the three lines of code
 
 \begin{lstlisting}
-    myfunc: push    ebp
-            mov     ebp,esp
-            sub     esp,12
+myfunc: push    ebp
+        mov     ebp,esp
+        sub     esp,12
 \end{lstlisting}
 
 The number \code{1} after the macro name in the \code{\%macro} line
@@ -555,16 +557,18 @@ instruction; for example, you might want to define
 
 \begin{lstlisting}
 %macro  push 2
-    push    %1
-    push    %2
+
+        push    %1
+        push    %2
+
 %endmacro
 \end{lstlisting}
 
 so that you could code
 
 \begin{lstlisting}
-push    ebx         ; this line is not a macro call
-push    eax,ecx     ; but this one is
+        push    ebx             ; this line is not a macro call
+        push    eax,ecx         ; but this one is
 \end{lstlisting}
 
 Ordinarily, NASM will give a warning for the first of the above two
@@ -586,9 +590,11 @@ So you can invent an instruction which executes a \code{RET} if the
 
 \begin{lstlisting}
 %macro  retz 0
+
         jnz     %%skip
         ret
     %%skip:
+
 %endmacro
 \end{lstlisting}
 
