@@ -148,7 +148,7 @@ val2:    db      isFalse
 In this case, \code{val1} is equal to 0, and \code{val2} is equal to 1.
 This is because, when a single-line macro is defined using \code{\%define},
 it is expanded only when it is called. As \code{isFalse} expands to \code{isTrue},
-the expansion will be the current value of \c{isTrue}. The first time it is called
+the expansion will be the current value of \code{isTrue}. The first time it is called
 that is 0, and the second time it is 1.
 
 If you wanted \code{isFalse} to expand to the value assigned to the
@@ -169,7 +169,7 @@ val2:    db      isFalse
 
 Now, each time that \code{isFalse} is called, it expands to 1,
 as that is what the embedded macro \code{isTrue} expanded to at
-the time that \c{isFalse} was defined.
+the time that \code{isFalse} was defined.
 
 % FIXME the keys
 \subsection{\textindexlc{Macro Indirection}: \indexcode{\%[}\code{\%[...]}}
@@ -678,9 +678,9 @@ See \fullref{subsec:sectmac} for a better way to write the above macro.
 \subsection{\textindexlc{Macro Parameters Range}}
 \label{subsec:mlmacrange}
 
-NASM allows you to expand parameters via special construction \c{\%\{x:y\}}
-where \c{x} is the first parameter index and \c{y} is the last. Any index can
-be either negative or positive but must never be zero.
+NASM allows you to expand parameters via special construction \code{\%\{x:y\}}
+where \code{x} is the first parameter index and \code{y} is the last.
+Any index can be either negative or positive but must never be zero.
 
 For example
 
@@ -1002,13 +1002,13 @@ in the listing file. The \code{.nolist} qualifier comes directly after
 the number of parameters, like this:
 
 \begin{lstlisting}
-\c %macro foo 1.nolist
+%macro foo 1.nolist
 \end{lstlisting}
 
 Or like this:
 
 \begin{lstlisting}
-\c %macro bar 1-5+.nolist a,b,c,d,e,f,g,h
+%macro bar 1-5+.nolist a,b,c,d,e,f,g,h
 \end{lstlisting}
 
 \subsection{Undefining Multi-Line Macros: \codeindex{\%unmacro}}
@@ -1016,7 +1016,7 @@ Or like this:
 
 Multi-line macros can be removed with the \code{\%unmacro} directive.
 Unlike the \code{\%undef} directive, however, \code{\%unmacro} takes an
-argument specification, and will only remove \index{exact matches} with
+argument specification, and will only remove \textindex{exact matches} with
 that argument specification.
 
 For example:
@@ -1039,3 +1039,281 @@ removes the previously defined macro \code{foo}, but
 
 does \emph{not} remove the macro \code{bar}, since the argument
 specification does not match exactly.
+
+\section{\textindexlc{Conditional Assembly}\indexcode{\%if}}
+\label{sec:condasm}
+
+Similarly to the C preprocessor, NASM allows sections of a source
+file to be assembled only if certain conditions are met. The general
+syntax of this feature looks like this:
+
+\begin{lstlisting}
+%if<condition>
+    ; some code which only appears if <condition> is met
+%elif<condition2>
+    ; only appears if <condition> is not met but <condition2> is
+%else
+    ; this appears if neither <condition> nor <condition2> was met
+%endif
+\end{lstlisting}
+
+The inverse forms \codeindex{\%ifn} and \codeindex{\%elifn} are also supported.
+
+The \codeindex{\%else} clause is optional, as is the \codeindex{\%elif} clause.
+You can have more than one \code{\%elif} clause as well.
+
+There are a number of variants of the \code{\%if} directive.  Each has its
+corresponding \code{\%elif}, \code{\%ifn}, and \code{\%elifn} directives; for
+example, the equivalents to the \code{\%ifdef} directive are \code{\%elifdef},
+\code{\%ifndef}, and \code{\%elifndef}.
+
+\subsection{\codeindex{\%ifdef}: Testing Single-Line Macro Existence
+\index{testing, single-line macro existence}}
+\label{susbec:ifdef}
+
+Beginning a conditional-assembly block with the line \code{\%ifdef MACRO}
+will assemble the subsequent code if, and only if, a single-line macro called
+\code{MACRO} is defined. If not, then the \code{\%elif} and \code{\%else}
+blocks (if any) will be processed instead.
+
+For example, when debugging a program, you might want to write code
+such as
+
+\begin{lstlisting}
+          ; perform some function
+%ifdef DEBUG
+          writefile 2,"Function performed successfully",13,10
+%endif
+          ; go and do something else
+\end{lstlisting}
+
+Then you could use the command-line option \code{-dDEBUG} to create a
+version of the program which produced debugging messages, and remove
+the option to generate the final release version of the program.
+
+You can test for a macro \emph{not} being defined by using
+\codeindex{\%ifndef} instead of \code{\%ifdef}. You can also test
+for macro definitions in \code{\%elif} blocks by using
+\codeindex{\%elifdef} and \codeindex{\%elifndef}.
+
+\subsection{\codeindex{\%ifmacro}: Testing Multi-Line Macro Existence
+\index{testing, multi-line macro existence}}
+\label{subsec:ifmacro}
+
+The \code{\%ifmacro} directive operates in the same way as the \code{\%ifdef}
+directive, except that it checks for the existence of a multi-line macro.
+
+For example, you may be working with a large project and not have control
+over the macros in a library. You may want to create a macro with one
+name if it doesn't already exist, and another name if one with that name
+does exist.
+
+The \code{\%ifmacro} is considered true if defining a macro with the given name
+and number of arguments would cause a definitions conflict. For example:
+
+\begin{lstlisting}
+%ifmacro MyMacro 1-3
+
+     %error "MyMacro 1-3" causes a conflict with an existing macro.
+
+%else
+
+     %macro MyMacro 1-3
+
+             ; insert code to define the macro
+
+     %endmacro
+
+%endif
+\end{lstlisting}
+
+This will create the macro ``\code{MyMacro 1-3}'' if no macro already exists which
+would conflict with it, and emits a warning if there would be a definition
+conflict.
+
+You can test for the macro not existing by using the \codeindex{\%ifnmacro}
+instead of \code{\%ifmacro}. Additional tests can be performed in
+\code{\%elif} blocks by using \codeindex{\%elifmacro} and
+\codeindex{\%elifnmacro}.
+
+\subsection{\codeindex{\%ifctx}: Testing the Context Stack
+\index{testing, context stack}}
+\label{subsec:ifctx}
+
+The conditional-assembly construct \code{\%ifctx} will cause the
+subsequent code to be assembled if and only if the top context on
+the preprocessor's context stack has the same name as one of the arguments.
+As with \code{\%ifdef}, the inverse and \code{\%elif} forms \codeindex{\%ifnctx},
+\codeindex{\%elifctx} and \codeindex{\%elifnctx} are also supported.
+
+For more details of the context stack, see \fullref{sec:ctxstack}.
+For a sample use of \code{\%ifctx}, see \fullref{sec:blockif}.
+
+%\subsection{\codeindex{\%if}: Testing Arbitrary Numeric Expressions
+%\index{testing, arbitrary numeric expressions}}
+%\label{subsec:if}
+%
+%The conditional-assembly construct \code{\%if expr} will cause the
+%subsequent code to be assembled if and only if the value of the
+%numeric expression \code{expr} is non-zero. An example of the use of
+%this feature is in deciding when to break out of a \code{\%rep}
+%preprocessor loop: see \fullref{subsec:rep} for a detailed example.
+%
+%The expression given to \code{\%if}, and its counterpart
+%\codeindex{\%elif}, is a critical expression (see \fullref{sec:crit}).
+%
+%\code{\%if} extends the normal NASM expression syntax, by providing a
+%set of \textindexlc{relational operators} which are not normally available in
+%expressions. The operators \codeindex{=}, \codeindex{\textless},
+%\codeindex{\textgreater},
+%\codeindex{\textless=}, \codeindex{>=} and \codeindex{<>} test equality,
+%less-than, greater-than, less-or-equal, greater-or-equal and not-equal
+%respectively. The C-like forms \codeindex{==} and \codeindex{!=} are
+%supported as alternative forms of \code{=} and \code{<>}.
+%In addition, low-priority logical operators \codeindex{\&\&},
+%\codeindex{\^{}\^{}} and \codeindex{\|{}\|{}} are provided, supplying
+%\textindex{logical AND}, \textindex{logical XOR} and \textindex{logical OR}.
+%These work like the C logical operators (although C has no logical XOR), in that
+%they always return either 0 or 1, and treat any non-zero input as 1
+%(so that \code{\^\^}, for example, returns 1 if exactly one of its inputs
+%is zero, and 0 otherwise). The relational operators also return 1
+%for true and 0 for false.
+
+%Like other \code{%if} constructs, \code{%if} has a counterpart
+%\codeindex{%elif}, and negative forms \codeindex{%ifn} and \codeindex{%elifn}.
+%
+%\S{ifidn} \codeindex{%ifidn} and \codeindex{%ifidni}: Testing Exact Text
+%Identity\I{testing, exact text identity}
+%
+%The construct \code{%ifidn text1,text2} will cause the subsequent code
+%to be assembled if and only if \code{text1} and \code{text2}, after
+%expanding single-line macros, are identical pieces of text.
+%Differences in white space are not counted.
+%
+%\code{%ifidni} is similar to \code{%ifidn}, but is \i{case-insensitive}.
+%
+%For example, the following macro pushes a register or number on the
+%stack, and allows you to treat \code{IP} as a real register:
+%
+%\c %macro  pushparam 1
+%\c
+%\c   %ifidni %1,ip
+%\c         call    %%label
+%\c   %%label:
+%\c   %else
+%\c         push    %1
+%\c   %endif
+%\c
+%\c %endmacro
+%
+%Like other \code{%if} constructs, \code{%ifidn} has a counterpart
+%\codeindex{%elifidn}, and negative forms \codeindex{%ifnidn} and \codeindex{%elifnidn}.
+%Similarly, \code{%ifidni} has counterparts codeindex{%elifidni},
+%\codeindex{%ifnidni} and \codeindex{%elifnidni}.
+%
+%\S{iftyp} \codeindex{%ifid}, \codeindex{%ifnum}, \codeindex{%ifstr}: Testing Token
+%Types\I{testing, token types}
+%
+%Some macros will want to perform different tasks depending on
+%whether they are passed a number, a string, or an identifier. For
+%example, a string output macro might want to be able to cope with
+%being passed either a string constant or a pointer to an existing
+%string.
+%
+%The conditional assembly construct \code{%ifid}, taking one parameter
+%(which may be blank), assembles the subsequent code if and only if
+%the first token in the parameter exists and is an identifier.
+%\code{%ifnum} works similarly, but tests for the token being a numeric
+%constant; \code{%ifstr} tests for it being a string.
+%
+%For example, the \code{writefile} macro defined in \k{mlmacgre} can be
+%extended to take advantage of \code{%ifstr} in the following fashion:
+%
+%\c %macro writefile 2-3+
+%\c
+%\c   %ifstr %2
+%\c         jmp     %%endstr
+%\c     %if %0 = 3
+%\c       %%str:    db      %2,%3
+%\c     %else
+%\c       %%str:    db      %2
+%\c     %endif
+%\c       %%endstr: mov     dx,%%str
+%\c                 mov     cx,%%endstr-%%str
+%\c   %else
+%\c                 mov     dx,%2
+%\c                 mov     cx,%3
+%\c   %endif
+%\c                 mov     bx,%1
+%\c                 mov     ah,0x40
+%\c                 int     0x21
+%\c
+%\c %endmacro
+%
+%Then the \code{writefile} macro can cope with being called in either of
+%the following two ways:
+%
+%\c         writefile [file], strpointer, length
+%\c         writefile [file], "hello", 13, 10
+%
+%In the first, \code{strpointer} is used as the address of an
+%already-declared string, and \code{length} is used as its length; in
+%the second, a string is given to the macro, which therefore declares
+%it itself and works out the address and length for itself.
+%
+%Note the use of \code{%if} inside the \code{%ifstr}: this is to detect
+%whether the macro was passed two arguments (so the string would be a
+%single string constant, and \code{db %2} would be adequate) or more (in
+%which case, all but the first two would be lumped together into
+%\code{%3}, and \code{db %2,%3} would be required).
+%
+%The usual \I\code{%elifid}\I\code{%elifnum}\I\code{%elifstr}\code{%elif}...,
+%\I\code{%ifnid}\I\code{%ifnnum}\I\code{%ifnstr}\code{%ifn}..., and
+%\I\code{%elifnid}\I\code{%elifnnum}\I\code{%elifnstr}\code{%elifn}... versions
+%exist for each of \code{%ifid}, \code{%ifnum} and \code{%ifstr}.
+%
+%\S{iftoken} \codeindex{%iftoken}: Test for a Single Token
+%
+%Some macros will want to do different things depending on if it is
+%passed a single token (e.g. paste it to something else using \code{%+})
+%versus a multi-token sequence.
+%
+%The conditional assembly construct \code{%iftoken} assembles the
+%subsequent code if and only if the expanded parameters consist of
+%exactly one token, possibly surrounded by whitespace.
+%
+%For example:
+%
+%\c %iftoken 1
+%
+%will assemble the subsequent code, but
+%
+%\c %iftoken -1
+%
+%will not, since \code{-1} contains two tokens: the unary minus operator
+%\code{-}, and the number \code{1}.
+%
+%The usual \codeindex{%eliftoken}, codeindex\{%ifntoken}, and \codeindex{%elifntoken}
+%variants are also provided.
+%
+%\S{ifempty} \codeindex{%ifempty}: Test for Empty Expansion
+%
+%The conditional assembly construct \code{%ifempty} assembles the
+%subsequent code if and only if the expanded parameters do not contain
+%any tokens at all, whitespace excepted.
+%
+%The usual \codeindex{%elifempty}, codeindex\{%ifnempty}, and \codeindex{%elifnempty}
+%variants are also provided.
+%
+%\S{ifenv} \codeindex{%ifenv}: Test If Environment Variable Exists
+%
+%The conditional assembly construct \code{%ifenv} assembles the
+%subsequent code if and only if the environment variable referenced by
+%the \code{%!}\e{variable} directive exists.
+%
+%The usual \codeindex{%elifenv}, codeindex\{%ifnenv}, and \codeindex{%elifnenv}
+%variants are also provided.
+%
+%Just as for \code{%!}\e{variable} the argument should be written as a
+%string if it contains characters that would not be legal in an
+%identifier.  See \k{getenv}.
