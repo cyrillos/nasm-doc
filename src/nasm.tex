@@ -74,6 +74,25 @@
 \newcommand{\fullref}[1]{``\hyperref[{#1}]{\ref*{#1}\xspace\nameref*{#1}}''\xspace}
 
 %
+% Convertion table
+%
+% \C{name}              ->      \chapter{name}
+%                               \label{ch:name}
+% \H{name}              ->      \section{name}
+%                               \label{sec:name}
+% \S{name}              ->      \subsection{name}
+%                               \label{subsec:name}
+% \c{name}              ->      \code{name}
+% \c name               ->      \begin{lstlisting}
+%                               name
+%                               \end{lstlisting}
+% \i{name}              ->      \textindexlc{name}
+% \I{name}              ->      \index{name}
+% \I\c{name}            ->      \indexcode{name}
+% \i\c{name}            ->      \codeindex{name}
+% \k{name}              ->      \fullref{name}
+
+%
 % Index into TOC
 \makeindex[title=Index,columns=2,intoc,options=-s src/idxconf.ist]
 
