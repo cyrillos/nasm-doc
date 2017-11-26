@@ -36,6 +36,7 @@ $(tex-y): $(tex-d)
 nasm.pdf: $(tex-y) .FORCE
 	$(call msg-gen,$@)
 	$(Q) $(XELATEX) $(XELATEX-OPTS) $^
+	$(Q) $(XELATEX) $(XELATEX-OPTS) $^
 all-y += nasm.pdf
 
 # Default target
