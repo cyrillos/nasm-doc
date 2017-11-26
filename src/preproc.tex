@@ -885,3 +885,67 @@ This macro begins by rotating its arguments one place to the
 as \code{\%1}. This is then popped, and the arguments are rotated
 right again, socthe second-to-last argument becomes \code{\%1}.
 Thus the arguments are iterated through in reverse order.
+
+\subsection{\textindexlc{Concatenating Macro Parameters}}
+\label{subsec:concat}
+
+NASM can concatenate macro parameters and macro indirection constructs
+on to other text surrounding them. This allows you to declare a family
+of symbols, for example, in a macro definition. If, for example, you
+wanted to generate a table of key codes along with offsets into the
+table, you could code something like
+
+\begin{lstlisting}
+%macro keytab_entry 2
+
+    keypos%1    equ     $-keytab
+                db      %2
+
+%endmacro
+
+keytab:
+          keytab_entry F1,128+1
+          keytab_entry F2,128+2
+          keytab_entry Return,13
+\end{lstlisting}
+
+which would expand to
+
+\begin{lstlisting}
+keytab:
+keyposF1        equ     $-keytab
+                db     128+1
+keyposF2        equ     $-keytab
+                db      128+2
+keyposReturn    equ     $-keytab
+                db      13
+\end{lstlisting}
+
+You can just as easily concatenate text on to the other end of a
+macro parameter, by writing \code{\%1foo}.
+
+If you need to append a \emph{digit} to a macro parameter, for example
+defining labels \code{foo1} and \code{foo2} when passed the parameter
+\code{foo}, you can't code \code{\%11} because that would be taken as the
+eleventh macro parameter. Instead, you must code
+\index{braces, after \% sign}\code{\%\{1\}1}, which will separate the first
+\code{1} (giving the number of the macro parameter) from the second
+(literal text to be concatenated to the parameter).
+
+This concatenation can also be applied to other preprocessor in-line
+objects, such as macro-local labels (\fullref{subsec:maclocal})
+and context-local labels (\fullref{subsec:ctxlocal}).
+In all cases, ambiguities in syntax can be resolved by enclosing
+everything after the \code{\%} sign and before the literal text
+in braces: so \code{\%\{\%foo\}bar} concatenates the text \code{bar}
+to the end of the real name of the macro-local label \code{\%\%foo}.
+(This is unnecessary, since the form NASM uses for the real names of
+macro-local labels means that the two usages \code{\%\{\%foo\}bar}
+and \code{\%\%foobar} would both expand to the same
+thing anyway; nevertheless, the capability is there.)
+
+The single-line macro indirection construct, \code{\%[...]}
+(\fullref{subsec:indmacro}), behaves the same way as macro
+parameters for the purpose of concatenation.
+
+See also the \code{\%+} operator, \fullref{subsec:concat_macro}.
