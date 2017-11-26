@@ -399,7 +399,6 @@ value, it may change the style of quoting of the input string or
 strings, and possibly use \code{\textbackslash}-escapes inside
 \code{`}-quoted strings.
 
-%fixme ` - listings?!
 \subsection{\textindexlc{Concatenating Strings}: \codeindex{\%strcat}}
 \label{subsec:strcat}
 
@@ -409,17 +408,17 @@ them to a single-line macro.
 For example:
 
 \begin{lstlisting}
-    %strcat alpha "Alpha: ", '12" screen'
+	%strcat alpha "Alpha: ", '12" screen'
 \end{lstlisting}
 
 would assign the value \code{'Alpha: 12" screen'} to \code{alpha}.
 Similarly:
 
 \begin{lstlisting}
-    %strcat beta '"foo"\', "'bar'"
+	%strcat beta '"foo"\', "'bar'"
 \end{lstlisting}
 
-would assign the value \code{'"foo" \textbackslash \textbackslash ''bar''}
+would assign the value \code{`"foo" \textbackslash \textbackslash 'bar'`}
 to \code{beta}.
 
 The use of commas to separate strings is permitted but optional.
@@ -431,7 +430,7 @@ The \code{\%strlen} operator assigns the length of a string to a macro.
 For example:
 
 \begin{lstlisting}
-    %strlen charcnt 'my string'
+	%strlen charcnt 'my string'
 \end{lstlisting}
 
 In this example, \code{charcnt} would receive the value 9, just as
@@ -440,8 +439,8 @@ was a literal string but it could also have been a single-line
 macro that expands to a string, as in the following example:
 
 \begin{lstlisting}
-    %define sometext 'my string'
-    %strlen charcnt sometext
+	%define sometext 'my string'
+	%strlen charcnt sometext
 \end{lstlisting}
 
 As in the first case, this would result in \code{charcnt} being
@@ -455,15 +454,15 @@ Individual letters or substrings in strings can be extracted using the
 than the description:
 
 \begin{lstlisting}
-    %substr mychar 'xyzw' 1     ; equivalent to %define mychar 'x'
-    %substr mychar 'xyzw' 2     ; equivalent to %define mychar 'y'
-    %substr mychar 'xyzw' 3     ; equivalent to %define mychar 'z'
-    %substr mychar 'xyzw' 2,2   ; equivalent to %define mychar 'yz'
-    %substr mychar 'xyzw' 2,-1  ; equivalent to %define mychar 'yzw'
-    %substr mychar 'xyzw' 2,-2  ; equivalent to %define mychar 'yz'
+	%substr mychar 'xyzw' 1     ; equivalent to %define mychar 'x'
+	%substr mychar 'xyzw' 2     ; equivalent to %define mychar 'y'
+	%substr mychar 'xyzw' 3     ; equivalent to %define mychar 'z'
+	%substr mychar 'xyzw' 2,2   ; equivalent to %define mychar 'yz'
+	%substr mychar 'xyzw' 2,-1  ; equivalent to %define mychar 'yzw'
+	%substr mychar 'xyzw' 2,-2  ; equivalent to %define mychar 'yz'
 \end{lstlisting}
 
-As with \code{\%strlen} (see \fullref{subse:strlen}), the first
+As with \code{\%strlen} (see \fullref{subsec:strlen}), the first
 parameter is the single-line macro to be created and the second
 is the string. The third parameter specifies the first character
 to be selected, and the optional fourth parameter (preceeded by comma)
@@ -482,18 +481,18 @@ and TASM: a multi-line macro definition in NASM looks something like
 this.
 
 \begin{lstlisting}
-    %macro  prologue 1
-        push    ebp
-        mov     ebp,esp
-        sub     esp,%1
-    %endmacro
+	%macro  prologue 1
+		push    ebp
+		mov     ebp,esp
+		sub     esp,%1
+	%endmacro
 \end{lstlisting}
 
 This defines a C-like function prologue as a macro: so you would
 invoke the macro with a call such as
 
 \begin{lstlisting}
-    myfunc:   prologue 12
+	myfunc:   prologue 12
 \end{lstlisting}
 
 which would expand to the three lines of code
@@ -520,13 +519,15 @@ in \index{braces, around macro parameters}braces. So you could code
 things like
 
 \begin{lstlisting}
-    %macro  silly 2
-        %2: db      %1
-    %endmacro
+%macro  silly 2
 
-        silly 'a', letter_a         ; letter_a:  db 'a'
-        silly 'ab', string_ab       ; string_ab: db 'ab'
-        silly {13,10}, crlf         ; crlf:      db 13,10
+    %2: db      %1
+
+%endmacro
+
+        silly 'a', letter_a             ; letter_a:  db 'a'
+        silly 'ab', string_ab           ; string_ab: db 'ab'
+        silly {13,10}, crlf             ; crlf:      db 13,10
 \end{lstlisting}
 
 \subsection{Overloading Multi-Line Macros\index{overloading, multi-line macros}}
@@ -538,10 +539,12 @@ parameters. This time, no exception is made for macros with no
 parameters at all. So you could define
 
 \begin{lstlisting}
-    %macro  prologue 0
+%macro  prologue 0
+
         push    ebp
         mov     ebp,esp
-    %endmacro
+
+%endmacro
 \end{lstlisting}
 
 to define an alternative form of the function prologue which
@@ -551,17 +554,17 @@ Sometimes, however, you might want to ``overload'' a machine
 instruction; for example, you might want to define
 
 \begin{lstlisting}
-    %macro  push 2
-        push    %1
-        push    %2
-    %endmacro
+%macro  push 2
+    push    %1
+    push    %2
+%endmacro
 \end{lstlisting}
 
 so that you could code
 
 \begin{lstlisting}
-    push    ebx         ; this line is not a macro call
-    push    eax,ecx     ; but this one is
+push    ebx         ; this line is not a macro call
+push    eax,ecx     ; but this one is
 \end{lstlisting}
 
 Ordinarily, NASM will give a warning for the first of the above two
@@ -582,11 +585,11 @@ So you can invent an instruction which executes a \code{RET} if the
 \code{Z} flag is set by doing this:
 
 \begin{lstlisting}
-    %macro  retz 0
-            jnz     %%skip
-            ret
-        %%skip:
-    %endmacro
+%macro  retz 0
+        jnz     %%skip
+        ret
+    %%skip:
+%endmacro
 \end{lstlisting}
 
 You can call this macro as many times as you want, and every time
