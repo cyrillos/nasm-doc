@@ -795,3 +795,93 @@ The maximum parameter count can be infinite, denoted by \code{*}. In
 this case, of course, it is impossible to provide a \emph{full} set of
 default parameters. Examples of this usage are shown in
 \fullref{subsec:rotate}.
+
+\subsection{\codeindex{\%0}: \index{counting macro parameters}Macro Parameter Counter}
+\label{subsec:percent0}
+
+The parameter reference \code{\%0} will return a numeric constant giving the
+number of parameters received, that is, if \code{\%0} is n then \code{\%}n
+is the last parameter. \code{\%0} is mostly useful for macros that can take a variable
+number of parameters. It can be used as an argument to \code{\%rep}
+(see \fullref{subsec:rep}) in order to iterate through all the parameters
+of a macro. Examples are given in \fullref{subsec:rotate}.
+
+\subsection{\codeindex{\%00}: \index{label preceeding macro}Label Preceeding Macro}
+\label{subsec:percent00}
+
+\code{\%00} will return the label preceeding the macro invocation, if any. The
+label must be on the same line as the macro invocation, may be a local label
+(see \fullref{locallab}), and need not end in a colon.
+
+\subsection{\codeindex{\%rotate}: \textindex{Rotating Macro Parameters}}
+\label{subsec:rotate}
+
+Unix shell programmers will be familiar with the \index{shift
+command}\code{shift} shell command, which allows the arguments passed
+to a shell script (referenced as \code{\$1}, \code{\$2} and so on) to be
+moved left by one place, so that the argument previously referenced
+as \code{\$2} becomes available as \code{\$1}, and the argument previously
+referenced as \code{\$1} is no longer available at all.
+
+NASM provides a similar mechanism, in the form of \code{\%rotate}. As
+its name suggests, it differs from the Unix \code{shift} in that no
+parameters are lost: parameters rotated off the left end of the
+argument list reappear on the right, and vice versa.
+
+\code{\%rotate} is invoked with a single numeric argument (which may be
+an expression). The macro parameters are rotated to the left by that
+many places. If the argument to \code{\%rotate} is negative, the macro
+parameters are rotated to the right.
+
+\index{iterating over macro parameters}So a pair of macros to save and
+restore a set of registers might work as follows:
+
+\begin{lstlisting}
+%macro  multipush 1-*
+
+  %rep  %0
+        push    %1
+  %rotate 1
+  %endrep
+
+%endmacro
+\end{lstlisting}
+
+This macro invokes the \code{PUSH} instruction on each of its arguments
+in turn, from left to right. It begins by pushing its first
+argument, \code{\%1}, then invokes \code{\%rotate} to move all the arguments
+one place to the left, so that the original second argument is now
+available as \code{\%1}. Repeating this procedure as many times as there
+were arguments (achieved by supplying \code{\%0} as the argument to
+\code{\%rep}) causes each argument in turn to be pushed.
+
+Note also the use of \code{*} as the maximum parameter count,
+indicating that there is no upper limit on the number of parameters
+you may supply to the \codeindex{multipush} macro.
+
+It would be convenient, when using this macro, to have a \code{POP}
+equivalent, which \emph{didn't} require the arguments to be given in
+reverse order. Ideally, you would write the \code{multipush} macro
+call, then cut-and-paste the line to where the pop needed to be
+done, and change the name of the called macro to \code{multipop}, and
+the macro would take care of popping the registers in the opposite
+order from the one in which they were pushed.
+
+This can be done by the following definition:
+
+\begin{lstlisting}
+%macro  multipop 1-*
+
+  %rep %0
+  %rotate -1
+        pop     %1
+  %endrep
+
+%endmacro
+\end{lstlisting}
+
+This macro begins by rotating its arguments one place to the
+\emph{right}, so that the original \emph{last} argument appears
+as \code{\%1}. This is then popped, and the arguments are rotated
+right again, socthe second-to-last argument becomes \code{\%1}.
+Thus the arguments are iterated through in reverse order.
