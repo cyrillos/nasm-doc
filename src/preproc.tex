@@ -607,3 +607,191 @@ interfering with the local label mechanism, as described in
 \fullref{subsec:locallab}. You should avoid defining your own labels
 in this form (the \code{..@} prefix, then a number, then another period)
 in case they interfere with macro-local labels.
+
+\subsection{\textindexlc{Greedy Macro Parameters}}
+\label{subsec:mlmacgre}
+
+Occasionally it is useful to define a macro which lumps its entire
+command line into one parameter definition, possibly after
+extracting one or two smaller parameters from the front. An example
+might be a macro to write a text string to a file in MS-DOS, where
+you might want to be able to write
+
+\begin{lstlisting}
+writefile [filehandle],"hello, world",13,10
+\end{lstlisting}
+
+NASM allows you to define the last parameter of a macro to be
+\emph{greedy}, meaning that if you invoke the macro with more
+parameters than it expects, all the spare parameters get lumped into
+the last defined one along with the separating commas. So if you
+code:
+
+\begin{lstlisting}
+%macro  writefile 2+
+
+        jmp     %%endstr
+  %%str:        db      %2
+  %%endstr:
+        mov     dx,%%str
+        mov     cx,%%endstr-%%str
+        mov     bx,%1
+        mov     ah,0x40
+        int     0x21
+
+%endmacro
+\end{lstlisting}
+
+then the example call to \code{writefile} above will work as expected:
+the text before the first comma, \code{[filehandle]}, is used as the
+first macro parameter and expanded when \code{\%1} is referred to, and
+all the subsequent text is lumped into \code{\%2} and placed after the
+\code{db}.
+
+The greedy nature of the macro is indicated to NASM by the use of
+the \index{modifier, +}\code{+} sign after the parameter count on the
+\code{\%macro} line.
+
+If you define a greedy macro, you are effectively telling NASM how
+it should expand the macro given \emph{any} number of parameters from
+the actual number specified up to infinity; in this case, for
+example, NASM now knows what to do when it sees a call to
+\code{writefile} with 2, 3, 4 or more parameters. NASM will take this
+into account when overloading macros, and will not allow you to
+define another form of \code{writefile} taking 4 parameters (for
+example).
+
+Of course, the above macro could have been implemented as a
+non-greedy macro, in which case the call to it would have had to
+look like
+
+\begin{lstlisting}
+writefile [filehandle], {"hello, world",13,10}
+\end{lstlisting}
+
+NASM provides both mechanisms for putting \textindex{commas in macro
+parameters}, and you choose which one you prefer for each macro
+definition.
+
+See \fullref{subsec:sectmac} for a better way to write the above macro.
+
+\subsection{\textindexlc{Macro Parameters Range}}
+\label{subsec:mlmacrange}
+
+NASM allows you to expand parameters via special construction \c{\%\{x:y\}}
+where \c{x} is the first parameter index and \c{y} is the last. Any index can
+be either negative or positive but must never be zero.
+
+For example
+
+\begin{lstlisting}
+%macro mpar 1-*
+     db %{3:5}
+%endmacro
+
+mpar 1,2,3,4,5,6
+\end{lstlisting}
+
+expands to \code{3,4,5} range.
+
+Even more, the parameters can be reversed so that
+
+\begin{lstlisting}
+%macro mpar 1-*
+     db %{5:3}
+%endmacro
+
+mpar 1,2,3,4,5,6
+\end{lstlisting}
+
+expands to \code{5,4,3} range.
+
+But even this is not the last. The parameters can be addressed via negative
+indices so NASM will count them reversed. The ones who know Python may see
+the analogue here.
+
+\begin{lstlisting}
+%macro mpar 1-*
+     db %{-1:-3}
+%endmacro
+
+mpar 1,2,3,4,5,6
+\end{lstlisting}
+
+expands to \code{6,5,4} range.
+
+Note that NASM uses \textindex{comma} to separate parameters being expanded.
+
+By the way, here is a trick - you might use the index \code{\%{-1:-1}}
+which gives you the \textindex{last} argument passed to a macro.
+
+\subsection{\textindexlc{Default Macro Parameters}}
+\label{subsec:mlmacdef}
+
+NASM also allows you to define a multi-line macro with a \emph{range}
+of allowable parameter counts. If you do this, you can specify
+defaults for \textindex{omitted parameters}. So, for example:
+
+\begin{lstlisting}
+%macro  die 0-1 "Painful program death has occurred."
+
+        writefile 2,%1
+        mov     ax,0x4c01
+        int     0x21
+
+%endmacro
+\end{lstlisting}
+
+This macro (which makes use of the \code{writefile} macro defined in
+\fullref{subsec:mlmacgre}) can be called with an explicit error message,
+which it will display on the error output stream before exiting, or it can be
+called with no parameters, in which case it will use the default
+error message supplied in the macro definition.
+
+In general, you supply a minimum and maximum number of parameters
+for a macro of this type; the minimum number of parameters are then
+required in the macro call, and then you provide defaults for the
+optional ones. So if a macro definition began with the line
+
+\begin{lstlisting}
+%macro foobar 1-3 eax,[ebx+2]
+\end{lstlisting}
+
+then it could be called with between one and three parameters, and
+\code{\%1} would always be taken from the macro call. \code{\%2}, if not
+specified by the macro call, would default to \code{eax}, and \code{\%3}
+if not specified would default to \code{[ebx+2]}.
+
+You can provide extra information to a macro by providing
+too many default parameters:
+
+\begin{lstlisting}
+%macro quux 1 something
+\end{lstlisting}
+
+This will trigger a warning by default; see \fullref{subsec:opt-w} for
+more information.
+When \code{quux} is invoked, it receives not one but two parameters.
+\code{something} can be referred to as \code{\%2}. The difference
+between passing \code{something} this way and writing \code{something}
+in the macro body is that with this way \code{something} is evaluated
+when the macro is defined, not when it is expanded.
+
+You may omit parameter defaults from the macro definition, in which
+case the parameter default is taken to be blank. This can be useful
+for macros which can take a variable number of parameters, since the
+\codeindex{\%0} token (see \fullref{subsec:percent0}) allows you to
+determine how many parameters were really passed to the macro call.
+
+This defaulting mechanism can be combined with the greedy-parameter
+mechanism; so the \code{die} macro above could be made more powerful,
+and more useful, by changing the first line of the definition to
+
+\begin{lstlisting}
+%macro die 0-1+ "Painful program death has occurred.",13,10
+\end{lstlisting}
+
+The maximum parameter count can be infinite, denoted by \code{*}. In
+this case, of course, it is impossible to provide a \emph{full} set of
+default parameters. Examples of this usage are shown in
+\fullref{subsec:rotate}.
