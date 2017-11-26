@@ -197,9 +197,9 @@ have, in fact, exactly the same effect.
 \code{\%[...]} concatenates to adjacent tokens in the same way that
 multi-line macro parameters do, see \fullref{sec:concat} for details.
 
-% FIXME concat_macro key
+% FIXME concatmacro key
 \subsection{Concatenating Single Line Macro Tokens: \codeindex{\%+}}
-\label{subsec:concat_macro}
+\label{subsec:concatmacro}
 
 Individual tokens in single line macros can be concatenated, to produce
 longer tokens for later processing. This can be useful if there are
@@ -948,4 +948,94 @@ The single-line macro indirection construct, \code{\%[...]}
 (\fullref{subsec:indmacro}), behaves the same way as macro
 parameters for the purpose of concatenation.
 
-See also the \code{\%+} operator, \fullref{subsec:concat_macro}.
+See also the \code{\%+} operator, \fullref{subsec:concatmacro}.
+
+\subsection{\textindexlc{Condition Codes as Macro Parameters}}
+\label{subsec:mlmaccc}
+
+NASM can give special treatment to a macro parameter which contains
+a condition code. For a start, you can refer to the macro parameter
+\code{\%1} by means of the alternative syntax \codeindex{\%+1},
+which informs NASM that this macro parameter is supposed to contain
+a condition code, and will cause the preprocessor to report an
+error message if the macro is called with a parameter which is
+\emph{not} a valid condition code.
+
+Far more usefully, though, you can refer to the macro parameter by
+means of \codeindex{\%-1}, which NASM will expand as the \emph{inverse}
+condition code. So the \code{retz} macro defined in \fullref{subsec:maclocal}
+can be replaced by a general \textindexlc{conditional-return macro} like this:
+
+\begin{lstlisting}
+%macro  retc 1
+
+        j%-1    %%skip
+        ret
+  %%skip:
+
+%endmacro
+\end{lstlisting}
+
+This macro can now be invoked using calls like \code{retc ne}, which
+will cause the conditional-jump instruction in the macro expansion
+to come out as \code{JE}, or \code{retc po} which will make the jump a
+\code{JPE}.
+
+The \code{\%+1} macro-parameter reference is quite happy to interpret
+the arguments \code{CXZ} and \code{ECXZ} as valid condition codes;
+however, \code{\%-1} will report an error if passed either of these,
+because no inverse condition code exists.
+
+\subsection{\textindexlc{Disabling Listing Expansion}\indexcode{.nolist}}
+\label{subsec:nolist}
+
+When NASM is generating a listing file from your program, it will
+generally expand multi-line macros by means of writing the macro
+call and then listing each line of the expansion. This allows you to
+see which instructions in the macro expansion are generating what
+code; however, for some macros this clutters the listing up
+unnecessarily.
+
+NASM therefore provides the \code{.nolist} qualifier, which you can
+include in a macro definition to inhibit the expansion of the macro
+in the listing file. The \code{.nolist} qualifier comes directly after
+the number of parameters, like this:
+
+\begin{lstlisting}
+\c %macro foo 1.nolist
+\end{lstlisting}
+
+Or like this:
+
+\begin{lstlisting}
+\c %macro bar 1-5+.nolist a,b,c,d,e,f,g,h
+\end{lstlisting}
+
+\subsection{Undefining Multi-Line Macros: \codeindex{\%unmacro}}
+\label{subsec:unmacro}
+
+Multi-line macros can be removed with the \code{\%unmacro} directive.
+Unlike the \code{\%undef} directive, however, \code{\%unmacro} takes an
+argument specification, and will only remove \index{exact matches} with
+that argument specification.
+
+For example:
+
+\begin{lstlisting}
+%macro foo 1-3
+        ; Do something
+%endmacro
+%unmacro foo 1-3
+\end{lstlisting}
+
+removes the previously defined macro \code{foo}, but
+
+\begin{lstlisting}
+%macro bar 1-3
+        ; Do something
+%endmacro
+%unmacro bar 1
+\end{lstlisting}
+
+does \emph{not} remove the macro \code{bar}, since the argument
+specification does not match exactly.
