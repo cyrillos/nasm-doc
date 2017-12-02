@@ -1496,3 +1496,268 @@ Standard macro packages are protected from multiple inclusion. When a
 standard macro package is used, a testable single-line macro of the
 form \code{\_\_USE\_\emph{package}\_\_} is also defined,
 see \fullref{subsec:use-def}.
+
+\section{The \textindexlc{Context Stack}}
+\label{sec:ctxstack}
+
+Having labels that are local to a macro definition is sometimes not
+quite powerful enough: sometimes you want to be able to share labels
+between several macro calls. An example might be a \code{REPEAT} ...
+\code{UNTIL} loop, in which the expansion of the \code{REPEAT} macro
+would need to be able to refer to a label which the \code{UNTIL} macro
+had defined. However, for such a macro you would also want to be
+able to nest these loops.
+
+NASM provides this level of power by means of a \emph{context stack}.
+The preprocessor maintains a stack of \emph{contexts}, each of which is
+characterized by a name. You add a new context to the stack using
+the \codeindex{\%push} directive, and remove one using \codeindex{\%pop}.
+You can define labels that are local to a particular context on the stack.
+
+\subsection{\codeindex{\%push} and \codeindex{\%pop}: Creating and Removing Contexts}
+\label{subsec:pushpop}
+\index{creating contexts}
+\index{removing contexts}
+
+The \code{\%push} directive is used to create a new context and place it
+on the top of the context stack. \code{\%push} takes an optional argument,
+which is the name of the context. For example:
+
+\begin{lstlisting}
+%push    foobar
+\end{lstlisting}
+
+This pushes a new context called \code{foobar} on the stack. You can have
+several contexts on the stack with the same name: they can still be
+distinguished.  If no name is given, the context is unnamed (this is
+normally used when both the \code{\%push} and the \code{\%pop} are inside a
+single macro definition.)
+
+The directive \code{\%pop}, taking one optional argument, removes the top
+context from the context stack and destroys it, along with any
+labels associated with it.  If an argument is given, it must match the
+name of the current context, otherwise it will issue an error.
+
+\subsection{\textindexlc{Context-Local Labels}}
+\label{subsec:ctxlocal}
+
+Just as the usage \code{\%\%foo} defines a label which is local to the
+particular macro call in which it is used, the usage \indexcode{\%\$}\code{\%\$foo}
+is used to define a label which is local to the context on the top
+of the context stack. So the \code{REPEAT} and \code{UNTIL} example given
+above could be implemented by means of:
+
+\begin{lstlisting}
+%macro repeat 0
+
+    %push   repeat
+    %$begin:
+
+%endmacro
+
+%macro until 1
+
+        j%-1    %$begin
+    %pop
+
+%endmacro
+\end{lstlisting}
+
+and invoked by means of, for example,
+
+\begin{lstlisting}
+mov     cx,string
+repeat
+add     cx,3
+scasb
+until   e
+\end{lstlisting}
+
+which would scan every fourth byte of a string in search of the byte
+in \code{AL}.
+
+If you need to define, or access, labels local to the context
+\emph{below} the top one on the stack, you can use
+\indexcode{\%\$\$}\code{\%\$\$foo}, or \code{\%\$\$\$foo} for
+the context below that, and so on.
+
+\subsection{\textindexlc{Context-Local Single-Line Macros}}
+\label{subsec:ctxdefine}
+
+NASM also allows you to define single-line macros which are local to
+a particular context, in just the same way:
+
+\begin{lstlisting}
+%define %$localmac 3
+\end{lstlisting}
+
+will define the single-line macro \code{\%\$localmac} to be local to the
+top context on the stack. Of course, after a subsequent \code{\%push},
+it can then still be accessed by the name \code{\%\$\$localmac}.
+
+\subsection{\textindexlc{Context Fall-Through Lookup} \emph{(deprecated)}}
+\label{subsec:ctxfallthrough}
+
+Context fall-through lookup (automatic searching of outer contexts)
+is a feature that was added in NASM version 0.98.03. Unfortunately,
+this feature is unintuitive and can result in buggy code that would
+have otherwise been prevented by NASM's error reporting. As a result,
+this feature has been \emph{deprecated}. NASM version 2.09 will issue a
+warning when usage of this \emph{deprecated} feature is detected. Starting
+with NASM version 2.10, usage of this \emph{deprecated} feature will simply
+result in an \emph{expression syntax error}.
+
+An example usage of this \emph{deprecated} feature follows:
+
+\begin{lstlisting}
+%macro ctxthru 0
+%push ctx1
+    %assign %$external 1
+        %push ctx2
+            %assign %$internal 1
+            mov eax, %$external
+            mov eax, %$internal
+        %pop
+%pop
+%endmacro
+\end{lstlisting}
+
+As demonstrated, \code{\%\$external} is being defined in the \code{ctx1}
+context and referenced within the \code{ctx2} context. With context
+fall-through lookup, referencing an undefined context-local macro
+like this implicitly searches through all outer contexts until a match
+is made or isn't found in any context. As a result, \code{\%\$external}
+referenced within the \code{ctx2} context would implicitly use \code{\%\$external}
+as defined in \code{ctx1}. Most people would expect NASM to issue an error in
+this situation because \code{\%\$external} was never defined within \code{ctx2}
+and also isn't qualified with the proper context depth, \code{\%\$\$external}.
+
+Here is a revision of the above example with proper context depth:
+
+\begin{lstlisting}
+%macro ctxthru 0
+%push ctx1
+    %assign %$external 1
+        %push ctx2
+            %assign %$internal 1
+            mov eax, %$$external
+            mov eax, %$internal
+        %pop
+%pop
+%endmacro
+\end{lstlisting}
+
+As demonstrated, \code{\%\$external} is still being defined in the \code{ctx1}
+context and referenced within the \code{ctx2} context. However, the
+reference to \code{\%\$external} within \code{ctx2} has been fully qualified with
+the proper context depth, \code{\%\$\$external}, and thus is no longer ambiguous,
+unintuitive or erroneous.
+
+\subsection{\codeindex{\%repl}: Renaming a Context}
+\label{subsec:ctxrepl}
+\index{renaming contexts}
+
+If you need to change the name of the top context on the stack (in
+order, for example, to have it respond differently to \code{\%ifctx}),
+you can execute a \code{\%pop} followed by a \code{\%push}; but this will
+have the side effect of destroying all context-local labels and
+macros associated with the context that was just popped.
+
+NASM provides the directive \code{\%repl}, which \emph{replaces} a context
+with a different name, without touching the associated macros and
+labels. So you could replace the destructive code
+
+\begin{lstlisting}
+%pop
+%push   newname
+\end{lstlisting}
+
+with the non-destructive version \code{\%repl newname}.
+
+\subsection{Example Use of the \textindexlc{Context Stack}: \textindexlc{Block IFs}}
+\label{subsec:blockif}
+
+This example makes use of almost all the context-stack features,
+including the conditional-assembly construct \codeindex{\%ifctx}, to
+implement a block IF statement as a set of macros.
+
+\begin{lstlisting}
+%macro if 1
+
+    %push if
+    j%-1  %$ifnot
+
+%endmacro
+
+%macro else 0
+
+  %ifctx if
+        %repl   else
+        jmp     %$ifend
+        %$ifnot:
+  %else
+        %error  "expected `if' before `else'"
+  %endif
+
+%endmacro
+
+%macro endif 0
+
+  %ifctx if
+        %$ifnot:
+        %pop
+  %elifctx      else
+        %$ifend:
+        %pop
+  %else
+        %error  "expected `if' or `else' before `endif'"
+  %endif
+
+%endmacro
+\end{lstlisting}
+
+This code is more robust than the \code{REPEAT} and \code{UNTIL} macros
+given in \fullref{subsec:ctxlocal}, because it uses conditional assembly to check
+that the macros are issued in the right order (for example, not calling \code{endif}
+before \code{if}) and issues a \code{\%error} if they're not.
+
+In addition, the \code{endif} macro has to be able to cope with the two
+distinct cases of either directly following an \code{if}, or following
+an \code{else}. It achieves this, again, by using conditional assembly
+to do different things depending on whether the context on top of
+the stack is \code{if} or \code{else}.
+
+The \code{else} macro has to preserve the context on the stack, in
+order to have the \code{\%\$ifnot} referred to by the \code{if} macro be the
+same as the one defined by the \code{endif} macro, but has to change
+the context's name so that \code{endif} will know there was an
+intervening \code{else}. It does this by the use of \code{\%repl}.
+
+A sample usage of these macros might look like:
+
+\begin{lstlisting}
+cmp     ax,bx
+
+if ae
+       cmp     bx,cx
+
+       if ae
+               mov     ax,cx
+       else
+               mov     ax,bx
+       endif
+
+else
+       cmp     ax,cx
+
+       if ae
+               mov     ax,cx
+       endif
+
+endif
+\end{lstlisting}
+
+The block-\code{IF} macros handle nesting quite happily, by means of
+pushing another context, describing the inner \code{if}, on top of the
+one describing the outer \code{if}; thus \code{else} and \code{endif}
+always refer to the last unmatched \code{if} or \code{else}.
