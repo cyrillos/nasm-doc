@@ -1316,18 +1316,19 @@ The conditional assembly construct \code{\%ifempty} assembles the
 subsequent code if and only if the expanded parameters do not contain
 any tokens at all, whitespace excepted.
 
-The usual \codeindex{\%elifempty}, \codeindex\{\%ifnempty}, and
+The usual \codeindex{\%elifempty}, \codeindex{\%ifnempty}, and
 \codeindex{\%elifnempty} variants are also provided.
 
-%\S{ifenv} \codeindex{%ifenv}: Test If Environment Variable Exists
-%
-%The conditional assembly construct \code{%ifenv} assembles the
-%subsequent code if and only if the environment variable referenced by
-%the \code{%!}\e{variable} directive exists.
-%
-%The usual \codeindex{%elifenv}, codeindex\{%ifnenv}, and \codeindex{%elifnenv}
-%variants are also provided.
-%
-%Just as for \code{%!}\e{variable} the argument should be written as a
-%string if it contains characters that would not be legal in an
-%identifier.  See \k{getenv}.
+\label{subsec:ifenv}
+\subsection{\codeindex{\%ifenv}: Test If Environment Variable Exists}
+
+The conditional assembly construct \code{\%ifenv} assembles the
+subsequent code if and only if the environment variable referenced by
+the \code{\%!}\emph{variable} directive exists.
+
+The usual \codeindex{\%elifenv}, codeindex{\%ifnenv}, and \codeindex{\%elifnenv}
+variants are also provided.
+
+Just as for \code{\%!}\emph{variable} the argument should be written as a
+string if it contains characters that would not be legal in an
+identifier. See \fullref{subsec:getenv}.
