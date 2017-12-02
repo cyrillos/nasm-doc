@@ -1280,30 +1280,35 @@ The usual \indexcode{\%elifid}\indexcode{\%elifnum}\indexcode{\%elifstr}\code{\%
 \indexcode{\%elifnid}\indexcode{\%elifnnum}\indexcode{\%elifnstr}\code{\%elifn}...
 versions exist for each of \code{\%ifid}, \code{\%ifnum} and \code{\%ifstr}.
 
-%\S{iftoken} \codeindex{%iftoken}: Test for a Single Token
-%
-%Some macros will want to do different things depending on if it is
-%passed a single token (e.g. paste it to something else using \code{%+})
-%versus a multi-token sequence.
-%
-%The conditional assembly construct \code{%iftoken} assembles the
-%subsequent code if and only if the expanded parameters consist of
-%exactly one token, possibly surrounded by whitespace.
-%
-%For example:
-%
-%\c %iftoken 1
-%
-%will assemble the subsequent code, but
-%
-%\c %iftoken -1
-%
-%will not, since \code{-1} contains two tokens: the unary minus operator
-%\code{-}, and the number \code{1}.
-%
-%The usual \codeindex{%eliftoken}, codeindex\{%ifntoken}, and \codeindex{%elifntoken}
-%variants are also provided.
-%
+\subsection{\codeindex{\%iftoken}: Test for a Single Token}
+\label{subsec:iftoken}
+
+Some macros will want to do different things depending on if it is
+passed a single token (e.g. paste it to something else using \code{\%+})
+versus a multi-token sequence.
+
+The conditional assembly construct \code{\%iftoken} assembles the
+subsequent code if and only if the expanded parameters consist of
+exactly one token, possibly surrounded by whitespace.
+
+For example:
+
+\begin{lstlisting}
+%iftoken 1
+\end{lstlisting}
+
+will assemble the subsequent code, but
+
+\begin{lstlisting}
+%iftoken -1
+\end{lstlisting}
+
+will not, since \code{-1} contains two tokens: the unary minus operator
+\code{-}, and the number \code{1}.
+
+The usual \codeindex{\%eliftoken}, \codeindex{\%ifntoken}, and
+\codeindex{\%elifntoken} variants are also provided.
+
 %\S{ifempty} \codeindex{%ifempty}: Test for Empty Expansion
 %
 %The conditional assembly construct \code{%ifempty} assembles the
