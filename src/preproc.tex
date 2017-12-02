@@ -1182,8 +1182,8 @@ for true and 0 for false.
 Like other \code{\%if} constructs, \code{\%if} has a counterpart
 \codeindex{\%elif}, and negative forms \codeindex{\%ifn} and \codeindex{\%elifn}.
 
-\label{subsec:ifidn}
 \subsection{\codeindex{\%ifidn} and \codeindex{\%ifidni}: Testing Exact Text Identity}
+\label{subsec:ifidn}
 \index{testing, exact text identity}
 
 The construct \code{\%ifidn text1,text2} will cause the subsequent code
@@ -1214,67 +1214,72 @@ Like other \code{\%if} constructs, \code{\%ifidn} has a counterpart
 \codeindex{\%elifnidn}. Similarly, \code{\%ifidni} has counterparts
 \codeindex{\%elifidni}, \codeindex{\%ifnidni} and \codeindex{\%elifnidni}.
 
-%\S{iftyp} \codeindex{%ifid}, \codeindex{%ifnum}, \codeindex{%ifstr}: Testing Token
-%Types\I{testing, token types}
-%
-%Some macros will want to perform different tasks depending on
-%whether they are passed a number, a string, or an identifier. For
-%example, a string output macro might want to be able to cope with
-%being passed either a string constant or a pointer to an existing
-%string.
-%
-%The conditional assembly construct \code{%ifid}, taking one parameter
-%(which may be blank), assembles the subsequent code if and only if
-%the first token in the parameter exists and is an identifier.
-%\code{%ifnum} works similarly, but tests for the token being a numeric
-%constant; \code{%ifstr} tests for it being a string.
-%
-%For example, the \code{writefile} macro defined in \k{mlmacgre} can be
-%extended to take advantage of \code{%ifstr} in the following fashion:
-%
-%\c %macro writefile 2-3+
-%\c
-%\c   %ifstr %2
-%\c         jmp     %%endstr
-%\c     %if %0 = 3
-%\c       %%str:    db      %2,%3
-%\c     %else
-%\c       %%str:    db      %2
-%\c     %endif
-%\c       %%endstr: mov     dx,%%str
-%\c                 mov     cx,%%endstr-%%str
-%\c   %else
-%\c                 mov     dx,%2
-%\c                 mov     cx,%3
-%\c   %endif
-%\c                 mov     bx,%1
-%\c                 mov     ah,0x40
-%\c                 int     0x21
-%\c
-%\c %endmacro
-%
-%Then the \code{writefile} macro can cope with being called in either of
-%the following two ways:
-%
-%\c         writefile [file], strpointer, length
-%\c         writefile [file], "hello", 13, 10
-%
-%In the first, \code{strpointer} is used as the address of an
-%already-declared string, and \code{length} is used as its length; in
-%the second, a string is given to the macro, which therefore declares
-%it itself and works out the address and length for itself.
-%
-%Note the use of \code{%if} inside the \code{%ifstr}: this is to detect
-%whether the macro was passed two arguments (so the string would be a
-%single string constant, and \code{db %2} would be adequate) or more (in
-%which case, all but the first two would be lumped together into
-%\code{%3}, and \code{db %2,%3} would be required).
-%
-%The usual \I\code{%elifid}\I\code{%elifnum}\I\code{%elifstr}\code{%elif}...,
-%\I\code{%ifnid}\I\code{%ifnnum}\I\code{%ifnstr}\code{%ifn}..., and
-%\I\code{%elifnid}\I\code{%elifnnum}\I\code{%elifnstr}\code{%elifn}... versions
-%exist for each of \code{%ifid}, \code{%ifnum} and \code{%ifstr}.
-%
+\label{subsec:iftyp}
+\subsection{\codeindex{\%ifid}, \codeindex{\%ifnum}, \codeindex{\%ifstr}: Testing Token Types}
+\index{testing, token types}
+
+Some macros will want to perform different tasks depending on
+whether they are passed a number, a string, or an identifier. For
+example, a string output macro might want to be able to cope with
+being passed either a string constant or a pointer to an existing
+string.
+
+The conditional assembly construct \code{\%ifid}, taking one parameter
+(which may be blank), assembles the subsequent code if and only if
+the first token in the parameter exists and is an identifier.
+\code{\%ifnum} works similarly, but tests for the token being a numeric
+constant; \code{\%ifstr} tests for it being a string.
+
+For example, the \code{writefile} macro defined in \fullref{subsec:mlmacgre}
+can be extended to take advantage of \code{\%ifstr} in the following fashion:
+
+\begin{lstlisting}
+%macro writefile 2-3+
+
+  %ifstr %2
+        jmp     %%endstr
+    %if %0 = 3
+      %%str:    db      %2,%3
+    %else
+      %%str:    db      %2
+    %endif
+      %%endstr: mov     dx,%%str
+                mov     cx,%%endstr-%%str
+  %else
+                mov     dx,%2
+                mov     cx,%3
+  %endif
+                mov     bx,%1
+                mov     ah,0x40
+                int     0x21
+
+%endmacro
+\end{lstlisting}
+
+Then the \code{writefile} macro can cope with being called in either of
+the following two ways:
+
+\begin{lstlisting}
+writefile [file], strpointer, length
+writefile [file], "hello", 13, 10
+\end{lstlisting}
+
+In the first, \code{strpointer} is used as the address of an
+already-declared string, and \code{length} is used as its length; in
+the second, a string is given to the macro, which therefore declares
+it itself and works out the address and length for itself.
+
+Note the use of \code{\%if} inside the \code{\%ifstr}: this is to detect
+whether the macro was passed two arguments (so the string would be a
+single string constant, and \code{db \%2} would be adequate) or more (in
+which case, all but the first two would be lumped together into
+\code{\%3}, and \code{db \%2,\%3} would be required).
+
+The usual \indexcode{\%elifid}\indexcode{\%elifnum}\indexcode{\%elifstr}\code{\%elif}...,
+\indexcode{\%ifnid}\indexcode{\%ifnnum}\indexcode{\%ifnstr}\code{\%ifn}..., and
+\indexcode{\%elifnid}\indexcode{\%elifnnum}\indexcode{\%elifnstr}\code{\%elifn}...
+versions exist for each of \code{\%ifid}, \code{\%ifnum} and \code{\%ifstr}.
+
 %\S{iftoken} \codeindex{%iftoken}: Test for a Single Token
 %
 %Some macros will want to do different things depending on if it is
