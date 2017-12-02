@@ -1149,38 +1149,38 @@ As with \code{\%ifdef}, the inverse and \code{\%elif} forms \codeindex{\%ifnctx}
 For more details of the context stack, see \fullref{sec:ctxstack}.
 For a sample use of \code{\%ifctx}, see \fullref{sec:blockif}.
 
-%\subsection{\codeindex{\%if}: Testing Arbitrary Numeric Expressions
-%\index{testing, arbitrary numeric expressions}}
-%\label{subsec:if}
-%
-%The conditional-assembly construct \code{\%if expr} will cause the
-%subsequent code to be assembled if and only if the value of the
-%numeric expression \code{expr} is non-zero. An example of the use of
-%this feature is in deciding when to break out of a \code{\%rep}
-%preprocessor loop: see \fullref{subsec:rep} for a detailed example.
-%
-%The expression given to \code{\%if}, and its counterpart
-%\codeindex{\%elif}, is a critical expression (see \fullref{sec:crit}).
-%
-%\code{\%if} extends the normal NASM expression syntax, by providing a
-%set of \textindexlc{relational operators} which are not normally available in
-%expressions. The operators \codeindex{=}, \codeindex{\textless},
-%\codeindex{\textgreater},
-%\codeindex{\textless=}, \codeindex{>=} and \codeindex{<>} test equality,
-%less-than, greater-than, less-or-equal, greater-or-equal and not-equal
-%respectively. The C-like forms \codeindex{==} and \codeindex{!=} are
-%supported as alternative forms of \code{=} and \code{<>}.
-%In addition, low-priority logical operators \codeindex{\&\&},
-%\codeindex{\^{}\^{}} and \codeindex{\|{}\|{}} are provided, supplying
-%\textindex{logical AND}, \textindex{logical XOR} and \textindex{logical OR}.
-%These work like the C logical operators (although C has no logical XOR), in that
-%they always return either 0 or 1, and treat any non-zero input as 1
-%(so that \code{\^\^}, for example, returns 1 if exactly one of its inputs
-%is zero, and 0 otherwise). The relational operators also return 1
-%for true and 0 for false.
+\subsection{\codeindex{\%if}: Testing Arbitrary Numeric Expressions}
+\index{testing, arbitrary numeric expressions}
+\label{subsec:if}
 
-%Like other \code{%if} constructs, \code{%if} has a counterpart
-%\codeindex{%elif}, and negative forms \codeindex{%ifn} and \codeindex{%elifn}.
+The conditional-assembly construct \code{\%if expr} will cause the
+subsequent code to be assembled if and only if the value of the
+numeric expression \code{expr} is non-zero. An example of the use of
+this feature is in deciding when to break out of a \code{\%rep}
+preprocessor loop: see \fullref{subsec:rep} for a detailed example.
+
+The expression given to \code{\%if}, and its counterpart
+\codeindex{\%elif}, is a critical expression (see \fullref{sec:crit}).
+
+\code{\%if} extends the normal NASM expression syntax, by providing a
+set of \textindexlc{relational operators} which are not normally available in
+expressions. The operators \codeindex{=}, \codeindex{\textless},
+\codeindex{\textgreater}, \codeindex{\textless=}, \codeindex{\textgreater=}
+and \codeindex{\textless\textgreater} test equality,
+less-than, greater-than, less-or-equal, greater-or-equal and not-equal
+respectively. The C-like forms \codeindex{==} and \codeindex{!=} are
+supported as alternative forms of \code{=} and \code{\textless\textgreater}.
+In addition, low-priority logical operators \codeindex{\&\&},
+\codeindex{\^{}\^{}} and \codeindex{||} are provided, supplying
+\textindex{logical AND}, \textindex{logical XOR} and \textindex{logical OR}.
+These work like the C logical operators (although C has no logical XOR),
+in that they always return either 0 or 1, and treat any non-zero input as 1
+(so that \code{\^{}\^{}}, for example, returns 1 if exactly one of its inputs
+is zero, and 0 otherwise). The relational operators also return 1
+for true and 0 for false.
+
+Like other \code{\%if} constructs, \code{\%if} has a counterpart
+\codeindex{\%elif}, and negative forms \codeindex{\%ifn} and \codeindex{\%elifn}.
 %
 %\S{ifidn} \codeindex{%ifidn} and \codeindex{%ifidni}: Testing Exact Text
 %Identity\I{testing, exact text identity}
