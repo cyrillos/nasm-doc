@@ -1388,3 +1388,47 @@ be gradually used up and other applications to start crashing.
 
 Note a maximum repeat count is limited by 62 bit number, though it
 is hardly possible that you ever need anything bigger.
+
+\section{Source Files and Dependencies}
+\label{sec:files}
+
+These commands allow you to split your sources into multiple files.
+
+\label{subsec:include}
+\subsection{\codeindex{\%include}: \textindexlc{Including Other Files}}
+
+Using, once again, a very similar syntax to the C preprocessor,
+NASM's preprocessor lets you include other source files into your
+code. This is done by the use of the \codeindex{\%include} directive:
+
+\begin{lstlisting}
+%include "macros.mac"
+\end{lstlisting}
+
+will include the contents of the file \code{macros.mac} into the source
+file containing the \code{\%include} directive.
+
+Include files are \index{searching for include files}searched for in the
+current directory (the directory you're in when you run NASM, as
+opposed to the location of the NASM executable or the location of
+the source file), plus any directories specified on the NASM command
+line using the \code{-i} option.
+
+The standard C idiom for preventing a file being included more than
+once is just as applicable in NASM: if the file \code{macros.mac} has
+the form
+
+\begin{lstlisting}
+%ifndef MACROS_MAC
+    %define MACROS_MAC
+    ; now define some macros
+%endif
+\end{lstlisting}
+
+then including the file more than once will not cause errors,
+because the second time the file is included nothing will happen
+because the macro \code{MACROS\_MAC} will already be defined.
+
+You can force a file to be included even if there is no \code{\%include}
+directive that explicitly includes it, by using the \codeindex{-p} option
+on the NASM command line (see \fullref{subsec:opt-p}).
