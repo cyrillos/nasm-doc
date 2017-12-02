@@ -1432,3 +1432,67 @@ because the macro \code{MACROS\_MAC} will already be defined.
 You can force a file to be included even if there is no \code{\%include}
 directive that explicitly includes it, by using the \codeindex{-p} option
 on the NASM command line (see \fullref{subsec:opt-p}).
+
+\subsection{\codeindex{\%pathsearch}: Search the Include Path}
+\label{subsec:pathsearch}
+
+The \code{\%pathsearch} directive takes a single-line macro name and a
+filename, and declare or redefines the specified single-line macro to
+be the \emph{include-path-resolved} version of the filename, if the file
+exists (otherwise, it is passed unchanged).
+
+For example,
+
+\begin{lstlisting}
+%pathsearch MyFoo "foo.bin"
+\end{lstlisting}
+
+... with \code{-Ibins/} in the include path may end up defining the macro
+\code{MyFoo} to be \code{"bins/foo.bin"}.
+
+\subsection{\codeindex{\%depend}: Add Dependent Files}
+\label{subsec:depend}
+
+The \code{\%depend} directive takes a filename and adds it to the list of
+files to be emitted as dependency generation when the \code{-M} options
+and its relatives (see \fullref{subsec:opt-M}) are used. It produces
+no output.
+
+This is generally used in conjunction with \code{\%pathsearch}. For
+example, a simplified version of the standard macro wrapper for the
+\code{INCBIN} directive looks like:
+
+\begin{lstlisting}
+%imacro incbin 1-2+ 0
+%pathsearch dep %1
+%depend dep
+        incbin dep,%2
+%endmacro
+\end{lstlisting}
+
+This first resolves the location of the file into the macro \code{dep},
+then adds it to the dependency lists, and finally issues the
+assembler-level \code{INCBIN} directive.
+
+\subsection{\codeindex{\%use}: Include Standard Macro Package}
+\label{subsec:use}
+
+The \code{\%use} directive is similar to \code{\%include}, but rather than
+including the contents of a file, it includes a named standard macro
+package.  The standard macro packages are part of NASM, and are
+described in \fullref{subsec:macropkg}.
+
+Unlike the \code{\%include} directive, package names for the \code{\%use}
+directive do not require quotes, but quotes are permitted. In NASM
+2.04 and 2.05 the unquoted form would be macro-expanded; this is no
+longer true. Thus, the following lines are equivalent:
+
+\begin{lstlisting}
+%use altreg
+%use 'altreg'
+\end{lstlisting}
+
+Standard macro packages are protected from multiple inclusion. When a
+standard macro package is used, a testable single-line macro of the
+form \code{\_\_USE\_\emph{package}\_\_} is also defined,
+see \fullref{subsec:use-def}.
