@@ -1181,36 +1181,39 @@ for true and 0 for false.
 
 Like other \code{\%if} constructs, \code{\%if} has a counterpart
 \codeindex{\%elif}, and negative forms \codeindex{\%ifn} and \codeindex{\%elifn}.
-%
-%\S{ifidn} \codeindex{%ifidn} and \codeindex{%ifidni}: Testing Exact Text
-%Identity\I{testing, exact text identity}
-%
-%The construct \code{%ifidn text1,text2} will cause the subsequent code
-%to be assembled if and only if \code{text1} and \code{text2}, after
-%expanding single-line macros, are identical pieces of text.
-%Differences in white space are not counted.
-%
-%\code{%ifidni} is similar to \code{%ifidn}, but is \i{case-insensitive}.
-%
-%For example, the following macro pushes a register or number on the
-%stack, and allows you to treat \code{IP} as a real register:
-%
-%\c %macro  pushparam 1
-%\c
-%\c   %ifidni %1,ip
-%\c         call    %%label
-%\c   %%label:
-%\c   %else
-%\c         push    %1
-%\c   %endif
-%\c
-%\c %endmacro
-%
-%Like other \code{%if} constructs, \code{%ifidn} has a counterpart
-%\codeindex{%elifidn}, and negative forms \codeindex{%ifnidn} and \codeindex{%elifnidn}.
-%Similarly, \code{%ifidni} has counterparts codeindex{%elifidni},
-%\codeindex{%ifnidni} and \codeindex{%elifnidni}.
-%
+
+\label{subsec:ifidn}
+\subsection{\codeindex{\%ifidn} and \codeindex{\%ifidni}: Testing Exact Text Identity}
+\index{testing, exact text identity}
+
+The construct \code{\%ifidn text1,text2} will cause the subsequent code
+to be assembled if and only if \code{text1} and \code{text2}, after
+expanding single-line macros, are identical pieces of text.
+Differences in white space are not counted.
+
+\code{\%ifidni} is similar to \code{\%ifidn}, but is \textindex{case-insensitive}.
+
+For example, the following macro pushes a register or number on the
+stack, and allows you to treat \code{IP} as a real register:
+
+\begin{lstlisting}
+%macro  pushparam 1
+
+  %ifidni %1,ip
+        call    %%label
+  %%label:
+  %else
+        push    %1
+  %endif
+
+%endmacro
+\end{lstlisting}
+
+Like other \code{\%if} constructs, \code{\%ifidn} has a counterpart
+\codeindex{\%elifidn}, and negative forms \codeindex{\%ifnidn} and
+\codeindex{\%elifnidn}. Similarly, \code{\%ifidni} has counterparts
+codeindex{\%elifidni}, \codeindex{\%ifnidni} and \codeindex{\%elifnidni}.
+
 %\S{iftyp} \codeindex{%ifid}, \codeindex{%ifnum}, \codeindex{%ifstr}: Testing Token
 %Types\I{testing, token types}
 %
