@@ -1309,15 +1309,16 @@ will not, since \code{-1} contains two tokens: the unary minus operator
 The usual \codeindex{\%eliftoken}, \codeindex{\%ifntoken}, and
 \codeindex{\%elifntoken} variants are also provided.
 
-%\S{ifempty} \codeindex{%ifempty}: Test for Empty Expansion
-%
-%The conditional assembly construct \code{%ifempty} assembles the
-%subsequent code if and only if the expanded parameters do not contain
-%any tokens at all, whitespace excepted.
-%
-%The usual \codeindex{%elifempty}, codeindex\{%ifnempty}, and \codeindex{%elifnempty}
-%variants are also provided.
-%
+\subsection{\codeindex{\%ifempty}: Test for Empty Expansion}
+\label{subsec:ifempty}
+
+The conditional assembly construct \code{\%ifempty} assembles the
+subsequent code if and only if the expanded parameters do not contain
+any tokens at all, whitespace excepted.
+
+The usual \codeindex{\%elifempty}, \codeindex\{\%ifnempty}, and
+\codeindex{\%elifnempty} variants are also provided.
+
 %\S{ifenv} \codeindex{%ifenv}: Test If Environment Variable Exists
 %
 %The conditional assembly construct \code{%ifenv} assembles the
