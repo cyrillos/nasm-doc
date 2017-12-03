@@ -1762,122 +1762,137 @@ pushing another context, describing the inner \code{if}, on top of the
 one describing the outer \code{if}; thus \code{else} and \code{endif}
 always refer to the last unmatched \code{if} or \code{else}.
 
-%\H{stackrel} \i{Stack Relative Preprocessor Directives}
-%
-%The following preprocessor directives provide a way to use
-%labels to refer to local variables allocated on the stack.
-%
-%\b\c{%arg}  (see \k{arg})
-%
-%\b\c{%stacksize}  (see \k{stacksize})
-%
-%\b\c{%local}  (see \k{local})
-%
-%
-%\S{arg} \i\c{%arg} Directive
-%
-%The \c{%arg} directive is used to simplify the handling of
-%parameters passed on the stack. Stack based parameter passing
-%is used by many high level languages, including C, C++ and Pascal.
-%
-%While NASM has macros which attempt to duplicate this
-%functionality (see \k{16cmacro}), the syntax is not particularly
-%convenient to use and is not TASM compatible. Here is an example
-%which shows the use of \c{%arg} without any external macros:
-%
-%\c some_function:
-%\c
-%\c     %push     mycontext        ; save the current context
-%\c     %stacksize large           ; tell NASM to use bp
-%\c     %arg      i:word, j_ptr:word
-%\c
-%\c         mov     ax,[i]
-%\c         mov     bx,[j_ptr]
-%\c         add     ax,[bx]
-%\c         ret
-%\c
-%\c     %pop                       ; restore original context
-%
-%This is similar to the procedure defined in \k{16cmacro} and adds
-%the value in i to the value pointed to by j_ptr and returns the
-%sum in the ax register. See \k{pushpop} for an explanation of
-%\c{push} and \c{pop} and the use of context stacks.
-%
-%
-%\S{stacksize} \i\c{%stacksize} Directive
-%
-%The \c{%stacksize} directive is used in conjunction with the
-%\c{%arg} (see \k{arg}) and the \c{%local} (see \k{local}) directives.
-%It tells NASM the default size to use for subsequent \c{%arg} and
-%\c{%local} directives. The \c{%stacksize} directive takes one
-%required argument which is one of \c{flat}, \c{flat64}, \c{large} or \c{small}.
-%
-%\c %stacksize flat
-%
-%This form causes NASM to use stack-based parameter addressing
-%relative to \c{ebp} and it assumes that a near form of call was used
-%to get to this label (i.e. that \c{eip} is on the stack).
-%
-%\c %stacksize flat64
-%
-%This form causes NASM to use stack-based parameter addressing
-%relative to \c{rbp} and it assumes that a near form of call was used
-%to get to this label (i.e. that \c{rip} is on the stack).
-%
-%\c %stacksize large
-%
-%This form uses \c{bp} to do stack-based parameter addressing and
-%assumes that a far form of call was used to get to this address
-%(i.e. that \c{ip} and \c{cs} are on the stack).
-%
-%\c %stacksize small
-%
-%This form also uses \c{bp} to address stack parameters, but it is
-%different from \c{large} because it also assumes that the old value
-%of bp is pushed onto the stack (i.e. it expects an \c{ENTER}
-%instruction). In other words, it expects that \c{bp}, \c{ip} and
-%\c{cs} are on the top of the stack, underneath any local space which
-%may have been allocated by \c{ENTER}. This form is probably most
-%useful when used in combination with the \c{%local} directive
-%(see \k{local}).
-%
-%
-%\S{local} \i\c{%local} Directive
-%
-%The \c{%local} directive is used to simplify the use of local
-%temporary stack variables allocated in a stack frame. Automatic
-%local variables in C are an example of this kind of variable. The
-%\c{%local} directive is most useful when used with the \c{%stacksize}
-%(see \k{stacksize} and is also compatible with the \c{%arg} directive
-%(see \k{arg}). It allows simplified reference to variables on the
-%stack which have been allocated typically by using the \c{ENTER}
-%instruction.
-%\# (see \k{insENTER} for a description of that instruction).
-%An example of its use is the following:
-%
-%\c silly_swap:
-%\c
-%\c     %push mycontext             ; save the current context
-%\c     %stacksize small            ; tell NASM to use bp
-%\c     %assign %$localsize 0       ; see text for explanation
-%\c     %local old_ax:word, old_dx:word
-%\c
-%\c         enter   %$localsize,0   ; see text for explanation
-%\c         mov     [old_ax],ax     ; swap ax & bx
-%\c         mov     [old_dx],dx     ; and swap dx & cx
-%\c         mov     ax,bx
-%\c         mov     dx,cx
-%\c         mov     bx,[old_ax]
-%\c         mov     cx,[old_dx]
-%\c         leave                   ; restore old bp
-%\c         ret                     ;
-%\c
-%\c     %pop                        ; restore original context
-%
-%The \c{%$localsize} variable is used internally by the
-%\c{%local} directive and \e{must} be defined within the
-%current context before the \c{%local} directive may be used.
-%Failure to do so will result in one expression syntax error for
-%each \c{%local} variable declared. It then may be used in
-%the construction of an appropriately sized ENTER instruction
-%as shown in the example.
+\section{\textindexlc{Stack Relative Preprocessor Directives}}
+\label{sec:stackrel}
+
+The following preprocessor directives provide a way to use
+labels to refer to local variables allocated on the stack:
+
+\begin{itemize}
+	\item{\code{\%arg}  (see \fullref{subsec:arg});}
+	\item{\code{\%stacksize}  (see \fullref{subsec:stacksize});}
+	\item{\code{\%local}  (see \fullref{subsec:local}).}
+\end{itemize}
+
+\subsection{\codeindex{\%arg} Directive}
+\label{subsec:arg}
+
+The \code{\%arg} directive is used to simplify the handling of
+parameters passed on the stack. Stack based parameter passing
+is used by many high level languages, including C, C++ and Pascal.
+
+While NASM has macros which attempt to duplicate this functionality
+(see \fullref{subsec:16cmacro}), the syntax is not particularly convenient
+to use and is not TASM compatible. Here is an example which shows the use
+of \code{\%arg} without any external macros:
+
+\begin{lstlisting}
+some_function:
+
+    %push     mycontext        ; save the current context
+    %stacksize large           ; tell NASM to use bp
+    %arg      i:word, j_ptr:word
+
+        mov     ax,[i]
+        mov     bx,[j_ptr]
+        add     ax,[bx]
+        ret
+
+    %pop                       ; restore original context
+\end{lstlisting}
+
+This is similar to the procedure defined in \fullref{subsec:16cmacro}
+and adds the value in i to the value pointed to by j\_ptr and returns
+the sum in the ax register. See \fullref{subsec:pushpop} for an
+explanation of \code{push} and \code{pop} and the use of context stacks.
+
+\subsection{\codeindex{\%stacksize} Directive}
+\label{subsec:stacksize}
+
+The \code{\%stacksize} directive is used in conjunction with the
+\code{\%arg} (see \fullref{subsec:arg}) and the \code{\%local}
+(see \fullref{subsec:local}) directives. It tells NASM the default
+size to use for subsequent \code{\%arg} and \code{\%local} directives.
+The \code{\%stacksize} directive takes one required argument
+which is one of \code{flat}, \code{flat64}, \code{large} or \code{small}.
+
+\begin{lstlisting}
+%stacksize flat
+\end{lstlisting}
+
+This form causes NASM to use stack-based parameter addressing
+relative to \code{ebp} and it assumes that a near form of call
+was used to get to this label (i.e. that \code{eip} is on the stack).
+
+\begin{lstlisting}
+%stacksize flat64
+\end{lstlisting}
+
+This form causes NASM to use stack-based parameter addressing
+relative to \code{rbp} and it assumes that a near form of call was used
+to get to this label (i.e. that \code{rip} is on the stack).
+
+\begin{lstlisting}
+%stacksize large
+\end{lstlisting}
+
+This form uses \code{bp} to do stack-based parameter addressing and
+assumes that a far form of call was used to get to this address
+(i.e. that \code{ip} and \code{cs} are on the stack).
+
+\begin{lstlisting}
+%stacksize small
+\end{lstlisting}
+
+This form also uses \code{bp} to address stack parameters, but it is
+different from \code{large} because it also assumes that the old value
+of bp is pushed onto the stack (i.e. it expects an \code{ENTER}
+instruction). In other words, it expects that \code{bp}, \code{ip} and
+\code{cs} are on the top of the stack, underneath any local space which
+may have been allocated by \code{ENTER}. This form is probably most
+useful when used in combination with the \code{\%local} directive
+(see \fullref{subsec:local}).
+
+
+\subsection{\codeindex{\%local} Directive}
+\label{subsec:local}
+
+The \code{\%local} directive is used to simplify the use of local
+temporary stack variables allocated in a stack frame. Automatic
+local variables in C are an example of this kind of variable. The
+\code{\%local} directive is most useful when used with the \code{\%stacksize}
+(see \fullref{subsec:stacksize} and is also compatible with the \code{\%arg} directive
+(see \fullref{subsec:arg}). It allows simplified reference to variables on the
+stack which have been allocated typically by using the \code{ENTER}
+instruction.
+% (see \fullref{insENTER} for a description of that instruction).
+An example of its use is the following:
+
+\begin{lstlisting}
+silly_swap:
+
+    %push mycontext             ; save the current context
+    %stacksize small            ; tell NASM to use bp
+    %assign %$localsize 0       ; see text for explanation
+    %local old_ax:word, old_dx:word
+
+        enter   %$localsize,0   ; see text for explanation
+        mov     [old_ax],ax     ; swap ax & bx
+        mov     [old_dx],dx     ; and swap dx & cx
+        mov     ax,bx
+        mov     dx,cx
+        mov     bx,[old_ax]
+        mov     cx,[old_dx]
+        leave                   ; restore old bp
+        ret                     ;
+
+    %pop                        ; restore original context
+\end{lstlisting}
+
+The \code{\%\$localsize} variable is used internally by the
+\code{\%local} directive and \emph{must} be defined within the
+current context before the \code{\%local} directive may be used.
+Failure to do so will result in one expression syntax error for
+each \code{\%local} variable declared. It then may be used in
+the construction of an appropriately sized ENTER instruction
+as shown in the example.
