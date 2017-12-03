@@ -50,7 +50,7 @@ undocumented instructions are all supported. The instruction may be
 prefixed by \code{LOCK}, \code{REP}, \code{REPE}/\code{REPZ},
 \code{REPNE}/\code{REPNZ}, \code{XACQUIRE}/\code{XRELEASE} or
 \code{BND}/\code{NOBND}, in the usual way. Explicit
-\index{address-size prefixes}address-size and \textindex{operand-size prefixes}
+\index{address-size!prefixes}address-size and \textindex{operand-size!prefixes}
 \codeindex{A16}, \codeindex{A32}, \codeindex{A64}, \codeindex{O16}
 and \codeindex{O32}, \codeindex{O64} are provided~-- one example of their
 use is given in \fullref{sec:mixsize}. You can also use the name of a
@@ -117,7 +117,7 @@ command, and the \codeindex{TIMES} prefix.
 \codeindex{DT}, \codeindex{DO}, \codeindex{DY} and \codeindex{DZ}
 are used, much as in MASM, to declare initialized data in
 the output file. They can be invoked in a wide range of ways:
-\index{floating-point}\index{character constant}\index{string constant}
+\index{floating-point!constants}\index{character!constants}\index{string!constants}
  
 \begin{lstlisting}
 db    0x55                ; just the byte 0x55
@@ -136,7 +136,7 @@ dt    1.234567e20         ; extended-precision float
 \end{lstlisting}
 
 \code{DT}, \code{DO}, \code{DY} and \code{DZ} do not accept
-\textindex{numeric constants} as operands.
+\textindex{numeric constants}\index{numeric!constants} as operands.
 
 \subsection{RESB and Friends: Declaring \textindexlc{Uninitialized} Data}
 \label{subsec:resb}
@@ -534,7 +534,7 @@ The UTF operators can be applied either to strings passed to the
 \code{DB} family instructions, or to character constants in an expression
 context.
 
-\subsection{\index{floating-point, constants}Floating-Point Constants}
+\subsection{\index{floating-point!constants}Floating-Point Constants}
 \label{subsec:fltconst}
 
 \textindexlc{Floating-point} constants are acceptable only as arguments to
@@ -610,7 +610,7 @@ This is because NASM is designed to be portable - although it always
 generates code to run on x86 processors, the assembler itself can
 run on any system with an ANSI C compiler. Therefore, the assembler
 cannot guarantee the presence of a floating-point unit capable of
-handling the \textindex{Intel number formats}, and so for NASM
+handling the \textindexlc{Intel number formats}, and so for NASM
 to be able to do floating arithmetic it would have to include its
 own complete set of floating-point routines, which would significantly
 increase the size of the assembler for very little benefit.
@@ -630,7 +630,7 @@ respectively. These are normally used as macros:
 The \code{\%use fp} standard macro package contains a set of convenience
 macros. See \fullref{sec:pkg_fp}.
 
-\subsection{\index{floating-point, packed BCD constants}Packed BCD Constants}
+\subsection{\index{floating-point!packed BCD constants}Packed BCD Constants}
 \label{subsec:bcdconst}
 
 x87-style packed BCD constants can be used in the same contexts as

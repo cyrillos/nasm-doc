@@ -80,7 +80,7 @@ the macro \code{a(3)} will expand once, becoming \code{1+a(3)}, and will
 then expand no further. This behaviour can be useful: see \fullref{sec:32c}
 for an example of its use.
 
-You can \index{overloading, single-line macros}overload single-line
+You can \index{overloading!single-line macros}overload single-line
 macros: if you write
 
 \begin{lstlisting}
@@ -517,7 +517,7 @@ unless you define them using the alternative directive \code{\%imacro}.
 
 If you need to pass a comma as \emph{part} of a parameter to a
 multi-line macro, you can do that by enclosing the entire parameter
-in \index{braces, around macro parameters}braces. So you could code
+in \index{braces!around macro parameters}braces. So you could code
 things like
 
 \begin{lstlisting}
@@ -532,7 +532,7 @@ things like
         silly {13,10}, crlf             ; crlf:      db 13,10
 \end{lstlisting}
 
-\subsection{Overloading Multi-Line Macros\index{overloading, multi-line macros}}
+\subsection{Overloading Multi-Line Macros\index{overloading!multi-line macros}}
 \label{subsec:mlmacover}
 
 As with single-line macros, multi-line macros can be overloaded by
@@ -649,7 +649,7 @@ all the subsequent text is lumped into \code{\%2} and placed after the
 \code{db}.
 
 The greedy nature of the macro is indicated to NASM by the use of
-the \index{modifier, +}\code{+} sign after the parameter count on the
+the \index{modifier!+}\code{+} sign after the parameter count on the
 \code{\%macro} line.
 
 If you define a greedy macro, you are effectively telling NASM how
@@ -928,7 +928,7 @@ If you need to append a \emph{digit} to a macro parameter, for example
 defining labels \code{foo1} and \code{foo2} when passed the parameter
 \code{foo}, you can't code \code{\%11} because that would be taken as the
 eleventh macro parameter. Instead, you must code
-\index{braces, after \% sign}\code{\%\{1\}1}, which will separate the first
+\index{braces!after \% sign}\code{\%\{1\}1}, which will separate the first
 \code{1} (giving the number of the macro parameter) from the second
 (literal text to be concatenated to the parameter).
 
@@ -1097,7 +1097,7 @@ for macro definitions in \code{\%elif} blocks by using
 \codeindex{\%elifdef} and \codeindex{\%elifndef}.
 
 \subsection{\codeindex{\%ifmacro}: Testing Multi-Line Macro Existence
-\index{testing, multi-line macro existence}}
+\index{testing!multi-line macro existence}}
 \label{subsec:ifmacro}
 
 The \code{\%ifmacro} directive operates in the same way as the \code{\%ifdef}
@@ -1150,7 +1150,7 @@ For more details of the context stack, see \fullref{sec:ctxstack}.
 For a sample use of \code{\%ifctx}, see \fullref{sec:blockif}.
 
 \subsection{\codeindex{\%if}: Testing Arbitrary Numeric Expressions}
-\index{testing, arbitrary numeric expressions}
+\index{testing!arbitrary numeric expressions}
 \label{subsec:if}
 
 The conditional-assembly construct \code{\%if expr} will cause the
@@ -1172,7 +1172,7 @@ respectively. The C-like forms \codeindex{==} and \codeindex{!=} are
 supported as alternative forms of \code{=} and \code{\textless\textgreater}.
 In addition, low-priority logical operators \codeindex{\&\&},
 \codeindex{\^{}\^{}} and \codeindex{||} are provided, supplying
-\textindex{logical AND}, \textindex{logical XOR} and \textindex{logical OR}.
+\textindex{logical!ND}, \textindex{logical!XOR} and \textindex{logical!OR}.
 These work like the C logical operators (although C has no logical XOR),
 in that they always return either 0 or 1, and treat any non-zero input as 1
 (so that \code{\^{}\^{}}, for example, returns 1 if exactly one of its inputs
