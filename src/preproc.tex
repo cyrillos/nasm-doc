@@ -1896,3 +1896,61 @@ Failure to do so will result in one expression syntax error for
 each \code{\%local} variable declared. It then may be used in
 the construction of an appropriately sized ENTER instruction
 as shown in the example.
+
+\section{Reporting \textindexlc{User-Defined Errors}:
+\codeindex{\%error}, \codeindex{\%warning}, \codeindex{\%fatal}}
+\label{sec:pperror}
+
+The preprocessor directive \code{\%error} will cause NASM to report an
+error if it occurs in assembled code. So if other users are going to
+try to assemble your source files, you can ensure that they define the
+right macros by means of code like this:
+
+\begin{lstlisting}
+%ifdef F1
+    ; do some setup
+%elifdef F2
+    ; do some different setup
+%else
+    %error "Neither F1 nor F2 was defined."
+%endif
+\end{lstlisting}
+
+Then any user who fails to understand the way your code is supposed
+to be assembled will be quickly warned of their mistake, rather than
+having to wait until the program crashes on being run and then not
+knowing what went wrong.
+
+Similarly, \code{\%warning} issues a warning, but allows assembly to continue:
+
+\begin{lstlisting}
+%ifdef F1
+    ; do some setup
+%elifdef F2
+    ; do some different setup
+%else
+    %warning "Neither F1 nor F2 was defined, assuming F1."
+    %define F1
+%endif
+\end{lstlisting}
+
+\code{\%error} and \code{\%warning} are issued only on the final assembly
+pass. This makes them safe to use in conjunction with tests that
+depend on symbol values.
+
+\code{\%fatal} terminates assembly immediately, regardless of pass. This
+is useful when there is no point in continuing the assembly further,
+and doing so is likely just going to cause a spew of confusing error
+messages.
+
+It is optional for the message string after \code{\%error}, \code{\%warning}
+or \code{\%fatal} to be quoted. If it is \emph{not}, then single-line macros
+are expanded in it, which can be used to display more information to
+the user. For example:
+
+\begin{lstlisting}
+%if foo > 64
+    %assign foo_over foo-64
+    %error foo is foo_over bytes too large
+%endif
+\end{lstlisting}
