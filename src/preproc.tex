@@ -1954,3 +1954,73 @@ the user. For example:
     %error foo is foo_over bytes too large
 %endif
 \end{lstlisting}
+
+\section{\textindexlc{Other Preprocessor Directives}}
+\label{sec:otherpreproc}
+
+NASM also has preprocessor directives which allow access to
+information from external sources. Currently they include:
+
+\begin{itemize}
+	\item{\code{\%line} enables NASM to correctly handle
+	the output of another preprocessor (see \fullref{subsec:line});}
+	\item{\code{\%^^21} enables NASM to read in the value
+	of an environment variable, which can then be used in
+	your program (see \fullref{subsec:getenv}).}
+\end{itemize}
+
+\subsection{\codeindex{\%line} Directive}
+\label{subsec:line}
+
+The \code{\%line} directive is used to notify NASM that the input line
+corresponds to a specific line number in another file. Typically
+this other file would be an original source file, with the current
+NASM input being the output of a pre-processor. The \code{\%line}
+directive allows NASM to output messages which indicate the line
+number of the original source file, instead of the file that is being
+read by NASM.
+
+This preprocessor directive is not generally of use to programmers,
+by may be of interest to preprocessor authors. The usage of the
+\code{\%line} preprocessor directive is as follows:
+
+\begin{lstlisting}
+%line nnn[+mmm] [filename]
+\end{lstlisting}
+
+In this directive, \code{nnn} identifies the line of the original source
+file which this line corresponds to. \code{mmm} is an optional parameter
+which specifies a line increment value; each line of the input file
+read in is considered to correspond to \code{mmm} lines of the original
+source file. Finally, \code{filename} is an optional parameter which
+specifies the file name of the original source file.
+
+After reading a \code{\%line} preprocessor directive, NASM will report
+all file name and line numbers relative to the values specified
+therein.
+
+\subsection{\codeindex{\%^^21\emph{variable}}: Read an Environment Variable}
+\label{subsec:getenv}
+
+The \code{\%^^21\emph{variable}} directive makes it possible to read the
+value of an environment variable at assembly time. This could, for example,
+be used to store the contents of an environment variable into a string, which
+could be used at some other point in your code.
+
+For example, suppose that you have an environment variable \code{FOO},
+and you want the contents of \code{FOO} to be embedded in your program as
+a quoted string. You could do that as follows:
+
+\begin{lstlisting}
+%defstr FOO          %!FOO
+\end{lstlisting}
+
+See \fullref{subsec:defstr} for notes on the \code{\%defstr} directive.
+
+If the name of the environment variable contains non-identifier
+characters, you can use string quotes to surround the name of the
+variable, for example:
+
+\begin{lstlisting}
+%defstr C_colon      %!'C:'
+\end{lstlisting}
