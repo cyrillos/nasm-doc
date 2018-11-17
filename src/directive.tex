@@ -1,0 +1,214 @@
+\chapter{\textindexlc{Assembler Directives}}
+\label{ch:directive}
+
+NASM, though it attempts to avoid the bureaucracy of assemblers like
+MASM and TASM, is nevertheless forced to support a \emph{few}
+directives. These are described in this chapter.
+
+NASM's directives come in two types: \index{directives!user-level}
+\emph{user-level} directives and \index{directives!primitive}
+\emph{primitive} directives. Typically, each directive has a
+user-level form and a primitive form. In almost all cases, we
+recommend that users use the user-level forms of the directives,
+which are implemented as macros which call the primitive forms.
+
+Primitive directives are enclosed in square brackets; user-level
+directives are not.
+
+In addition to the universal directives described in this chapter,
+each object file format can optionally supply extra directives in
+order to control particular features of that file format. These
+\index{directives!format-specific}\emph{format-specific} directives are
+documented along with the formats that implement them, in
+\fullref{sec:outfmt}.
+
+\section{\codeindex{BITS}: Specifying Target \textindexlc{Processor Mode}}
+\label{sec:bits}
+
+The \code{BITS} directive specifies whether NASM should generate code
+\index{16-bit mode, versus 32-bit mode}designed to run on a processor
+operating in 16-bit mode, 32-bit mode or 64-bit mode. The syntax is
+\code{BITS XX}, where XX is 16, 32 or 64.
+
+In most cases, you should not need to use \code{BITS} explicitly. The
+\code{aout}, \code{coff}, \code{elf32}, \code{elf64}, \code{macho32},
+\code{macho64}, \code{win32} and \code{win64} object formats, which
+are designed for use in 32-bit or 64-bit operating systems, all cause
+NASM to select 32-bit or 64-bit mode, respectively, by default.
+The \code{obj} object format allows you to specify each segment
+you define as either \code{USE16} or \code{USE32}, and NASM will
+set its operating mode accordingly, so the use of the \code{BITS}
+directive is once again unnecessary.
+
+The most likely reason for using the \code{BITS} directive is to write
+32-bit or 64-bit code in a flat binary file; this is because the \code{bin}
+output format defaults to 16-bit mode in anticipation of it being
+used most frequently to write DOS \code{.COM} programs, DOS \code{.SYS}
+device drivers and boot loader software.
+
+The \code{BITS} directive can also be used to generate code for
+a different mode than the standard one for the output format.
+
+You do \emph{not} need to specify \code{BITS 32} merely in order
+to use 32-bit instructions in a 16-bit DOS program; if you do, the
+assembler will generate incorrect code because it will be writing
+code targeted at a 32-bit platform, to be run on a 16-bit one.
+
+When NASM is in \code{BITS 16} mode, instructions which use 32-bit
+data are prefixed with an 0x66 byte, and those referring to 32-bit
+addresses have an 0x67 prefix. In \code{BITS 32} mode, the reverse is
+true: 32-bit instructions require no prefixes, whereas instructions
+using 16-bit data need an 0x66 and those working on 16-bit
+addresses need an 0x67.
+
+When NASM is in \code{BITS 64} mode, most instructions operate the same
+as they do for \code{BITS 32} mode. However, there are 8 more general and
+SSE registers, and 16-bit addressing is no longer supported.
+
+The default address size is 64 bits; 32-bit addressing can be selected
+with the 0x67 prefix. The default operand size is still 32 bits,
+however, and the 0x66 prefix selects 16-bit operand size.
+The \code{REX} prefix is used both to select 64-bit operand size, and
+to access the new registers. NASM automatically inserts REX prefixes
+when necessary.
+
+When the \code{REX} prefix is used, the processor does not know how to
+address the AH, BH, CH or DH (high 8-bit legacy) registers. Instead,
+it is possible to access the the low 8-bits of the SP, BP SI and DI
+registers as SPL, BPL, SIL and DIL, respectively; but only when the
+REX prefix is used.
+
+The \code{BITS} directive has an exactly equivalent primitive form,
+\code{[BITS 16]}, \code{[BITS 32]} and \code{[BITS 64]}. The user-level
+form is a macro which has no function other than to call the primitive form.
+
+Note that the space is neccessary, e.g. \code{BITS32} will \emph{not} work!
+
+\subsection{\codeindex{USE16}, \codeindex{USE32} and \codeindex{USE64}: Aliases for BITS}
+\label{subsec:use163264}
+
+The \code{USE16}, \code{USE32} and \code{USE64} directives can be used
+in place of \code{BITS 16}, \code{BITS 32} and \code{BITS 64}, for
+compatibility with other assemblers.
+
+\section{\codeindex{DEFAULT}: Change the assembler defaults}
+\label{sec:default}
+
+The \code{DEFAULT} directive changes the assembler defaults. Normally,
+NASM defaults to a mode where the programmer is expected to explicitly
+specify most features directly. However, this is occasionally obnoxious,
+as the explicit form is pretty much the only one one wishes to use.
+
+Currently, \code{DEFAULT} can be set to \code{REL}, \code{ABS}, \code{BND}
+and \code{NOBND}.
+
+\subsection{\codeindex{REL} and \codeindex{ABS}: RIP-relative addressing}
+\label{subsec:relabs}
+
+This sets whether registerless instructions in 64-bit mode are
+\code{RIP}-relative or not. By default, they are absolute unless
+overridden with the \codeindex{REL} specifier (see \fullref{sec:effaddr}).
+However, if \code{DEFAULT REL} is specified, \code{REL} is default, unless
+overridden with the \code{ABS} specifier, \emph{except when used with an
+FS or GS segment override}.
+
+The special handling of \code{FS} and \code{GS} overrides are due to the
+fact that these registers are generally used as thread pointers or
+other special functions in 64-bit mode, and generating
+\code{RIP}-relative addresses would be extremely confusing.
+
+\code{DEFAULT REL} is disabled with \code{DEFAULT ABS}.
+
+\subsection{\codeindex{BND} and \codeindex{NOBND}: \code{BND} prefix}
+\label{subsec:bndnobnd}
+
+If \code{DEFAULT BND} is set, all bnd-prefix available instructions
+following this directive are prefixed with bnd. To override it,
+\code{NOBND} prefix can be used.
+
+\begin{lstlisting}
+DEFAULT BND
+    call foo        ; BND will be prefixed
+    nobnd call foo  ; BND will NOT be prefixed
+\end{lstlisting}
+
+\code{DEFAULT NOBND} can disable \code{DEFAULT BND} and then
+\code{BND} prefix will be added only when explicitly specified
+in code.
+
+\code{DEFAULT BND} is expected to be the normal configuration
+for writing MPX-enabled code.
+
+\section{\codeindex{SECTION} or \codeindex{SEGMENT}: Changing and
+\textindexlc{Defining Sections}}
+\label{sec:section}
+
+\index{sections!changing}\index{sections!switching between}
+The \code{SECTION} directive (\code{SEGMENT} is an exactly equivalent
+synonym) changes which section of the output file the code you write
+will be assembled into. In some object file formats, the number and
+names of sections are fixed; in others, the user may make up as many
+as they wish. Hence \code{SECTION} may sometimes give an error message,
+or may define a new section, if you try to switch to a section that does
+not (yet) exist.
+
+The Unix object formats, and the \code{bin} object format (but see
+\fullref{sec:multisec}), all support the \index{sections!standardized names}
+standardized names \code{.text}, \code{.data} and \code{.bss} for the code,
+data and uninitialized-data sections. The \code{obj} format, by contrast,
+does not recognize these section names as being special, and indeed will
+strip off the leading period of any section name that has one.
+
+\subsection{The \codeindex{\_\_SECT\_\_} Macro}
+\label{subsec:sectmac}
+
+The \code{SECTION} directive is unusual in that its user-level form
+functions differently from its primitive form. The primitive form,
+\code{[SECTION xyz]}, simply switches the current target section to the
+one given. The user-level form, \code{SECTION xyz}, however, first
+defines the single-line macro \code{\_\_SECT\_\_} to be the primitive
+\code{[SECTION]} directive which it is about to issue, and then issues
+it. So the user-level directive
+
+\begin{lstlisting}
+    SECTION .text
+\end{lstlisting}
+
+expands to the two lines
+
+\begin{lstlisting}
+%define __SECT__    [SECTION .text]
+    [SECTION .text]
+\end{lstlisting}
+
+Users may find it useful to make use of this in their own macros.
+For example, the \code{writefile} macro defined in \fullref{sec:mlmacgre}
+can be usefully rewritten in the following more sophisticated form:
+
+\begin{lstlisting}
+%macro  writefile 2+
+        [section .data]
+
+    %%str:      db %2
+    %%endstr:
+
+        __SECT__
+
+        mov     dx, %%str
+        mov     cx, %%endstr-%%str
+        mov     bx, %1
+        mov     ah, 0x40
+        int     0x21
+%endmacro
+\end{lstlisting}
+
+This form of the macro, once passed a string to output, first
+switches temporarily to the data section of the file, using the
+primitive form of the \code{SECTION} directive so as not to modify
+\code{\_\_SECT\_\_}. It then declares its string in the data section,
+and then invokes \code{\_\_SECT\_\_} to switch back to \emph{whichever}
+section the user was previously working in. It thus avoids the need,
+in the previous version of the macro, to include a \code{JMP} instruction
+to jump over the data, and also does not fail if, in a complicated
+\code{OBJ} format module, the user could potentially be assembling the
+code in any of several separate code sections.
