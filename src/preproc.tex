@@ -1319,17 +1319,17 @@ any tokens at all, whitespace excepted.
 The usual \codeindex{\%elifempty}, \codeindex{\%ifnempty}, and
 \codeindex{\%elifnempty} variants are also provided.
 
-\label{subsec:ifenv}
 \subsection{\codeindex{\%ifenv}: Test If Environment Variable Exists}
+\label{subsec:ifenv}
 
 The conditional assembly construct \code{\%ifenv} assembles the
 subsequent code if and only if the environment variable referenced by
-the \code{\%!}\emph{variable} directive exists.
+the \code{\%^^21}\emph{variable} directive exists.
 
 The usual \codeindex{\%elifenv}, codeindex{\%ifnenv}, and \codeindex{\%elifnenv}
 variants are also provided.
 
-Just as for \code{\%!}\emph{variable} the argument should be written as a
+Just as for \code{\%^^21}\emph{variable} the argument should be written as a
 string if it contains characters that would not be legal in an
 identifier. See \fullref{subsec:getenv}.
 
@@ -2023,4 +2023,435 @@ variable, for example:
 
 \begin{lstlisting}
 %defstr C_colon      %!'C:'
+\end{lstlisting}
+
+\section{\textindexlc{Standard Macros}}
+\label{ch:stdmac}
+
+NASM defines a set of standard macros, which are already defined
+when it starts to process any source file. If you really need a
+program to be assembled with no pre-defined macros, you can use the
+\codeindex{\%clear} directive to empty the preprocessor of everything
+but context-local preprocessor variables and single-line macros.
+
+Most \textindex{user-level assembler directives} are implemented as macros
+which invoke primitive directives; these are described in \fullref{sec:directive}.
+The rest of the standard macro set is described here.
+
+\subsection{\textindexlc{NASM Version} Macros}
+\label{sec:stdmacver}
+
+The single-line macros \codeindex{\_\_NASM\_MAJOR\_\_}, \codeindex{\_\_NASM\_MINOR\_\_},
+\codeindex{\_\_NASM\_SUBMINOR\_\_} and \codeindex{\_\_NASM\_PATCHLEVEL\_\_} expand to
+the major, minor, subminor and patch level parts of the \textindexlc{version number of NASM}
+being used. So, under NASM 0.98.32p1 for example, \code{\_\_NASM\_MAJOR\_\_}
+would be defined to be 0, \code{\_\_NASM\_MINOR\_\_} would be defined as 98,
+\code{\_\_NASM\_SUBMINOR\_\_} would be defined to 32, and \code{\_\_NASM\_PATCHLEVEL\_\_}
+would be defined as 1.
+
+Additionally, the macro \codeindex{\_\_NASM\_SNAPSHOT\_\_} is defined for
+automatically generated snapshot releases \emph{only}.
+
+\subsection{\codeindex{\_\_NASM\_VERSION\_ID\_\_}: \textindexlc{NASM Version ID}}
+\label{sec:stdmacverid}
+
+The single-line macro \code{\_\_NASM\_VERSION\_ID\_\_} expands to a dword integer
+representing the full version number of the version of nasm being used.
+The value is the equivalent to \code{\_\_NASM\_MAJOR\_\_}, \code{\_\_NASM\_MINOR\_\_},
+\code{\_\_NASM\_SUBMINOR\_\_} and \code{\_\_NASM\_PATCHLEVEL\_\_} concatenated to
+produce a single doubleword. Hence, for 0.98.32p1, the returned number
+would be equivalent to:
+
+\begin{lstlisting}
+dd      0x00622001
+\end{lstlisting}
+
+or
+
+\begin{lstlisting}
+db      1,32,98,0
+\end{lstlisting}
+
+Note that the above lines are generate exactly the same code, the second
+line is used just to give an indication of the order that the separate
+values will be present in memory.
+
+
+\subsection{\codeindex{\_\_NASM\_VER\_\_}: \textindexlc{NASM Version string}}
+\label{sec:stdmacverstr}
+
+The single-line macro \code{\_\_NASM\_VER\_\_} expands to a string which defines
+the version number of nasm being used. So, under NASM 0.98.32 for example,
+
+\begin{lstlisting}
+db      __NASM_VER__
+\end{lstlisting}
+
+would expand to
+
+\begin{lstlisting}
+db      "0.98.32"
+\end{lstlisting}
+
+\subsection{\codeindex{\_\_FILE\_\_} and \codeindex{\_\_LINE\_\_}: File Name and Line Number}
+\label{sec:fileline}
+
+Like the C preprocessor, NASM allows the user to find out the file
+name and line number containing the current instruction. The macro
+\code{\_\_FILE\_\_} expands to a string constant giving the name of the
+current input file (which may change through the course of assembly
+if \code{\%include} directives are used), and \code{\_\_LINE\_\_} expands
+to a numeric constant giving the current line number in the input file.
+
+These macros could be used, for example, to communicate debugging
+information to a macro, since invoking \code{\_\_LINE\_\_} inside a macro
+definition (either single-line or multi-line) will return the line
+number of the macro \emph{call}, rather than \emph{definition}. So to
+determine where in a piece of code a crash is occurring, for example,
+one could write a routine \code{stillhere}, which is passed a line number
+in \code{EAX} and outputs something like "line 155: still here".
+You could then write a macro
+
+\begin{lstlisting}
+%macro  notdeadyet 0
+    push    eax
+    mov     eax,__LINE__
+    call    stillhere
+    pop     eax
+%endmacro
+\end{lstlisting}
+
+and then pepper your code with calls to \c{notdeadyet} until you
+find the crash point.
+
+\subsection{\codeindex{\_\_BITS\_\_}: Current BITS Mode}
+\label{sec:bitsm}
+
+The \code{\_\_BITS\_\_} standard macro is updated every time that the BITS
+mode is set using the \code{BITS XX} or \code{[BITS XX]} directive,
+where XX is a valid mode number of 16, 32 or 64. \code{\_\_BITS\_\_} receives
+the specified mode number and makes it globally available. This can be very
+useful for those who utilize mode-dependent macros.
+
+\subsection{\codeindex{\_\_OUTPUT\_FORMAT\_\_}: Current Output Format}
+\label{sec:ofmtm}
+
+The \code{\_\_OUTPUT\_FORMAT\_\_} standard macro holds the current output format,
+as given by the \code{-f} option or NASM's default. Type \code{nasm -hf} for a
+list.
+
+\begin{lstlisting}
+%ifidn __OUTPUT_FORMAT__, win32
+    %define NEWLINE 13, 10
+%elifidn __OUTPUT_FORMAT__, elf32
+    %define NEWLINE 10
+%endif
+\end{lstlisting}
+
+\subsection{Assembly Date and Time Macros}
+\label{sec:datetime}
+
+NASM provides a variety of macros that represent the timestamp of the
+assembly session.
+
+\begin{itemize}
+    \item{The \codeindex{\_\_DATE\_\_} and \codeindex{\_\_TIME\_\_}
+        macros give the assembly date and time as strings, in ISO 8601
+        format (\code{"YYYY-MM-DD"} and \code{"HH:MM:SS"}, respectively).}
+
+    \item{The \codeindex{\_\_DATE\_NUM\_\_} and \codeindex{\_\_TIME\_NUM\_\_}
+        macros give the assembly date and time in numeric form; in the format
+        \code{YYYYMMDD} and \code{HHMMSS} respectively.}
+
+    \item{The \codeindex{\_\_UTC\_DATE\_\_} and \codeindex{\_\_UTC\_TIME\_\_}
+        macros give the assembly date and time in universal time (UTC) as strings,
+        in ISO 8601 format (\code{"YYYY-MM-DD"} and \code{"HH:MM:SS"}, respectively).
+        If the host platform doesn't provide UTC time, these macros are undefined.}
+
+    \item{The \codeindex{\_\_UTC\_DATE\_NUM\_\_} and \codeindex{\_\_UTC\_TIME\_NUM\_\_}
+        macros give the assembly date and time universal time (UTC) in numeric form;
+        in the format \code{YYYYMMDD} and \code{HHMMSS} respectively. If the
+        host platform doesn't provide UTC time, these macros are undefined.}
+
+    \item{The \code{\_\_POSIX\_TIME\_\_} macro is defined as a number containing
+        the number of seconds since the POSIX epoch, 1 January 1970 00:00:00 UTC;
+        excluding any leap seconds. This is computed using UTC time if
+        available on the host platform, otherwise it is computed using the
+        local time as if it was UTC.}
+\end{itemize}
+
+All instances of time and date macros in the same assembly session
+produce consistent output.  For example, in an assembly session
+started at 42 seconds after midnight on January 1, 2010 in Moscow
+(timezone UTC+3) these macros would have the following values,
+assuming, of course, a properly configured environment with a correct
+clock:
+
+\begin{lstlisting}
+__DATE__            "2010-01-01"
+__TIME__            "00:00:42"
+__DATE_NUM__        20100101
+__TIME_NUM__        000042
+__UTC_DATE__        "2009-12-31"
+__UTC_TIME__        "21:00:42"
+__UTC_DATE_NUM__    20091231
+__UTC_TIME_NUM__    210042
+__POSIX_TIME__      1262293242
+\end{lstlisting}
+
+\subsection{\indexcode{\_\_USE\_*\_\_}\code{\_\_USE\_}\emph{package}\code{\_\_}: Package Include Test}
+\label{sec:usedef}
+
+When a standard macro package (see \fullref{sec:macropkg}) is included with the
+\code{\%use} directive (see \fullref{sec:use}), a single-line macro of
+the form \code{\_\_USE\_}\emph{package}\code{\_\_} is automatically defined.
+This allows testing if a particular package is invoked or not.
+
+For example, if the \code{altreg} package is included (see \fullref{sec:pkgaltreg}),
+then the macro \code{\_\_USE\_ALTREG\_\_} is defined.
+
+\subsection{\codeindex{\_\_PASS\_\_}: Assembly Pass}
+\label{sec:usedef}
+
+The macro \code{\_\_PASS\_\_} is defined to be \code{1} on preparatory passes,
+and \code{2} on the final pass.  In preprocess-only mode, it is set to
+\code{3}, and when running only to generate dependencies (due to the
+\code{-M} or \code{-MG} option, see \fullref{sec:optM}) it is set to \code{0}.
+
+\emph{Avoid using this macro if at all possible. It is tremendously easy
+to generate very strange errors by misusing it, and the semantics may
+change in future versions of NASM.}
+
+\subsection{\codeindex{STRUC} and \codeindex{ENDSTRUC}: \textindexlc{Declaring Structure} Data Types}
+\label{sec:struc}
+
+The core of NASM contains no intrinsic means of defining data
+structures; instead, the preprocessor is sufficiently powerful that
+data structures can be implemented as a set of macros. The macros
+\code{STRUC} and \code{ENDSTRUC} are used to define a structure
+data type.
+
+\code{STRUC} takes one or two parameters. The first parameter is the name
+of the data type. The second, optional parameter is the base offset of
+the structure. The name of the data type is defined as a symbol with
+the value of the base offset, and the name of the data type with the
+suffix \code{\_size} appended to it is defined as an \code{EQU} giving
+the size of the structure. Once \code{STRUC} has been issued, you are
+defining the structure, and should define fields using the \code{RESB}
+family of pseudo-instructions, and then invoke \code{ENDSTRUC} to finish
+the definition.
+
+For example, to define a structure called \code{mytype} containing a
+longword, a word, a byte and a string of bytes, you might code
+
+\begin{lstlisting}
+struc mytype
+    mt_long:    resd    1
+    mt_word:    resw    1
+    mt_byte:    resb    1
+    mt_str:     resb    32
+endstruc
+\end{lstlisting}
+
+The above code defines six symbols: \code{mt\_long} as 0 (the offset
+from the beginning of a \code{mytype} structure to the longword field),
+\code{mt\_word} as 4, \code{mt\_byte} as 6, \code{mt\_str} as 7,
+\code{mytype\_size} as 39, and \code{mytype} itself as zero.
+
+The reason why the structure type name is defined at zero by default
+is a side effect of allowing structures to work with the local label
+mechanism: if your structure members tend to have the same names in
+more than one structure, you can define the above structure like this:
+
+\begin{lstlisting}
+struc mytype
+    .long:  resd    1
+    .word:  resw    1
+    .byte:  resb    1
+    .str:   resb    32
+endstruc
+\end{lstlisting}
+
+This defines the offsets to the structure fields as \code{mytype.long},
+\code{mytype.word}, \code{mytype.byte} and \code{mytype.str}.
+
+NASM, since it has no \emph{intrinsic} structure support, does not
+support any form of period notation to refer to the elements of a
+structure once you have one (except the above local-label notation),
+so code such as \code{mov ax,[mystruc.mt\_word]} is not valid.
+\code{mt\_word} is a constant just like any other constant, so the
+correct syntax is \code{mov ax,[mystruc+mt\_word]} or
+\code{mov ax,[mystruc+mytype.word]}.
+
+Sometimes you only have the address of the structure displaced by an
+offset. For example, consider this standard stack frame setup:
+
+\begin{lstlisting}
+push    ebp
+mov     ebp, esp
+sub     esp, 40
+\end{lstlisting}
+
+In this case, you could access an element by subtracting the offset:
+
+\begin{lstlisting}
+mov [ebp - 40 + mytype.word], ax
+\end{lstlisting}
+
+However, if you do not want to repeat this offset, you can use -40 as
+a base offset:
+
+\begin{lstlisting}
+struc mytype, -40
+\end{lstlisting}
+
+And access an element this way:
+
+\begin{lstlisting}
+mov [ebp + mytype.word], ax
+\end{lstlisting}
+
+\subsection{\codeindex{ISTRUC}, \codeindex{AT} and \codeindex{IEND}: Declaring}
+\label{sec:istruc}
+\textindexlc{Instances of Structures}
+
+Having defined a structure type, the next thing you typically want
+to do is to declare instances of that structure in your data
+segment. NASM provides an easy way to do this in the \code{ISTRUC}
+mechanism. To declare a structure of type \code{mytype} in a program,
+you code something like this:
+
+\begin{lstlisting}
+mystruc:
+    istruc mytype
+        at mt_long, dd  123456
+        at mt_word, dw  1024
+        at mt_byte, db  'x'
+        at mt_str,  db  'hello, world', 13, 10, 0
+    iend
+\end{lstlisting}
+
+The function of the \code{AT} macro is to make use of the \code{TIMES}
+prefix to advance the assembly position to the correct point for the
+specified structure field, and then to declare the specified data.
+Therefore the structure fields must be declared in the same order as
+they were specified in the structure definition.
+
+If the data to go in a structure field requires more than one source
+line to specify, the remaining source lines can easily come after
+the \code{AT} line. For example:
+
+\begin{lstlisting}
+at mt_str,  db  123,134,145,156,167,178,189
+            db  190,100,0
+\end{lstlisting}
+
+Depending on personal taste, you can also omit the code part of the
+\code{AT} line completely, and start the structure field on the next
+line:
+
+\begin{lstlisting}
+at mt_str
+        db  'hello, world'
+        db  13,10,0
+\end{lstlisting}
+
+\subsection{\codeindex{ALIGN} and \codeindex{ALIGNB}: Data Alignment}
+\label{sec:align}
+
+The \code{ALIGN} and \code{ALIGNB} macros provides a convenient way to
+align code or data on a word, longword, paragraph or other boundary.
+Some assemblers call this directive \codeindex{EVEN}. The syntax of the
+\code{ALIGN} and \code{ALIGNB} macros is
+
+\begin{lstlisting}
+align   4           ; align on 4-byte boundary
+align   16          ; align on 16-byte boundary
+align   8,db 0      ; pad with 0s rather than NOPs
+align   4,resb 1    ; align to 4 in the BSS
+alignb  4           ; equivalent to previous line
+\end{lstlisting}
+
+Both macros require their first argument to be a power of two; they
+both compute the number of additional bytes required to bring the
+length of the current section up to a multiple of that power of two,
+and then apply the \code{TIMES} prefix to their second argument to
+perform the alignment.
+
+If the second argument is not specified, the default for \code{ALIGN}
+is \code{NOP}, and the default for \code{ALIGNB} is \code{RESB 1}.
+So if the second argument is specified, the two macros are equivalent.
+Normally, you can just use \code{ALIGN} in code and data sections and
+\code{ALIGNB} in BSS sections, and never need the second argument
+except for special purposes.
+
+\code{ALIGN} and \code{ALIGNB}, being simple macros, perform no error
+checking: they cannot warn you if their first argument fails to be a
+power of two, or if their second argument generates more than one
+byte of code. In each of these cases they will silently do the wrong
+thing.
+
+\code{ALIGNB} (or \code{ALIGN} with a second argument of \code{RESB 1})
+can be used within structure definitions:
+
+\begin{lstlisting}
+struc mytype2
+    mt_byte:
+        resb 1
+        alignb 2
+    mt_word:
+        resw 1
+        alignb 4
+    mt_long:
+        resd 1
+    mt_str:
+        resb 32
+endstruc
+\end{lstlisting}
+
+This will ensure that the structure members are sensibly aligned
+relative to the base of the structure.
+
+A final caveat: \code{ALIGN} and \code{ALIGNB} work relative to the
+beginning of the \emph{section}, not the beginning of the address space
+in the final executable. Aligning to a 16-byte boundary when the
+section you're in is only guaranteed to be aligned to a 4-byte
+boundary, for example, is a waste of effort. Again, NASM does not
+check that the section's alignment characteristics are sensible for
+the use of \code{ALIGN} or \code{ALIGNB}.
+
+Both \code{ALIGN} and \code{ALIGNB} do call \code{SECTALIGN} macro implicitly.
+See \fullref{sec:sectalign} for details.
+
+See also the \code{smartalign} standard macro package, \fullref{sec:pkgsmartalign}.
+
+\subsection{\codeindex{SECTALIGN}: Section Alignment}
+\label{sec:sectalign}
+
+The \code{SECTALIGN} macros provides a way to modify alignment attribute
+of output file section. Unlike the \code{align=} attribute (which is allowed
+at section definition only) the \code{SECTALIGN} macro may be used at any time.
+
+For example the directive
+
+\begin{lstlisting}
+SECTALIGN 16
+\end{lstlisting}
+
+sets the section alignment requirements to 16 bytes. Once increased it can
+not be decreased, the magnitude may grow only.
+
+Note that \code{ALIGN} (see \fullref{sec:align}) calls the \code{SECTALIGN}
+macro implicitly so the active section alignment requirements may be updated.
+This is by default behaviour, if for some reason you want the \code{ALIGN}
+do not call \code{SECTALIGN} at all use the directive
+
+\begin{lstlisting}
+SECTALIGN OFF
+\end{lstlisting}
+
+It is still possible to turn in on again by
+
+\begin{lstlisting}
+SECTALIGN ON
 \end{lstlisting}
