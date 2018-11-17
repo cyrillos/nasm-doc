@@ -1,0 +1,80 @@
+\chapter{\textindexlc{Output Formats}}
+\label{ch:outfmt}
+
+NASM is a portable assembler, designed to be able to compile on any
+ANSI C-supporting platform and produce output to run on a variety of
+Intel x86 operating systems. For this reason, it has a large number
+of available output formats, selected using the \codeindex{-f} option
+on the NASM \textindex{command line}. Each of these formats, along with
+its extensions to the base NASM syntax, is detailed in this chapter.
+
+\section{\codeindex{bin}: \textindexlc{Flat-Form Binary}\index{pure binary} Output}
+\label{sec:binfmt}
+
+The \code{bin} format does not produce object files: it generates
+nothing in the output file except the code you wrote. Such ``pure
+binary'' files are used by \textindex{MS-DOS}: \codeindex{.COM}
+executables and \codeindex{.SYS} device drivers are pure binary
+files. Pure binary output is also useful for \textindex{operating system}
+and \textindex{boot loader} development.
+
+The \code{bin} format supports \textindex{multiple section names}.
+For details of how NASM handles sections in the \code{bin} format,
+see \fullref{sec:multisec}.
+
+Using the \code{bin} format puts NASM by default into 16-bit mode
+(see \fullref{sec:bits}). In order to use \code{bin} to write 32-bit
+or 64-bit code, such as an OS kernel, you need to explicitly issue
+the \indexcode{BITS}\c{BITS 32} or \indexcode{BITS}\c{BITS 64}
+directive.
+
+\code{bin} has no default output file name extension: instead, it
+leaves your file name as it is once the original extension has been
+removed. Thus, the default is for NASM to assemble \code{binprog.asm}
+into a binary file called \code{binprog}.
+
+\subsection{\codeindex{ORG}: Binary File \textindexlc{Program Origin}}
+\label{subsec:binfmt}
+
+The \code{bin} format provides an additional directive to the list
+given in \fullref{sec:directive}: \code{ORG}. The function of the
+\code{ORG} directive is to specify the origin address which NASM
+will assume the program begins at when it is loaded into memory.
+
+For example, the following code will generate the longword
+\code{0x00000104}:
+
+\begin{lstlisting}
+    org     0x100
+    dd      label
+label:
+\end{lstlisting}
+
+Unlike the \code{ORG} directive provided by MASM-compatible assemblers,
+which allows you to jump around in the object file and overwrite
+code you have already generated, NASM's \code{ORG} does exactly what
+the directive says: \emph{origin}. Its sole function is to specify one
+offset which is added to all internal address references within the
+section; it does not permit any of the trickery that MASM's version
+does. See \fullref{sec:proborg} for further comments.
+
+\subsection{\code{bin} Extensions to the \code{SECTION}
+Directive\index{section!bin extensions to}}
+\label{subsec:binseg}
+
+The \code{bin} output format extends the \code{SECTION} (or \code{SEGMENT})
+directive to allow you to specify the alignment requirements of segments.
+This is done by appending the \codeindex{ALIGN} qualifier to the end of
+the section-definition line. For example,
+
+\begin{lstlisting}
+section .data   align=16
+\end{lstlisting}
+
+switches to the section \code{.data} and also specifies that it must be
+aligned on a 16-byte boundary.
+
+The parameter to \code{ALIGN} specifies how many low bits of the
+section start address must be forced to zero. The alignment value
+given may be any power of two.\index{section alignment!in bin}
+\index{segment alignment!in bin}\index{alignment!in bin sections}
