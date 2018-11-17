@@ -438,3 +438,26 @@ of the brackeded primitive form, (\code{[FLOAT]}).
 
 \code{\_\_FLOAT\_\_} contains the full set of floating-point settings;
 this value can be saved away and invoked later to restore the setting.
+
+\section{\codeindex{[WARNING]}: Enable or disable warnings}
+\label{sec:asmdirwarning}
+
+The \code{[WARNING]} directive can be used to enable or disable classes
+of warnings in the same way as the \code{-w} option, see \fullref{sec:optw}
+for more details about warning classes.
+
+\begin{itemize}
+    \item{\code{[warning +\emph{warning-class}]} enables warnings for
+        \emph{warning-class}}.
+
+    \item{\code{[warning -\emph{warning-class}]} disables warnings for
+        \emph{warning-class}}.
+
+    \item{\code{[warning *\emph{warning-class}]} restores \emph{warning-class} to
+        the original value, either the default value or as specified on the
+            command line.}
+\end{itemize}
+The \code{[WARNING]} directive also accepts the \code{all}, \code{error} and
+\code{error=}\emph{warning-class} specifiers.
+
+No ``user form'' (without the brackets) currently exists.
