@@ -64,35 +64,35 @@ would expand to
 \begin{lstlisting}
 db      "0.98.32"
 \end{lstlisting}
-%
-%
-%\S{fileline} \i\c{__FILE__} and \i\c{__LINE__}: File Name and Line Number
-%
-%Like the C preprocessor, NASM allows the user to find out the file
-%name and line number containing the current instruction. The macro
-%\c{__FILE__} expands to a string constant giving the name of the
-%current input file (which may change through the course of assembly
-%if \c{%include} directives are used), and \c{__LINE__} expands to a
-%numeric constant giving the current line number in the input file.
-%
-%These macros could be used, for example, to communicate debugging
-%information to a macro, since invoking \c{__LINE__} inside a macro
-%definition (either single-line or multi-line) will return the line
-%number of the macro \e{call}, rather than \e{definition}. So to
-%determine where in a piece of code a crash is occurring, for
-%example, one could write a routine \c{stillhere}, which is passed a
-%line number in \c{EAX} and outputs something like `line 155: still
-%here'. You could then write a macro
-%
-%\c %macro  notdeadyet 0
-%\c
-%\c         push    eax
-%\c         mov     eax,__LINE__
-%\c         call    stillhere
-%\c         pop     eax
-%\c
-%\c %endmacro
-%
+
+\section{\codeindex{\_\_FILE\_\_} and \codeindex{\_\_LINE\_\_}: File Name and Line Number}
+\label{sec:fileline}
+
+Like the C preprocessor, NASM allows the user to find out the file
+name and line number containing the current instruction. The macro
+\code{\_\_FILE\_\_} expands to a string constant giving the name of the
+current input file (which may change through the course of assembly
+if \code{\%include} directives are used), and \code{\_\_LINE\_\_} expands
+to a numeric constant giving the current line number in the input file.
+
+These macros could be used, for example, to communicate debugging
+information to a macro, since invoking \code{\_\_LINE\_\_} inside a macro
+definition (either single-line or multi-line) will return the line
+number of the macro \emph{call}, rather than \emph{definition}. So to
+determine where in a piece of code a crash is occurring, for example,
+one could write a routine \c{stillhere}, which is passed a line number
+in \code{EAX} and outputs something like "line 155: still here".
+You could then write a macro
+
+\begin{lstlisting}
+%macro  notdeadyet 0
+        push    eax
+        mov     eax,__LINE__
+        call    stillhere
+        pop     eax
+%endmacro
+\end{lstlisting}
+
 %and then pepper your code with calls to \c{notdeadyet} until you
 %find the crash point.
 %
