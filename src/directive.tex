@@ -306,3 +306,135 @@ You can declare the same variable as \code{EXTERN} more than once:
 NASM will quietly ignore the second and later redeclarations.
 You can't declare a variable as \code{EXTERN} as well as something
 else, though.
+
+\section{\codeindex{GLOBAL}: \textindexlc{Exporting Symbols} to Other Modules}
+\label{sec:global}
+
+\code{GLOBAL} is the other end of \code{EXTERN}: if one module declares a
+symbol as \code{EXTERN} and refers to it, then in order to prevent
+linker errors, some other module must actually \emph{define} the
+symbol and declare it as \code{GLOBAL}. Some assemblers use the name
+\codeindex{PUBLIC} for this purpose.
+
+The \code{GLOBAL} directive applying to a symbol must appear \emph{before}
+the definition of the symbol.
+
+\code{GLOBAL} uses the same syntax as \code{EXTERN}, except that it must
+refer to symbols which \emph{are} defined in the same module as the
+\code{GLOBAL} directive. For example:
+
+\begin{lstlisting}
+global _main
+_main:
+        ; some code
+\end{lstlisting}
+
+\code{GLOBAL}, like \code{EXTERN}, allows object formats to define private
+extensions by means of a colon. The \code{elf} object format, for
+example, lets you specify whether global data items are functions or
+data:
+
+\begin{lstlisting}
+global  hashlookup:function, hashtable:data
+\end{lstlisting}
+
+Like \code{EXTERN}, the primitive form of \code{GLOBAL} differs
+from the user-level form only in that it can take only one argument
+at a time.
+
+\section{\codeindex{COMMON}: Defining Common Data Areas}
+\label{sec:common}
+
+The \code{COMMON} directive is used to declare \textindex{\emph{common
+variables}}. A common variable is much like a global variable declared
+in the uninitialized data section, so that
+
+\begin{lstlisting}
+common  intvar  4
+\end{lstlisting}
+
+is similar in function to
+
+\begin{lstlisting}
+global  intvar
+section .bss
+
+intvar  resd    1
+\end{lstlisting}
+
+The difference is that if more than one module defines the same
+common variable, then at link time those variables will be
+\emph{merged}, and references to \code{intvar} in all modules
+will point at the same piece of memory.
+
+Like \code{GLOBAL} and \code{EXTERN}, \code{COMMON} supports
+object-format specific extensions. For example, the \code{obj}
+format allows common variables to be NEAR or FAR, and the \code{elf}
+format allows you to specify the alignment requirements of
+a common variable:
+
+\begin{lstlisting}
+common  commvar  4:near ; works in OBJ
+common  intarray 100:4  ; works in ELF: 4 byte aligned
+\end{lstlisting}
+
+Once again, like \code{EXTERN} and \code{GLOBAL}, the primitive form of
+\code{COMMON} differs from the user-level form only in that it can take
+only one argument at a time.
+
+\section{\codeindex{CPU}: Defining CPU Dependencies}
+\label{sec:cpu}
+
+The \code{CPU} directive restricts assembly to those instructions which
+are available on the specified CPU.
+
+Options are:
+
+\begin{tabular}{ l l }
+  \code{CPU 8086} & Assemble only 8086 instruction set \\
+  \code{CPU 186} & Assemble instructions up to the 80186 instruction set \\
+  \code{CPU 286} & Assemble instructions up to the 286 instruction set \\
+  \code{CPU 386} & Assemble instructions up to the 386 instruction set \\
+  \code{CPU 486} & 486 instruction set \\
+  \code{CPU 586} & Pentium instruction set \\
+  \code{CPU PENTIUM} & Same as 586 \\
+  \code{CPU 686} & P6 instruction set \\
+  \code{CPU PPRO} & Same as 686 \\
+  \code{CPU P2} & Same as 686 \\
+  \code{CPU P3} & Pentium III (Katmai) instruction sets \\
+  \code{CPU KATMAI} & Same as P3 \\
+  \code{CPU P4} & Pentium 4 (Willamette) instruction set \\
+  \code{CPU WILLAMETTE} & Same as P4 \\
+  \code{CPU PRESCOTT} & Prescott instruction set \\
+  \code{CPU X64} & x86-64 (x64/AMD64/Intel 64) instruction set \\
+  \code{CPU IA64} & IA64 CPU (in x86 mode) instruction set \\
+\end{tabular}
+
+All options are case insensitive. All instructions will be selected
+only if they apply to the selected CPU or lower. By default, all
+instructions are available.
+
+\section{\codeindex{FLOAT}: Handling of \index{constants!floating-point}floating-point constants}
+\label{sec:float}
+
+By default, floating-point constants are rounded to nearest, and IEEE
+denormals are supported. The following options can be set to alter
+this behaviour:
+
+\begin{tabular}{ l l }
+  \code{FLOAT DAZ} & Flush denormals to zero \\
+  \code{FLOAT NODAZ} & Do not flush denormals to zero (default) \\
+  \code{FLOAT NEAR} & Round to nearest (default) \\
+  \code{FLOAT UP} &  Round up (toward +Infinity) \\
+  \code{FLOAT DOWN} & Round down (toward -Infinity) \\
+  \code{FLOAT ZERO} & Round toward zero \\
+  \code{FLOAT DEFAULT} & Restore default settings \\
+\end{tabular}
+
+The standard macros \codeindex{\_\_FLOAT\_DAZ\_\_},
+\codeindex{\_\_FLOAT\_ROUND\_\_}, and \codeindex{\_\_FLOAT\_\_} contain
+the current state, as long as the programmer has avoided the use
+of the brackeded primitive form, (\code{[FLOAT]}).
+
+\code{\_\_FLOAT\_\_} contains the full set of floating-point settings;
+this value can be saved away and invoked later to restore the setting.
