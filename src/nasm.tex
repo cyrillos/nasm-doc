@@ -13,11 +13,11 @@
 \usepackage{xspace}		% spacing
 \usepackage{sectsty}		% colors for sections
 \usepackage{graphicx}		% images
-\usepackage[titles]{tocloft}		% coloring TOC
+\usepackage[titles]{tocloft}	% coloring TOC
 
 \title{NASM -- The Netwide Assembler}
 \author{The NASM Development Team}
-\date{1996 -- 2017}
+\date{1996 -- 2018}
 \input{src/version.tex}
 
 %
@@ -42,8 +42,6 @@
 %
 % Setup document fonts
 \setmainfont{Source Sans Pro}
-%\setmonofont{Source Code Pro}
-\setmonofont{DejaVu Sans Mono}
 \setmonofont{FreeMono}
 
 % Listings font and settings
@@ -62,6 +60,7 @@
         xrightmargin=10pt,
         aboveskip=10pt,
         belowskip=5pt,
+        literate={-}{{-}}1
 }
 
 %
