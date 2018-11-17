@@ -212,3 +212,97 @@ in the previous version of the macro, to include a \code{JMP} instruction
 to jump over the data, and also does not fail if, in a complicated
 \code{OBJ} format module, the user could potentially be assembling the
 code in any of several separate code sections.
+
+\section{\codeindex{ABSOLUTE}: Defining Absolute Labels}
+\label{subsec:absolute}
+
+The \code{ABSOLUTE} directive can be thought of as an alternative form
+of \code{SECTION}: it causes the subsequent code to be directed at no
+physical section, but at the hypothetical section starting at the
+given absolute address. The only instructions you can use in this
+mode are the \code{RESB} family.
+
+\code{ABSOLUTE} is used as follows:
+
+\begin{lstlisting}
+absolute 0x1A
+
+    kbuf_chr    resw    1
+    kbuf_free   resw    1
+    kbuf        resw    16
+\end{lstlisting}
+
+This example describes a section of the PC BIOS data area, at
+segment address 0x40: the above code defines \code{kbuf\_chr} to be
+0x1A, \code{kbuf\_free} to be 0x1C, and \code{kbuf} to be 0x1E.
+
+The user-level form of \code{ABSOLUTE}, like that of \code{SECTION},
+redefines the \codeindex{\_\_SECT\_\_} macro when it is invoked.
+
+\codeindex{STRUC} and \codeindex{ENDSTRUC} are defined as macros
+which use \code{ABSOLUTE} (and also \code{\_\_SECT\_\_}).
+
+\code{ABSOLUTE} doesn't have to take an absolute constant as an
+argument: it can take an expression (actually, a \textindex{critical
+expression}: see \fullref{sec:crit}) and it can be a value in a segment.
+For example, a TSR can re-use its setup code as run-time BSS like this:
+
+\begin{lstlisting}
+        org     100h        ; it's a .COM program
+        jmp     setup       ; setup code comes last
+        ; the resident part of the TSR goes here
+        ; ...
+setup:
+        ; now write the code that installs the TSR here
+        ; ...
+absolute setup
+
+runtimevar1     resw    1
+runtimevar2     resd    20
+
+tsr_end:
+\end{lstlisting}
+
+This defines some variables ``on top of'' the setup code, so that
+after the setup has finished running, the space it took up can be
+re-used as data storage for the running TSR. The symbol
+\code{tsr\_end} can be used to calculate the total size of
+the part of the TSR that needs to be made resident.
+
+\section{\codeindex{EXTERN}: \textindexlc{Importing Symbols} from Other Modules}
+\label{sec:extern}
+
+\code{EXTERN} is similar to the MASM directive \code{EXTRN} and
+the C keyword \code{extern}: it is used to declare a symbol which
+is not defined anywhere in the module being assembled, but is assumed
+to be defined in some other module and needs to be referred to by this
+one. Not every object-file format can support external variables:
+the \code{bin} format cannot.
+
+The \code{EXTERN} directive takes as many arguments as you like.
+Each argument is the name of a symbol:
+
+\begin{lstlisting}
+extern  _printf
+extern  _sscanf,_fscanf
+\end{lstlisting}
+
+Some object-file formats provide extra features to the \code{EXTERN}
+directive. In all cases, the extra features are used by suffixing a
+colon to the symbol name followed by object-format specific text.
+For example, the \code{obj} format allows you to declare that the
+default segment base of an external should be the group \code{dgroup}
+by means of the directive
+
+\begin{lstlisting}
+extern  _variable:wrt dgroup
+\end{lstlisting}
+
+The primitive form of \code{EXTERN} differs from the user-level form
+only in that it can take only one argument at a time: the support
+for multiple arguments is implemented at the preprocessor level.
+
+You can declare the same variable as \code{EXTERN} more than once:
+NASM will quietly ignore the second and later redeclarations.
+You can't declare a variable as \code{EXTERN} as well as something
+else, though.
