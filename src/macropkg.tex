@@ -78,3 +78,53 @@ to turn off the jump completely just set jump threshold value to -1
 The macro \codeindex{\_\_ALIGNMODE\_\_} is defined to contain the
 current alignment mode. A number of other macros beginning with
 \code{\_\_ALIGN\_} are used internally by this macro package.
+
+\section{\codeindex{fp}: Floating-point macros}
+\label{sec:pkgfp}
+
+This packages contains the following floating-point convenience macros:
+
+\begin{lstlisting}
+%define Inf             __Infinity__
+%define NaN             __QNaN__
+%define QNaN            __QNaN__
+%define SNaN            __SNaN__
+
+%define float8(x)       __float8__(x)
+%define float16(x)      __float16__(x)
+%define float32(x)      __float32__(x)
+%define float64(x)      __float64__(x)
+%define float80m(x)     __float80m__(x)
+%define float80e(x)     __float80e__(x)
+%define float128l(x)    __float128l__(x)
+%define float128h(x)    __float128h__(x)
+\end{lstlisting}
+
+\section{\codeindex{ifunc}: \textindexlc{Integer functions}}
+\label{sec:pkgifunc}
+
+This package contains a set of macros which implement integer
+functions. These are actually implemented as special operators, but
+are most conveniently accessed via this macro package.
+
+\subsection{\textindexlc{Integer logarithms}}
+\label{subsec:ilog2}
+
+These functions calculate the integer logarithm base 2 of their
+argument, considered as an unsigned integer. The only differences
+between the functions is their respective behavior if the argument
+provided is not a power of two.
+
+The function \codeindex{ilog2e()} (alias \codeindex{ilog2()}) generates
+an error if the argument is not a power of two.
+
+The function \codeindex{ilog2f()} rounds the argument down to the nearest
+power of two; if the argument is zero it returns zero.
+
+The function \codeindex{ilog2c()} rounds the argument up to the nearest
+power of two.
+
+The functions \codeindex{ilog2fw()} (alias \codeindex{ilog2w()}) and
+\codeindex{ilog2cw()} generate a warning if the argument is not a power of
+two, but otherwise behaves like \codeindex{ilog2f()} and \codeindex{ilog2c()},
+respectively.
