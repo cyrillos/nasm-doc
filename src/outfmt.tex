@@ -223,3 +223,74 @@ extern  foo
     mov     ax,[ds:foo]             ; this accesses `foo'
     mov     [es:foo wrt data],bx    ; so does this
 \end{lstlisting}
+
+\subsection{\code{obj} Extensions to the \code{SEGMENT} Directive
+\index{SEGMENT!obj extensions to}}
+\label{subsec:objseg}
+
+The \code{obj} output format extends the \code{SEGMENT} (or \code{SECTION})
+directive to allow you to specify various properties of the segment
+you are defining. This is done by appending extra qualifiers to the
+end of the segment-definition line. For example,
+
+\begin{lstlisting}
+segment code private align=16
+\end{lstlisting}
+
+defines the segment \code{code}, but also declares it to be a private
+segment, and requires that the portion of it described in this code
+module must be aligned on a 16-byte boundary.
+
+The available qualifiers are:
+
+\begin{itemize}
+    \item{\codeindex{PRIVATE}, \codeindex{PUBLIC}, \codeindex{COMMON}
+        and \codeindex{STACK} specify the combination characteristics
+        of the segment. \code{PRIVATE} segments do not get combined
+        with any others by the linker; \code{PUBLIC} and \code{STACK}
+        segments get concatenated together at link time; and \code{COMMON}
+        segments all get overlaid on top of each other rather than stuck
+        end-to-end.}
+
+    \item{\codeindex{ALIGN} is used, as shown above, to specify how many
+        low bits of the segment start address must be forced to zero.
+        The alignment value given may be any power of two from 1 to 4096;
+        in reality, the only values supported are 1, 2, 4, 16, 256 and 4096,
+        so if 8 is specified it will be rounded up to 16, and 32, 64 and 128
+        will all be rounded up to 256, and so on. Note that alignment to
+        4096-byte boundaries is a \textindex{PharLap} extension to the
+        format and may not be supported by all linkers.
+        \index{section alignment!in OBJ}
+        \index{segment alignment!in OBJ}
+        \index{alignment!in OBJ sections}}
+
+    \item{\codeindex{CLASS} can be used to specify the segment class;
+        this feature indicates to the linker that segments of the same
+        class should be placed near each other in the output file.
+        The class name can be any word, e.g. \code{CLASS=CODE}.}
+
+    \item{\codeindex{OVERLAY}, like \code{CLASS}, is specified with
+        an arbitrary word as an argument, and provides overlay information
+        to an overlay-capable linker.}
+
+    \item{Segments can be declared as \codeindex{USE16} or \codeindex{USE32},
+        which has the effect of recording the choice in the object file
+        and also ensuring that NASM's default assembly mode when assembling
+        in that segment is 16-bit or 32-bit respectively.}
+
+    \item{When writing \textindex{OS/2} object files, you should declare
+        32-bit segments as \codeindex{FLAT}, which causes the default
+        segment base for anything in the segment to be the special group
+        \code{FLAT}, and also defines the group if it is not already defined.}
+
+    \item{The \code{obj} file format also allows segments to be declared as
+        having a pre-defined absolute segment address, although no linkers
+        are currently known to make sensible use of this feature;
+        nevertheless, NASM allows you to declare a segment such as
+        \code{SEGMENT SCREEN ABSOLUTE=0xB800} if you need to. The
+        \codeindex{ABSOLUTE} and \code{ALIGN} keywords are mutually
+        exclusive.}
+\end{itemize}
+
+NASM's default segment attributes are \code{PUBLIC}, \code{ALIGN=1}, no
+class, no overlay, and \code{USE16}.
