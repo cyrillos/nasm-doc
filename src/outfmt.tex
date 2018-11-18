@@ -243,6 +243,22 @@ module must be aligned on a 16-byte boundary.
 
 The available qualifiers are:
 
+%\begin{tabular}{ l l }
+%\codeindex{CLASS} &
+%\begin{minipage}[t]{0.8\columnwidth}
+%can be used to specify the segment class; this feature indicates to
+%the linker that segments of the same class should be placed near each
+%other in the output file.  The class name can be any word, e.g.
+%\code{CLASS=CODE}.
+%\end{minipage} \\
+%
+%\codeindex{OVERLAY} &
+%\begin{minipage}[t]{0.8\columnwidth}
+%like \code{CLASS}, is specified with an arbitrary word as an argument,
+%and provides overlay information to an overlay-capable linker.
+%\end{minipage}
+%\end{tabular}
+
 \begin{itemize}
     \item{\codeindex{PRIVATE}, \codeindex{PUBLIC}, \codeindex{COMMON}
         and \codeindex{STACK} specify the combination characteristics
