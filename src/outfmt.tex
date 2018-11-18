@@ -59,9 +59,9 @@ offset which is added to all internal address references within the
 section; it does not permit any of the trickery that MASM's version
 does. See \fullref{sec:proborg} for further comments.
 
-\subsection{\code{bin} Extensions to the \code{SECTION}
-Directive\index{section!bin extensions to}}
+\subsection{\code{bin} Extensions to the \code{SECTION} Directive}
 \label{subsec:binseg}
+\index{section!bin extensions to}
 
 The \code{bin} output format extends the \code{SECTION} (or \code{SEGMENT})
 directive to allow you to specify the alignment requirements of segments.
@@ -77,11 +77,14 @@ aligned on a 16-byte boundary.
 
 The parameter to \code{ALIGN} specifies how many low bits of the
 section start address must be forced to zero. The alignment value
-given may be any power of two.\index{section alignment!in bin}
-\index{segment alignment!in bin}\index{alignment!in bin sections}
+given may be any power of two.
+\index{section alignment!in bin}
+\index{segment alignment!in bin}
+\index{alignment!in bin sections}
 
-\subsection{\textindexlc{Multisection}\index{bin!multisection} Support for the \code{bin} Format}
+\subsection{\textindexlc{Multisection} Support for the \code{bin} Format}
 \label{subsec:multisec}
+\index{bin!multisection}
 
 The \code{bin} format allows the use of multiple sections, of arbitrary names,
 besides the ``known'' \code{.text}, \code{.data}, and \code{.bss} names.
@@ -209,9 +212,9 @@ function:
     ret
 \end{lstlisting}
 
-The \c{obj} format also enables the use of the \i\c{SEG} and
-\i\c{WRT} operators, so that you can write code which does things
-like
+The \code{obj} format also enables the use of the \codeindex{SEG}
+and \codeindex{WRT} operators, so that you can write code which
+does things like
 
 \begin{lstlisting}
 extern  foo
@@ -224,9 +227,9 @@ extern  foo
     mov     [es:foo wrt data],bx    ; so does this
 \end{lstlisting}
 
-\subsection{\code{obj} Extensions to the \code{SEGMENT} Directive
-\index{SEGMENT!obj extensions to}}
+\subsection{\code{obj} Extensions to the \code{SEGMENT} Directive}
 \label{subsec:objseg}
+\index{SEGMENT!obj extensions to}
 
 The \code{obj} output format extends the \code{SEGMENT} (or \code{SECTION})
 directive to allow you to specify various properties of the segment
@@ -310,3 +313,249 @@ The available qualifiers are:
 
 NASM's default segment attributes are \code{PUBLIC}, \code{ALIGN=1}, no
 class, no overlay, and \code{USE16}.
+
+\subsection{\codeindex{GROUP}: Defining Groups of Segments}
+\label{subsec:group}
+\index{segments!groups of}
+
+The \code{obj} format also allows segments to be grouped, so that a
+single segment register can be used to refer to all the segments in
+a group. NASM therefore supplies the \code{GROUP} directive, whereby
+you can code
+
+\begin{lstlisting}
+segment data
+    ; some data
+segment bss
+    ; some uninitialized data
+group dgroup data bss
+\end{lstlisting}
+
+which will define a group called \code{dgroup} to contain the segments
+\code{data} and \code{bss}. Like \code{SEGMENT}, \code{GROUP} causes
+the group name to be defined as a symbol, so that you can refer to
+a variable \code{var} in the \code{data} segment as \code{var wrt data}
+or as \code{var wrt dgroup}, depending on which segment value is
+currently in your segment register.
+
+If you just refer to \code{var}, however, and \code{var} is declared
+in a segment which is part of a group, then NASM will default to giving
+you the offset of \code{var} from the beginning of the \emph{group},
+not the \emph{segment}. Therefore \code{SEG var}, also, will return
+the group base rather than the segment base.
+
+NASM will allow a segment to be part of more than one group, but
+will generate a warning if you do this. Variables declared in a
+segment which is part of more than one group will default to being
+relative to the first group that was defined to contain the segment.
+
+A group does not have to contain any segments; you can still make
+\code{WRT} references to a group which does not contain the variable
+you are referring to. OS/2, for example, defines the special group
+\code{FLAT} with no segments in it.
+
+\subsection{\codeindex{UPPERCASE}: Disabling Case Sensitivity in Output}
+\label{subsec:uppercase}
+
+Although NASM itself is \textindex{case sensitive}, some OMF linkers are
+not; therefore it can be useful for NASM to output single-case
+object files. The \code{UPPERCASE} format-specific directive causes all
+segment, group and symbol names that are written to the object file
+to be forced to upper case just before being written. Within a
+source file, NASM is still case-sensitive; but the object file can
+be written entirely in upper case if desired.
+
+\code{UPPERCASE} is used alone on a line; it requires no parameters.
+
+\subsection{\codeindex{IMPORT}: Importing DLL Symbols}
+\label{subsec:import}
+\index{DLL symbols!importing}
+\index{symbols!importing from DLLs}
+
+The \code{IMPORT} format-specific directive defines a symbol to be
+imported from a DLL, for use if you are writing a DLL's
+\textindex{import library} in NASM. You still need to declare the
+symbol as \code{EXTERN} as well as using the \code{IMPORT}
+directive.
+
+The \code{IMPORT} directive takes two required parameters, separated
+by white space, which are (respectively) the name of the symbol you
+wish to import and the name of the library you wish to import it
+from. For example:
+
+\begin{lstlisting}
+import  WSAStartup wsock32.dll
+\end{lstlisting}
+
+A third optional parameter gives the name by which the symbol is
+known in the library you are importing it from, in case this is not
+the same as the name you wish the symbol to be known by to your code
+once you have imported it. For example:
+
+\begin{lstlisting}
+import  asyncsel wsock32.dll WSAAsyncSelect
+\end{lstlisting}
+
+\subsection{\codeindex{EXPORT}: Exporting DLL Symbols}
+\label{subsec:export}
+\index{DLL symbols!exporting}
+\index{symbols!exporting from DLLs}
+
+The \code{EXPORT} format-specific directive defines a global
+symbol to be exported as a DLL symbol, for use if you are
+writing a DLL in NASM. You still need to declare the symbol
+as \code{GLOBAL} as well as using the \code{EXPORT} directive.
+
+\code{EXPORT} takes one required parameter, which is the name of the
+symbol you wish to export, as it was defined in your source file. An
+optional second parameter (separated by white space from the first)
+gives the \emph{external} name of the symbol: the name by which you
+wish the symbol to be known to programs using the DLL. If this name
+is the same as the internal name, you may leave the second parameter
+off.
+
+Further parameters can be given to define attributes of the exported
+symbol. These parameters, like the second, are separated by white
+space. If further parameters are given, the external name must also
+be specified, even if it is the same as the internal name. The
+available attributes are:
+
+\begin{itemize}
+    \item{\code{resident} indicates that the exported name is
+        to be kept resident by the system loader. This is
+        an optimisation for frequently used symbols imported
+        by name.}
+
+    \item{\code{nodata} indicates that the exported symbol
+        is a function which does not make use of any initialized
+        data.}
+
+    \item{\code{parm=NNN}, where \code{NNN} is an integer, sets
+        the number of parameter words for the case in which
+        the symbol is a call gate between 32-bit and 16-bit
+        segments.}
+
+    \item{An attribute which is just a number indicates that
+        the symbol should be exported with an identifying
+        number (ordinal), and gives the desired number.}
+\end{itemize}
+
+For example:
+
+\begin{lstlisting}
+export  myfunc
+export  myfunc TheRealMoreFormalLookingFunctionName
+export  myfunc myfunc 1234  ; export by ordinal
+export  myfunc myfunc resident parm=23 nodata
+\end{lstlisting}
+
+\subsection{\codeindex{..start}: Defining the \textindexlc{Program Entry Point}}
+\label{subsec:dotdotstart}
+
+\code{OMF} linkers require exactly one of the object files being linked to
+define the program entry point, where execution will begin when the
+program is run. If the object file that defines the entry point is
+assembled using NASM, you specify the entry point by declaring the
+special symbol \code{..start} at the point where you wish execution to
+begin.
+
+\subsection{\code{obj} Extensions to the \code{EXTERN} Directive}
+\label{subsec:objextern}
+\index{EXTERN!obj extensions to}
+
+If you declare an external symbol with the directive
+
+\begin{lstlisting}
+extern  foo
+\end{lstlisting}
+
+then references such as \code{mov ax,foo} will give you the offset of
+\code{foo} from its preferred segment base (as specified in whichever
+module \code{foo} is actually defined in). So to access the contents of
+\code{foo} you will usually need to do something like
+
+\begin{lstlisting}
+    mov     ax,seg foo      ; get preferred segment base
+    mov     es,ax           ; move it into ES
+    mov     ax,[es:foo]     ; and use offset `foo' from it
+\end{lstlisting}
+
+This is a little unwieldy, particularly if you know that an external
+is going to be accessible from a given segment or group, say
+\code{dgroup}. So if \code{DS} already contained \code{dgroup},
+you could simply code
+
+\begin{lstlisting}
+    mov     ax,[foo wrt dgroup]
+\end{lstlisting}
+
+However, having to type this every time you want to access \code{foo}
+can be a pain; so NASM allows you to declare \code{foo} in the
+alternative form
+
+\begin{lstlisting}
+extern  foo:wrt dgroup
+\end{lstlisting}
+
+This form causes NASM to pretend that the preferred segment base of
+\code{foo} is in fact \code{dgroup}; so the expression \code{seg foo}
+will now return \code{dgroup}, and the expression \code{foo} is
+equivalent to \code{foo wrt dgroup}.
+
+This \index{default-WRT mechanism}default-\code{WRT} mechanism can be used
+to make externals appear to be relative to any group or segment in
+your program. It can also be applied to common variables: see
+\fullref{subsec:objcommon}.
+
+\subsection{\code{obj} Extensions to the \code{COMMON} Directive}
+\label{subsec:objcommon}
+\index{COMMON!obj extensions to}
+
+The \code{obj} format allows common variables to be either near
+\index{common variables!near} or far\index{common variables!far};
+NASM allows you to specify which your variables should be by the
+use of the syntax
+
+\begin{lstlisting}
+common  nearvar 2:near  ; nearvar is a near common
+common  farvar  10:far  ; and farvar is far
+\end{lstlisting}
+
+Far common variables may be greater in size than 64Kb, and so the
+OMF specification says that they are declared as a number of
+\emph{elements} of a given size. So a 10-byte far common variable could
+be declared as ten one-byte elements, five two-byte elements, two
+five-byte elements or one ten-byte element.
+
+Some \code{OMF} linkers require the \index{element size!in common
+variables}\index{common variables!element size}element size, as well as
+the variable size, to match when resolving common variables declared
+in more than one module. Therefore NASM must allow you to specify
+the element size on your far common variables. This is done by the
+following syntax:
+
+\begin{lstlisting}
+common  c_5by2  10:far  5   ; two five-byte elements
+common  c_2by5  10:far  2   ; five two-byte elements
+\end{lstlisting}
+
+If no element size is specified, the default is 1. Also, the \code{FAR}
+keyword is not required when an element size is specified, since
+only far commons may have element sizes at all. So the above
+declarations could equivalently be
+
+\begin{lstlisting}
+common  c_5by2  10:5        ; two five-byte elements
+common  c_2by5  10:2        ; five two-byte elements
+\end{lstlisting}
+
+In addition to these extensions, the \code{COMMON} directive
+in \code{obj} also supports default-\code{WRT} specification
+like \code{EXTERN} does (explained in \fullref{subsec:objextern}).
+So you can also declare things like
+
+\begin{lstlisting}
+common  foo     10:wrt dgroup
+common  bar     16:far 2:wrt data
+common  baz     24:wrt data:6
+\end{lstlisting}
