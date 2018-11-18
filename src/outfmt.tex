@@ -78,3 +78,49 @@ The parameter to \code{ALIGN} specifies how many low bits of the
 section start address must be forced to zero. The alignment value
 given may be any power of two.\index{section alignment!in bin}
 \index{segment alignment!in bin}\index{alignment!in bin sections}
+
+\subsection{\textindexlc{Multisection}\index{bin!multisection} Support for the \code{bin} Format}
+\label{subsec:multisec}
+
+The \code{bin} format allows the use of multiple sections, of arbitrary names,
+besides the ``known'' \code{.text}, \code{.data}, and \code{.bss} names.
+
+\begin{itemize}
+    \item{Sections may be designated \codeindex{progbits} or \codeindex{nobits}.
+        Default is \code{progbits} (except \code{.bss}, which defaults to
+        \code{nobits}, of course).}
+
+    \item{Sections can be aligned at a specified boundary following the previous
+        section with \code{align=}, or at an arbitrary byte-granular position with
+        \codeindex{start=}.}
+
+    \item{Sections can be given a virtual start address, which will be used
+        for the calculation of all memory references within that section
+        with \codeindex{vstart=}.}
+
+    \item{Sections can be ordered using \codeindex{follows=}\code{<section>} or
+        \codeindex{vfollows=}\code{<section>} as an alternative to specifying
+        an explicit start address.}
+
+    \item{Arguments to \code{org}, \code{start}, \code{vstart}, and \code{align=}
+        are critical expressions. See \fullref{sec:crit}. E.g.
+        \code{align=(1 << ALIGN\_SHIFT)} - \code{ALIGN\_SHIFT} must be defined
+        before it is used here.}
+
+    \item{Any code which comes before an explicit \code{SECTION} directive
+        is directed by default into the \code{.text} section.}
+
+    \item{If an \code{ORG} statement is not given, \code{ORG 0} is used by default.}
+
+    \item{The \code{.bss} section will be placed after the last \code{progbits}
+        section, unless \code{start=}, \code{vstart=}, \code{follows=}, or
+        \code{vfollows=} has been specified.}
+
+    \item{All sections are aligned on dword boundaries, unless a different
+        alignment has been specified.}
+
+    \item{Sections may not overlap.}
+
+    \item{NASM creates the \code{section.<secname>.start} for each section,
+        which may be used in your code.}
+\end{itemize}
