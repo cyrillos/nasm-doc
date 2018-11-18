@@ -10,6 +10,7 @@ its extensions to the base NASM syntax, is detailed in this chapter.
 
 \section{\codeindex{bin}: \textindexlc{Flat-Form Binary}\index{pure binary} Output}
 \label{sec:binfmt}
+\index{file extension!bin}
 
 The \code{bin} format does not produce object files: it generates
 nothing in the output file except the code you wrote. Such ``pure
@@ -124,3 +125,101 @@ besides the ``known'' \code{.text}, \code{.data}, and \code{.bss} names.
     \item{NASM creates the \code{section.<secname>.start} for each section,
         which may be used in your code.}
 \end{itemize}
+
+\subsection{\textindexlc{Map Files}}
+\label{subsec:map}
+\index{file extension!map}
+
+Map files can be generated in \code{-f bin} format by means of the \code{[map]}
+option. Map types of \code{all} (default), \code{brief}, \code{sections},
+\code{segments}, or \code{symbols} may be specified. Output may be directed
+to \code{stdout} (default), \code{stderr}, or a specified file. E.g.
+\code{[map symbols myfile.map]}. No ``user form'' exists, the square
+brackets must be used.
+
+\section{\codeindex{ith}: \textindexlc{Intel Hex} Output}
+\label{sec:ithfmt}
+\index{file extension!ith}
+
+The \code{ith} file format produces Intel hex-format files. Just as the
+\code{bin} format, this is a flat memory image format with no support for
+relocation or linking. It is usually used with ROM programmers and
+similar utilities.
+
+All extensions supported by the \code{bin} file format is also supported by
+the \code{ith} file format.
+
+\code{ith} provides a default output file-name extension of \code{.ith}.
+
+\section{\codeindex{srec}: \textindexlc{Motorola S-Records} Output}
+\label{sec:srecfmt}
+\index{file extension!srec}
+
+The \code{srec} file format produces Motorola S-records files. Just as the
+\code{bin} format, this is a flat memory image format with no support for
+relocation or linking. It is usually used with ROM programmers and similar
+utilities.
+
+All extensions supported by the \code{bin} file format is also supported by
+the \code{srec} file format.
+
+\code{srec} provides a default output file-name extension of \code{.srec}.
+
+\section{\codeindex{obj}: \textindexlc{Microsoft OMF}\index{OMF} Object Files}
+\label{sec:objfmt}
+\index{file extension!obj}
+
+The \code{obj} file format (NASM calls it \code{obj} rather than
+\code{omf} for historical reasons) is the one produced by \textindex{MASM}
+and \textindex{TASM}, which is typically fed to 16-bit DOS linkers
+to produce \codeindex{.EXE} files. It is also the format used by
+\textindex{OS/2}.
+
+\code{obj} provides a default output file-name extension of \code{.obj}.
+
+\code{obj} is not exclusively a 16-bit format, though: NASM has full
+support for the 32-bit extensions to the format. In particular,
+32-bit \code{obj} format files are used by \textindex{Borland's Win32
+compilers}, instead of using Microsoft's newer \codeindex{win32} object
+file format.
+
+The \code{obj} format does not define any special segment names: you
+can call your segments anything you like. Typical names for segments
+in \code{obj} format files are \code{CODE}, \code{DATA} and \code{BSS}.
+
+If your source file contains code before specifying an explicit
+\code{SEGMENT} directive, then NASM will invent its own segment called
+\codeindex{\_\_NASMDEFSEG} for you.
+
+When you define a segment in an \code{obj} file, NASM defines the
+segment name as a symbol as well, so that you can access the segment
+address of the segment. So, for example:
+
+\begin{lstlisting}
+segment data
+
+dvar:   dw      1234
+
+segment code
+
+function:
+    mov     ax,data     ; get segment address of data
+    mov     ds,ax       ; and move it into DS
+    inc     word [dvar] ; now this reference will work
+    ret
+\end{lstlisting}
+
+The \c{obj} format also enables the use of the \i\c{SEG} and
+\i\c{WRT} operators, so that you can write code which does things
+like
+
+\begin{lstlisting}
+extern  foo
+
+    mov     ax,seg foo              ; get preferred segment of foo
+    mov     ds,ax
+    mov     ax,data                 ; a different segment
+    mov     es,ax
+    mov     ax,[ds:foo]             ; this accesses `foo'
+    mov     [es:foo wrt data],bx    ; so does this
+\end{lstlisting}
