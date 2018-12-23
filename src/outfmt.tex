@@ -947,68 +947,79 @@ Developer is allowed to append handler-specific data to \code{UNWIND\_INFO}
 structure, and if [s]he adds a 32-bit reference, then [s]he will have
 to remember to adjust its value to obtain the real pointer.
 
-%As already mentioned, in Win64 terms leaf function is one that does not
-%call any other function \e{nor} modifies any non-volatile register,
-%including stack pointer. But it's not uncommon that assembler
-%programmer plans to utilize every single register and sometimes even
-%have variable stack frame. Is there anything one can do with bare
-%building blocks? I.e. besides manually composing fully-fledged
-%\c{UNWIND_INFO} structure, which would surely be considered
-%error-prone? Yes, there is. Recall that exception handler is called
-%first, before stack layout is analyzed. As it turned out, it's
-%perfectly possible to manipulate current callee's context in custom
-%handler in manner that permits further stack unwinding. General idea is
-%that handler would not actually "handle" the exception, but instead
-%restore callee's context, as it was at its entry point and thus mimic
-%leaf function. In other words, handler would simply undertake part of
-%unwinding procedure. Consider following example:
-%
-%\c function:
-%\c         mov     rax,rsp         ; copy rsp to volatile register
-%\c         push    r15             ; save non-volatile registers
-%\c         push    rbx
-%\c         push    rbp
-%\c         mov     r11,rsp         ; prepare variable stack frame
-%\c         sub     r11,rcx
-%\c         and     r11,-64
-%\c         mov     QWORD[r11],rax  ; check for exceptions
-%\c         mov     rsp,r11         ; allocate stack frame
-%\c         mov     QWORD[rsp],rax  ; save original rsp value
-%\c magic_point:
-%\c         ...
-%\c         mov     r11,QWORD[rsp]  ; pull original rsp value
-%\c         mov     rbp,QWORD[r11-24]
-%\c         mov     rbx,QWORD[r11-16]
-%\c         mov     r15,QWORD[r11-8]
-%\c         mov     rsp,r11         ; destroy frame
-%\c         ret
-%
-%The keyword is that up to \c{magic_point} original \c{rsp} value
-%remains in chosen volatile register and no non-volatile register,
-%except for \c{rsp}, is modified. While past \c{magic_point} \c{rsp}
-%remains constant till the very end of the \c{function}. In this case
-%custom language-specific exception handler would look like this:
-%
-%\c EXCEPTION_DISPOSITION handler (EXCEPTION_RECORD *rec,ULONG64 frame,
-%\c         CONTEXT *context,DISPATCHER_CONTEXT *disp)
-%\c {   ULONG64 *rsp;
-%\c     if (context->Rip<(ULONG64)magic_point)
-%\c         rsp = (ULONG64 *)context->Rax;
-%\c     else
-%\c     {   rsp = ((ULONG64 **)context->Rsp)[0];
-%\c         context->Rbp = rsp[-3];
-%\c         context->Rbx = rsp[-2];
-%\c         context->R15 = rsp[-1];
-%\c     }
-%\c     context->Rsp = (ULONG64)rsp;
-%\c
-%\c     memcpy (disp->ContextRecord,context,sizeof(CONTEXT));
-%\c     RtlVirtualUnwind(UNW_FLAG_NHANDLER,disp->ImageBase,
-%\c         dips->ControlPc,disp->FunctionEntry,disp->ContextRecord,
-%\c         &disp->HandlerData,&disp->EstablisherFrame,NULL);
-%\c     return ExceptionContinueSearch;
-%\c }
-%
-%As custom handler mimics leaf function, corresponding \c{UNWIND_INFO}
-%structure does not have to contain any information about stack frame
-%and its layout.
+As already mentioned, in Win64 terms leaf function is one that does not
+call any other function \emph{nor} modifies any non-volatile register,
+including stack pointer. But it's not uncommon that assembler
+programmer plans to utilize every single register and sometimes even
+have variable stack frame. Is there anything one can do with bare
+building blocks? I.e. besides manually composing fully-fledged
+\code{UNWIND\_INFO} structure, which would surely be considered
+error-prone? Yes, there is. Recall that exception handler is called
+first, before stack layout is analyzed. As it turned out, it's
+perfectly possible to manipulate current callee's context in custom
+handler in manner that permits further stack unwinding. General idea is
+that handler would not actually "handle" the exception, but instead
+restore callee's context, as it was at its entry point and thus mimic
+leaf function. In other words, handler would simply undertake part of
+unwinding procedure. Consider following example:
+
+\begin{lstlisting}
+function:
+        mov     rax,rsp         ; copy rsp to volatile register
+        push    r15             ; save non-volatile registers
+        push    rbx
+        push    rbp
+        mov     r11,rsp         ; prepare variable stack frame
+        sub     r11,rcx
+        and     r11,-64
+        mov     QWORD[r11],rax  ; check for exceptions
+        mov     rsp,r11         ; allocate stack frame
+        mov     QWORD[rsp],rax  ; save original rsp value
+magic_point:
+        ...
+        mov     r11,QWORD[rsp]  ; pull original rsp value
+        mov     rbp,QWORD[r11-24]
+        mov     rbx,QWORD[r11-16]
+        mov     r15,QWORD[r11-8]
+        mov     rsp,r11         ; destroy frame
+        ret
+\end{lstlisting}
+
+The keyword is that up to \code{magic\_point} original \code{rsp} value
+remains in chosen volatile register and no non-volatile register,
+except for \code{rsp}, is modified. While past \code{magic\_point}
+\code{rsp} remains constant till the very end of the \code{function}.
+In this case custom language-specific exception handler would look like this:
+
+\begin{lstlisting}
+EXCEPTION_DISPOSITION
+handler(EXCEPTION_RECORD *rec, ULONG64 frame,
+        CONTEXT *context, DISPATCHER_CONTEXT *disp)
+{
+    ULONG64 *rsp;
+
+    if (context->Rip < (ULONG64)magic_point)
+        rsp = (ULONG64 *)context->Rax;
+    else {
+        rsp = ((ULONG64 **)context->Rsp)[0];
+        context->Rbp = rsp[-3];
+        context->Rbx = rsp[-2];
+        context->R15 = rsp[-1];
+    }
+    context->Rsp = (ULONG64)rsp;
+
+    memcpy(disp->ContextRecord, context, sizeof(CONTEXT));
+    RtlVirtualUnwind(UNW_FLAG_NHANDLER, disp->ImageBase,
+                     dips->ControlPc, disp->FunctionEntry,
+                     disp->ContextRecord,
+                     &disp->HandlerData,
+                     &disp->EstablisherFrame,
+                     NULL);
+
+    return ExceptionContinueSearch;
+}
+\end{lstlisting}
+
+As custom handler mimics leaf function, corresponding \code{UNWIND\_INFO}
+structure does not have to contain any information about stack frame
+and its layout.
