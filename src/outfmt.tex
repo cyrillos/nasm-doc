@@ -801,35 +801,39 @@ dsptch: dq      case0-dsptch
         ...
 \end{lstlisting}
 
-%NASM version 2.03 and later provides another alternative, \c{wrt
-%..imagebase} operator, which returns offset from base address of the
-%current image, be it .exe or .dll module, therefore the name. For those
-%acquainted with PE-COFF format base address denotes start of
-%\c{IMAGE_DOS_HEADER} structure. Here is how to implement switch with
-%these image-relative references:
-%
-%\c         lea     rbx,[rel dsptch]
-%\c         mov     eax,[rbx+rax*4]
-%\c         sub     rbx,dsptch wrt ..imagebase
-%\c         add     rbx,rax
-%\c         jmp     rbx
-%\c         ...
-%\c dsptch: dd      case0 wrt ..imagebase
-%\c         dd      case1 wrt ..imagebase
-%
-%One can argue that the operator is redundant. Indeed,  snippet before
-%last works just fine with any NASM version and is not even Windows
-%specific... The real reason for implementing \c{wrt ..imagebase} will
-%become apparent in next paragraph.
-%
-%It should be noted that \c{wrt ..imagebase} is defined as 32-bit
-%operand only:
-%
-%\c         dd      label wrt ..imagebase           ; ok
-%\c         dq      label wrt ..imagebase           ; bad
-%\c         mov     eax,label wrt ..imagebase       ; ok
-%\c         mov     rax,label wrt ..imagebase       ; bad
-%
+NASM version 2.03 and later provides another alternative, \code{wrt
+..imagebase} operator, which returns offset from base address of the
+current image, be it .exe or .dll module, therefore the name. For those
+acquainted with PE-COFF format base address denotes start of
+\code{IMAGE\_DOS\_HEADER} structure. Here is how to implement switch with
+these image-relative references:
+
+\begin{lstlisting}
+        lea     rbx,[rel dsptch]
+        mov     eax,[rbx+rax*4]
+        sub     rbx,dsptch wrt ..imagebase
+        add     rbx,rax
+        jmp     rbx
+        ...
+dsptch: dd      case0 wrt ..imagebase
+        dd      case1 wrt ..imagebase
+\end{lstlisting}
+
+One can argue that the operator is redundant. Indeed, snippet before
+last works just fine with any NASM version and is not even Windows
+specific... The real reason for implementing \code{wrt ..imagebase} will
+become apparent in next paragraph.
+
+It should be noted that \code{wrt ..imagebase} is defined as 32-bit
+operand only:
+
+\begin{lstlisting}
+        dd      label wrt ..imagebase           ; ok
+        dq      label wrt ..imagebase           ; bad
+        mov     eax,label wrt ..imagebase       ; ok
+        mov     rax,label wrt ..imagebase       ; bad
+\end{lstlisting}
+
 %\S{win64seh} \c{win64}: Structured Exception Handling
 %
 %Structured exception handing in Win64 is completely different matter
