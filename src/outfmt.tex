@@ -743,3 +743,265 @@ The \code{win32} and \code{win64} formats support the Microsoft CodeView
 debugging format. Currently CodeView version 8 format is supported
 (\i\c{cv8}), but newer versions of the CodeView debugger should be
 able to handle this format as well.
+
+\section{\codeindex{win64}: Microsoft Win64 Object Files}
+\label{sec:win64fmt}
+
+The \code{win64} output format generates Microsoft Win64 object files,
+which is nearly 100\% identical to the \code{win32} object format
+(\fullref{sec:win32fmt}) with the exception that it is meant to target
+64-bit code and the x86-64 platform altogether. This object file is used
+exactly the same as the \code{win32} object format, in NASM, with regard to this exception.
+
+\subsection{\code{win64}: Writing Position-Independent Code}
+\label{subsec:win64pic}
+
+While \code{REL} takes good care of RIP-relative addressing, there is one
+aspect that is easy to overlook for a Win64 programmer: indirect
+references. Consider a switch dispatch table:
+
+\begin{lstlisting}
+        jmp     qword [dsptch+rax*8]
+        ...
+dsptch: dq      case0
+        dq      case1
+        ...
+\end{lstlisting}
+
+Even a novice Win64 assembler programmer will soon realize that the code
+is not 64-bit savvy. Most notably linker will refuse to link it with
+
+\begin{lstlisting}
+'ADDR32' relocation to '.text' invalid without /LARGEADDRESSAWARE:NO
+\end{lstlisting}
+
+So [s]he will have to split jmp instruction as following:
+
+\begin{lstlisting}
+        lea     rbx,[rel dsptch]
+        jmp     qword [rbx+rax*8]
+\end{lstlisting}
+
+What happens behind the scene is that effective address in \code{lea} is
+encoded relative to instruction pointer, or in perfectly position-independent
+manner. But this is only part of the problem! Trouble is that in .dll context
+\code{caseN} relocations will make their way to the final module and might
+have to be adjusted at .dll load time. To be specific when it can't be loaded
+at preferred address. And when this occurs, pages with such relocations will
+be rendered private to current process, which kind of undermines the idea
+of sharing .dll. But no worry, it's trivial to fix:
+
+\begin{lstlisting}
+        lea     rbx,[rel dsptch]
+        add     rbx,[rbx+rax*8]
+        jmp     rbx
+        ...
+dsptch: dq      case0-dsptch
+        dq      case1-dsptch
+        ...
+\end{lstlisting}
+
+%NASM version 2.03 and later provides another alternative, \c{wrt
+%..imagebase} operator, which returns offset from base address of the
+%current image, be it .exe or .dll module, therefore the name. For those
+%acquainted with PE-COFF format base address denotes start of
+%\c{IMAGE_DOS_HEADER} structure. Here is how to implement switch with
+%these image-relative references:
+%
+%\c         lea     rbx,[rel dsptch]
+%\c         mov     eax,[rbx+rax*4]
+%\c         sub     rbx,dsptch wrt ..imagebase
+%\c         add     rbx,rax
+%\c         jmp     rbx
+%\c         ...
+%\c dsptch: dd      case0 wrt ..imagebase
+%\c         dd      case1 wrt ..imagebase
+%
+%One can argue that the operator is redundant. Indeed,  snippet before
+%last works just fine with any NASM version and is not even Windows
+%specific... The real reason for implementing \c{wrt ..imagebase} will
+%become apparent in next paragraph.
+%
+%It should be noted that \c{wrt ..imagebase} is defined as 32-bit
+%operand only:
+%
+%\c         dd      label wrt ..imagebase           ; ok
+%\c         dq      label wrt ..imagebase           ; bad
+%\c         mov     eax,label wrt ..imagebase       ; ok
+%\c         mov     rax,label wrt ..imagebase       ; bad
+%
+%\S{win64seh} \c{win64}: Structured Exception Handling
+%
+%Structured exception handing in Win64 is completely different matter
+%from Win32. Upon exception program counter value is noted, and
+%linker-generated table comprising start and end addresses of all the
+%functions [in given executable module] is traversed and compared to the
+%saved program counter. Thus so called \c{UNWIND_INFO} structure is
+%identified. If it's not found, then offending subroutine is assumed to
+%be "leaf" and just mentioned lookup procedure is attempted for its
+%caller. In Win64 leaf function is such function that does not call any
+%other function \e{nor} modifies any Win64 non-volatile registers,
+%including stack pointer. The latter ensures that it's possible to
+%identify leaf function's caller by simply pulling the value from the
+%top of the stack.
+%
+%While majority of subroutines written in assembler are not calling any
+%other function, requirement for non-volatile registers' immutability
+%leaves developer with not more than 7 registers and no stack frame,
+%which is not necessarily what [s]he counted with. Customarily one would
+%meet the requirement by saving non-volatile registers on stack and
+%restoring them upon return, so what can go wrong? If [and only if] an
+%exception is raised at run-time and no \c{UNWIND_INFO} structure is
+%associated with such "leaf" function, the stack unwind procedure will
+%expect to find caller's return address on the top of stack immediately
+%followed by its frame. Given that developer pushed caller's
+%non-volatile registers on stack, would the value on top point at some
+%code segment or even addressable space? Well, developer can attempt
+%copying caller's return address to the top of stack and this would
+%actually work in some very specific circumstances. But unless developer
+%can guarantee that these circumstances are always met, it's more
+%appropriate to assume worst case scenario, i.e. stack unwind procedure
+%going berserk. Relevant question is what happens then? Application is
+%abruptly terminated without any notification whatsoever. Just like in
+%Win32 case, one can argue that system could at least have logged
+%"unwind procedure went berserk in x.exe at address n" in event log, but
+%no, no trace of failure is left.
+%
+%Now, when we understand significance of the \c{UNWIND_INFO} structure,
+%let's discuss what's in it and/or how it's processed. First of all it
+%is checked for presence of reference to custom language-specific
+%exception handler. If there is one, then it's invoked. Depending on the
+%return value, execution flow is resumed (exception is said to be
+%"handled"), \e{or} rest of \c{UNWIND_INFO} structure is processed as
+%following. Beside optional reference to custom handler, it carries
+%information about current callee's stack frame and where non-volatile
+%registers are saved. Information is detailed enough to be able to
+%reconstruct contents of caller's non-volatile registers upon call to
+%current callee. And so caller's context is reconstructed, and then
+%unwind procedure is repeated, i.e. another \c{UNWIND_INFO} structure is
+%associated, this time, with caller's instruction pointer, which is then
+%checked for presence of reference to language-specific handler, etc.
+%The procedure is recursively repeated till exception is handled. As
+%last resort system "handles" it by generating memory core dump and
+%terminating the application.
+%
+%As for the moment of this writing NASM unfortunately does not
+%facilitate generation of above mentioned detailed information about
+%stack frame layout. But as of version 2.03 it implements building
+%blocks for generating structures involved in stack unwinding. As
+%simplest example, here is how to deploy custom exception handler for
+%leaf function:
+%
+%\c default rel
+%\c section .text
+%\c extern  MessageBoxA
+%\c handler:
+%\c         sub     rsp,40
+%\c         mov     rcx,0
+%\c         lea     rdx,[text]
+%\c         lea     r8,[caption]
+%\c         mov     r9,1    ; MB_OKCANCEL
+%\c         call    MessageBoxA
+%\c         sub     eax,1   ; incidentally suits as return value
+%\c                         ; for exception handler
+%\c         add     rsp,40
+%\c         ret
+%\c global  main
+%\c main:
+%\c         xor     rax,rax
+%\c         mov     rax,QWORD[rax]  ; cause exception
+%\c         ret
+%\c main_end:
+%\c text:   db      'OK to rethrow, CANCEL to generate core dump',0
+%\c caption:db      'SEGV',0
+%\c
+%\c section .pdata  rdata align=4
+%\c         dd      main wrt ..imagebase
+%\c         dd      main_end wrt ..imagebase
+%\c         dd      xmain wrt ..imagebase
+%\c section .xdata  rdata align=8
+%\c xmain:  db      9,0,0,0
+%\c         dd      handler wrt ..imagebase
+%\c section .drectve info
+%\c         db      '/defaultlib:user32.lib /defaultlib:msvcrt.lib '
+%
+%What you see in \c{.pdata} section is element of the "table comprising
+%start and end addresses of function" along with reference to associated
+%\c{UNWIND_INFO} structure. And what you see in \c{.xdata} section is
+%\c{UNWIND_INFO} structure describing function with no frame, but with
+%designated exception handler. References are \e{required} to be
+%image-relative (which is the real reason for implementing \c{wrt
+%..imagebase} operator). It should be noted that \c{rdata align=n}, as
+%well as \c{wrt ..imagebase}, are optional in these two segments'
+%contexts, i.e. can be omitted. Latter means that \e{all} 32-bit
+%references, not only above listed required ones, placed into these two
+%segments turn out image-relative. Why is it important to understand?
+%Developer is allowed to append handler-specific data to \c{UNWIND_INFO}
+%structure, and if [s]he adds a 32-bit reference, then [s]he will have
+%to remember to adjust its value to obtain the real pointer.
+%
+%As already mentioned, in Win64 terms leaf function is one that does not
+%call any other function \e{nor} modifies any non-volatile register,
+%including stack pointer. But it's not uncommon that assembler
+%programmer plans to utilize every single register and sometimes even
+%have variable stack frame. Is there anything one can do with bare
+%building blocks? I.e. besides manually composing fully-fledged
+%\c{UNWIND_INFO} structure, which would surely be considered
+%error-prone? Yes, there is. Recall that exception handler is called
+%first, before stack layout is analyzed. As it turned out, it's
+%perfectly possible to manipulate current callee's context in custom
+%handler in manner that permits further stack unwinding. General idea is
+%that handler would not actually "handle" the exception, but instead
+%restore callee's context, as it was at its entry point and thus mimic
+%leaf function. In other words, handler would simply undertake part of
+%unwinding procedure. Consider following example:
+%
+%\c function:
+%\c         mov     rax,rsp         ; copy rsp to volatile register
+%\c         push    r15             ; save non-volatile registers
+%\c         push    rbx
+%\c         push    rbp
+%\c         mov     r11,rsp         ; prepare variable stack frame
+%\c         sub     r11,rcx
+%\c         and     r11,-64
+%\c         mov     QWORD[r11],rax  ; check for exceptions
+%\c         mov     rsp,r11         ; allocate stack frame
+%\c         mov     QWORD[rsp],rax  ; save original rsp value
+%\c magic_point:
+%\c         ...
+%\c         mov     r11,QWORD[rsp]  ; pull original rsp value
+%\c         mov     rbp,QWORD[r11-24]
+%\c         mov     rbx,QWORD[r11-16]
+%\c         mov     r15,QWORD[r11-8]
+%\c         mov     rsp,r11         ; destroy frame
+%\c         ret
+%
+%The keyword is that up to \c{magic_point} original \c{rsp} value
+%remains in chosen volatile register and no non-volatile register,
+%except for \c{rsp}, is modified. While past \c{magic_point} \c{rsp}
+%remains constant till the very end of the \c{function}. In this case
+%custom language-specific exception handler would look like this:
+%
+%\c EXCEPTION_DISPOSITION handler (EXCEPTION_RECORD *rec,ULONG64 frame,
+%\c         CONTEXT *context,DISPATCHER_CONTEXT *disp)
+%\c {   ULONG64 *rsp;
+%\c     if (context->Rip<(ULONG64)magic_point)
+%\c         rsp = (ULONG64 *)context->Rax;
+%\c     else
+%\c     {   rsp = ((ULONG64 **)context->Rsp)[0];
+%\c         context->Rbp = rsp[-3];
+%\c         context->Rbx = rsp[-2];
+%\c         context->R15 = rsp[-1];
+%\c     }
+%\c     context->Rsp = (ULONG64)rsp;
+%\c
+%\c     memcpy (disp->ContextRecord,context,sizeof(CONTEXT));
+%\c     RtlVirtualUnwind(UNW_FLAG_NHANDLER,disp->ImageBase,
+%\c         dips->ControlPc,disp->FunctionEntry,disp->ContextRecord,
+%\c         &disp->HandlerData,&disp->EstablisherFrame,NULL);
+%\c     return ExceptionContinueSearch;
+%\c }
+%
+%As custom handler mimics leaf function, corresponding \c{UNWIND_INFO}
+%structure does not have to contain any information about stack frame
+%and its layout.
