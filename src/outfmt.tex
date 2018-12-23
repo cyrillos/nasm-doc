@@ -1023,3 +1023,15 @@ handler(EXCEPTION_RECORD *rec, ULONG64 frame,
 As custom handler mimics leaf function, corresponding \code{UNWIND\_INFO}
 structure does not have to contain any information about stack frame
 and its layout.
+
+\section{\codeindex{coff}: \textindexlc{Common Object File Format}}
+\label{sec:cofffmt}
+
+The \code{coff} output type produces \code{COFF} object files suitable for
+linking with the \textindex{DJGPP} linker.
+
+\code{coff} provides a default output file-name extension of \code{.o}.
+
+The \code{coff} format supports the same extensions to the \code{SECTION}
+directive as \code{win32} does, except that the \code{align} qualifier and
+the \code{info} section type are not supported.
