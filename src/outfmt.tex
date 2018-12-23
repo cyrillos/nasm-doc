@@ -559,3 +559,71 @@ common  foo     10:wrt dgroup
 common  bar     16:far 2:wrt data
 common  baz     24:wrt data:6
 \end{lstlisting}
+
+\section{\codeindex{win32}: Microsoft Win32 Object Files}
+\label{sec:win32fmt}
+
+The \code{win32} output format generates Microsoft Win32 object files,
+suitable for passing to Microsoft linkers such as \emph{Visual C++}.
+Note that Borland Win32 compilers do not use this format, but use
+\code{obj} instead (see \fullref{sec:objfmt}).
+
+\code{win32} provides a default output file-name extension of \code{.obj}.
+
+Note that although Microsoft say that Win32 object files follow the
+COFF (Common Object File Format) standard, the object files produced
+by Microsoft Win32 compilers are not compatible with COFF linkers such
+as DJGPP's, and vice versa. This is due to a difference of opinion over
+the precise semantics of PC-relative relocations. To produce COFF files
+suitable for DJGPP, use NASM's \code{coff} output format; conversely,
+the \code{coff} format does not produce object files that Win32 linkers
+can generate correct output from.
+
+\subsection{\code{win32} Extensions to the \code{SECTION} Directive}
+\label{subsec:win32sect}
+\index{SECTION!win32 extensions to}
+
+Like the \code{obj} format, \code{win32} allows you to specify additional
+information on the \code{SECTION} directive line, to control the type
+and properties of sections you declare. Section types and properties
+are generated automatically by NASM for the \textindex{standard section names}
+\code{.text}, \code{.data} and \code{.bss}, but may still be overridden by
+these qualifiers.
+
+The available qualifiers are:
+
+\begin{itemize}
+    \item{\code{code}, or equivalently \code{text}, defines the section
+        to be a code section. This marks the section as readable and
+        executable, but not writable, and also indicates to the linker
+        that the type of the section is code.}
+
+    \item{\code{data} and \code{bss} define the section to be a data
+        section, analogously to \code{code}. Data sections are marked
+        as readable and writable, but not executable. \code{data}
+        declares an initialized data section, whereas \code{bss} declares
+        an uninitialized data section.}
+
+    \item{\code{rdata} declares an initialized data section that is
+        readable but not writable. Microsoft compilers use this section
+        to place constants in it.}
+
+    \item{\code{info} defines the section to be an \textindex{informational section},
+        which is not included in the executable file by the linker, but may
+        (for example) pass information \emph{to} the linker. For example,
+        declaring an \code{info}-type section called \codeindex{.drectve} causes
+        the linker to interpret the contents of the section as command-line
+        options.}
+
+    \item{\code{align=}, used with a trailing number as in \code{obj}, gives the
+        \index{section alignment!in win32} \index{alignment!in win32 sections}
+        alignment requirements of the section. The maximum you may
+        specify is 64: the Win32 object file format contains no means to
+        request a greater section alignment than this. If alignment is not
+        explicitly specified, the defaults are 16-byte alignment for code
+        sections, 8-byte alignment for rdata sections and 4-byte alignment
+        for data (and BSS) sections.
+        Informational sections get a default alignment of 1 byte (no
+        alignment), though the value does not matter.}
+
+\end{itemize}
