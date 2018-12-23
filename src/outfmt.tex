@@ -625,5 +625,16 @@ The available qualifiers are:
         for data (and BSS) sections.
         Informational sections get a default alignment of 1 byte (no
         alignment), though the value does not matter.}
-
 \end{itemize}
+
+The defaults assumed by NASM if you do not specify the above
+qualifiers are:
+
+\begin{lstlisting}
+section .text   code    align=16
+section .data   data    align=4
+section .rdata  rdata   align=8
+section .bss    bss     align=4
+\end{lstlisting}
+
+Any other section name is treated by default like \code{.text}.
