@@ -1041,7 +1041,7 @@ the \code{info} section type are not supported.
 \label{sec:machofmt}
 \index{Mach-O}
 
-The \code{macho32} and \code{macho64} output formts produces Mach-O
+The \code{macho32}, \code{macho64} output formts produces Mach-O
 object files suitable for linking with the \textindex{MacOS X} linker.
 \codeindex{macho} is a synonym for \code{macho32}.
 
@@ -1131,3 +1131,257 @@ non-Mach-O builds of the same source code:
 \begin{lstlisting}
 %pragma macho no_dead_strip symbol...
 \end{lstlisting}
+
+\section{\codeindex{elf32}, \codeindex{elf64}, \codeindex{elfx32}:
+\textindexlc{Executable and Linkable Format} Object Files}
+\label{sec:elffmt}
+\index{ELF}\index{linux!elf}
+
+The \code{elf32}, \code{elf64} and \code{elfx32} output formats generate
+\code{ELF32} and \code{ELF64} (Executable and Linkable Format) object files,
+as used by Linux as well as \textindex{Unix System V}, including
+\textindex{Solaris x86}, \textindex{UnixWare} and \textindex{SCO Unix}.
+\code{elf} provides a default output file-name extension of \code{.o}.
+\code{elf} is a synonym for \code{elf32}.
+
+The \code{elfx32} format is used for the \textindex{x32} ABI, which is
+a 32-bit ABI with the CPU in 64-bit mode.
+
+\subsection{ELF specific directive \codeindex{osabi}}
+\label{subsec:abisect}
+
+The ELF header specifies the application binary interface for the
+target operating system (OSABI). This field can be set by using the
+\code{osabi} directive with the numeric value (0-255) of the target
+system. If this directive is not used, the default value will be "UNIX
+System V ABI" (0) which will work on most systems which support ELF.
+%
+%\S{elfsect} \c{elf} extensions to the \c{SECTION} Directive
+%\I{SECTION, elf extensions to}
+%
+%Like the \c{obj} format, \c{elf} allows you to specify additional
+%information on the \c{SECTION} directive line, to control the type
+%and properties of sections you declare. Section types and properties
+%are generated automatically by NASM for the \i{standard section
+%names}, but may still be
+%overridden by these qualifiers.
+%
+%The available qualifiers are:
+%
+%\b \i\c{alloc} defines the section to be one which is loaded into
+%memory when the program is run. \i\c{noalloc} defines it to be one
+%which is not, such as an informational or comment section.
+%
+%\b \i\c{exec} defines the section to be one which should have execute
+%permission when the program is run. \i\c{noexec} defines it as one
+%which should not.
+%
+%\b \i\c{write} defines the section to be one which should be writable
+%when the program is run. \i\c{nowrite} defines it as one which should
+%not.
+%
+%\b \i\c{progbits} defines the section to be one with explicit contents
+%stored in the object file: an ordinary code or data section, for
+%example, \i\c{nobits} defines the section to be one with no explicit
+%contents given, such as a BSS section.
+%
+%\b \c{align=}, used with a trailing number as in \c{obj}, gives the
+%\I{section alignment, in elf}\I{alignment, in elf sections}alignment
+%requirements of the section.
+%
+%\b \i\c{tls} defines the section to be one which contains
+%thread local variables.
+%
+%The defaults assumed by NASM if you do not specify the above
+%qualifiers are:
+%
+%\I\c{.text} \I\c{.rodata} \I\c{.lrodata} \I\c{.data} \I\c{.ldata}
+%\I\c{.bss} \I\c{.lbss} \I\c{.tdata} \I\c{.tbss} \I\c\{.comment}
+%
+%\c section .text    progbits  alloc   exec    nowrite  align=16
+%\c section .rodata  progbits  alloc   noexec  nowrite  align=4
+%\c section .lrodata progbits  alloc   noexec  nowrite  align=4
+%\c section .data    progbits  alloc   noexec  write    align=4
+%\c section .ldata   progbits  alloc   noexec  write    align=4
+%\c section .bss     nobits    alloc   noexec  write    align=4
+%\c section .lbss    nobits    alloc   noexec  write    align=4
+%\c section .tdata   progbits  alloc   noexec  write    align=4    tls
+%\c section .tbss    nobits    alloc   noexec  write    align=4    tls
+%\c section .comment progbits  noalloc noexec  nowrite  align=1
+%\c section other    progbits  alloc   noexec  nowrite  align=1
+%
+%(Any section name other than those in the above table
+% is treated by default like \c{other} in the above table.
+% Please note that section names are case sensitive.)
+%
+%
+%\S{elfwrt} \i{Position-Independent Code}\I{PIC}: \c{macho} Special
+%Symbols and \i\c{WRT}
+%
+%Since \c{ELF} does not support segment-base references, the \c{WRT}
+%operator is not used for its normal purpose; therefore NASM's
+%\c{elf} output format makes use of \c{WRT} for a different purpose,
+%namely the PIC-specific \I{relocations, PIC-specific}relocation
+%types.
+%
+%\c{elf} defines five special symbols which you can use as the
+%right-hand side of the \c{WRT} operator to obtain PIC relocation
+%types. They are \i\c{..gotpc}, \i\c{..gotoff}, \i\c{..got},
+%\i\c{..plt} and \i\c{..sym}. Their functions are summarized here:
+%
+%\b Referring to the symbol marking the global offset table base
+%using \c{wrt ..gotpc} will end up giving the distance from the
+%beginning of the current section to the global offset table.
+%(\i\c{_GLOBAL_OFFSET_TABLE_} is the standard symbol name used to
+%refer to the \i{GOT}.) So you would then need to add \i\c{$$} to the
+%result to get the real address of the GOT.
+%
+%\b Referring to a location in one of your own sections using \c{wrt
+%..gotoff} will give the distance from the beginning of the GOT to
+%the specified location, so that adding on the address of the GOT
+%would give the real address of the location you wanted.
+%
+%\b Referring to an external or global symbol using \c{wrt ..got}
+%causes the linker to build an entry \e{in} the GOT containing the
+%address of the symbol, and the reference gives the distance from the
+%beginning of the GOT to the entry; so you can add on the address of
+%the GOT, load from the resulting address, and end up with the
+%address of the symbol.
+%
+%\b Referring to a procedure name using \c{wrt ..plt} causes the
+%linker to build a \i{procedure linkage table} entry for the symbol,
+%and the reference gives the address of the \i{PLT} entry. You can
+%only use this in contexts which would generate a PC-relative
+%relocation normally (i.e. as the destination for \c{CALL} or
+%\c{JMP}), since ELF contains no relocation type to refer to PLT
+%entries absolutely.
+%
+%\b Referring to a symbol name using \c{wrt ..sym} causes NASM to
+%write an ordinary relocation, but instead of making the relocation
+%relative to the start of the section and then adding on the offset
+%to the symbol, it will write a relocation record aimed directly at
+%the symbol in question. The distinction is a necessary one due to a
+%peculiarity of the dynamic linker.
+%
+%A fuller explanation of how to use these relocation types to write
+%shared libraries entirely in NASM is given in \k{picdll}.
+%
+%\S{elftls} \i{Thread Local Storage in ELF}\I{TLS}: \c{elf} Special
+%Symbols and \i\c{WRT}
+%
+%\b In ELF32 mode, referring to an external or global symbol using
+%\c{wrt ..tlsie} \I\c{..tlsie}
+%causes the linker to build an entry \e{in} the GOT containing the
+%offset of the symbol within the TLS block, so you can access the value
+%of the symbol with code such as:
+%
+%\c	  mov  eax,[tid wrt ..tlsie]
+%\c	  mov  [gs:eax],ebx
+%
+%
+%\b In ELF64 or ELFx32 mode, referring to an external or global symbol using
+%\c{wrt ..gottpoff} \I\c{..gottpoff}
+%causes the linker to build an entry \e{in} the GOT containing the
+%offset of the symbol within the TLS block, so you can access the value
+%of the symbol with code such as:
+%
+%\c	  mov	rax,[rel tid wrt ..gottpoff]
+%\c	  mov	rcx,[fs:rax]
+%
+%
+%\S{elfglob} \c{elf} Extensions to the \c{GLOBAL} Directive\I{GLOBAL,
+%elf extensions to}\I{GLOBAL, aoutb extensions to}
+%
+%\c{ELF} object files can contain more information about a global symbol
+%than just its address: they can contain the \I{symbol sizes,
+%specifying}\I{size, of symbols}size of the symbol and its \I{symbol
+%types, specifying}\I{type, of symbols}type as well. These are not
+%merely debugger conveniences, but are actually necessary when the
+%program being written is a \i{shared library}. NASM therefore
+%supports some extensions to the \c{GLOBAL} directive, allowing you
+%to specify these features.
+%
+%You can specify whether a global variable is a function or a data
+%object by suffixing the name with a colon and the word
+%\i\c{function} or \i\c{data}. (\i\c{object} is a synonym for
+%\c{data}.) For example:
+%
+%\c global   hashlookup:function, hashtable:data
+%
+%exports the global symbol \c{hashlookup} as a function and
+%\c{hashtable} as a data object.
+%
+%Optionally, you can control the ELF visibility of the symbol.  Just
+%add one of the visibility keywords: \i\c{default}, \i\c{internal},
+%\i\c{hidden}, or \i\c{protected}.  The default is \i\c{default} of
+%course.  For example, to make \c{hashlookup} hidden:
+%
+%\c global   hashlookup:function hidden
+%
+%You can also specify the size of the data associated with the
+%symbol, as a numeric expression (which may involve labels, and even
+%forward references) after the type specifier. Like this:
+%
+%\c global  hashtable:data (hashtable.end - hashtable)
+%\c
+%\c hashtable:
+%\c         db this,that,theother  ; some data here
+%\c .end:
+%
+%This makes NASM automatically calculate the length of the table and
+%place that information into the \c{ELF} symbol table.
+%
+%Declaring the type and size of global symbols is necessary when
+%writing shared library code. For more information, see
+%\k{picglobal}.
+%
+%
+%\S{elfcomm} \c{elf} Extensions to the \c{COMMON} Directive
+%\I{COMMON, elf extensions to}
+%
+%\c{ELF} also allows you to specify alignment requirements \I{common
+%variables, alignment in elf}\I{alignment, of elf common variables}on
+%common variables. This is done by putting a number (which must be a
+%power of two) after the name and size of the common variable,
+%separated (as usual) by a colon. For example, an array of
+%doublewords would benefit from 4-byte alignment:
+%
+%\c common  dwordarray 128:4
+%
+%This declares the total size of the array to be 128 bytes, and
+%requires that it be aligned on a 4-byte boundary.
+%
+%
+%\S{elf16} 16-bit code and ELF
+%\I{ELF, 16-bit code and}
+%
+%The \c{ELF32} specification doesn't provide relocations for 8- and
+%16-bit values, but the GNU \c{ld} linker adds these as an extension.
+%NASM can generate GNU-compatible relocations, to allow 16-bit code to
+%be linked as ELF using GNU \c{ld}. If NASM is used with the
+%\c{-w+gnu-elf-extensions} option, a warning is issued when one of
+%these relocations is generated.
+%
+%\S{elfdbg} Debug formats and ELF
+%\I{ELF, Debug formats and}
+%
+%ELF provides debug information in \c{STABS} and \c{DWARF} formats.
+%Line number information is generated for all executable sections, but please
+%note that only the ".text" section is executable by default.
+%
+%\H{aoutfmt} \i\c{aout}: Linux \I{a.out, Linux version}\I{linux, a.out}\c{a.out} Object Files
+%
+%The \c{aout} format generates \c{a.out} object files, in the form used
+%by early Linux systems (current Linux systems use ELF, see
+%\k{elffmt}.) These differ from other \c{a.out} object files in that
+%the magic number in the first four bytes of the file is
+%different; also, some implementations of \c{a.out}, for example
+%NetBSD's, support position-independent code, which Linux's
+%implementation does not.
+%
+%\c{a.out} provides a default output file-name extension of \c{.o}.
+%
+%\c{a.out} is a very simple object format. It supports no special
+%directives, no special symbols, no use of \c{SEG} or \c{WRT}, and no
+%extensions to any standard directives. It supports only the three
+%\i{standard section names} \i\c{.text}, \i\c{.data} and \i\c{.bss}.
