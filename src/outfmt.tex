@@ -1457,3 +1457,169 @@ of view). It supports no special directives, no use of \code{SEG} or
 only the three \textindexlc{standard section names} \codeindex{.text},
 \codeindex{.data} and \codeindex{.bss}. The only special symbol supported
 is \code{..start}.
+
+\section{\index{RDOFF}\codeindex{rdf}: \textindexlc{Relocatable Dynamic
+Object File Format}}
+\label{sec:rdffmt}
+
+The \code{rdf} output format produces \code{RDOFF} object files.
+\code{RDOFF} (Relocatable Dynamic Object File Format) is a home-grown
+object-file format, designed alongside NASM itself and reflecting in
+its file format the internal structure of the assembler.
+
+\code{RDOFF} is not used by any well-known operating systems. Those
+writing their own systems, however, may well wish to use \code{RDOFF}
+as their object format, on the grounds that it is designed primarily
+for simplicity and contains very little file-header bureaucracy.
+
+The Unix NASM archive, and the DOS archive which includes sources,
+both contain an \index{rdoff subdirectory}\code{rdoff} subdirectory
+holding a set of RDOFF utilities: an RDF linker, an \code{RDF}
+static-library manager, an RDF file dump utility, and a program
+which will load and execute an RDF executable under Linux.
+
+\code{rdf} supports only the \index{standard section names}
+\codeindex{.text}, \codeindex{.data} and \codeindex{.bss}.
+
+\subsection{Requiring a Library: The \codeindex{LIBRARY} Directive}
+\label{subsec:rdflib}
+
+\code{RDOFF} contains a mechanism for an object file to demand a given
+library to be linked to the module, either at load time or run time.
+This is done by the \code{LIBRARY} directive, which takes one argument
+which is the name of the module:
+
+\begin{lstlisting}
+library mylib.rdl
+\end{lstlisting}
+
+\subsection{Specifying a Module Name: The \codeindex{MODULE} Directive}
+\label{subsec:rdfmod}
+
+Special \code{RDOFF} header record is used to store the name of the module.
+It can be used, for example, by run-time loader to perform dynamic
+linking. \code{MODULE} directive takes one argument which is the name
+of current module:
+
+\begin{lstlisting}
+module  mymodname
+\end{lstlisting}
+
+Note that when you statically link modules and tell linker to strip
+the symbols from output file, all module names will be stripped too.
+To avoid it, you should start module names with \index{\$!prefix}\code{\$},
+like:
+
+\begin{lstlisting}
+module $kernel.core
+\end{lstlisting}
+
+\subsection{\code{rdf} Extensions to the \code{GLOBAL} Directive}
+\label{subsec:rdfglob}
+\index{GLOBAL!rdf extensions to}
+
+\code{RDOFF} global symbols can contain additional information needed by
+the static linker. You can mark a global symbol as exported, thus
+telling the linker do not strip it from target executable or library
+file. Like in \code{ELF}, you can also specify whether an exported symbol
+is a procedure (function) or data object.
+
+Suffixing the name with a colon and the word \codeindex{export} you make the
+symbol exported:
+
+\begin{lstlisting}
+global  sys_open:export
+\end{lstlisting}
+
+To specify that exported symbol is a procedure (function), you add the
+word \codeindex{proc} or \codeindex{function} after declaration:
+
+\begin{lstlisting}
+global  sys_open:export proc
+\end{lstlisting}
+
+Similarly, to specify exported data object, add the word \codeindex{data}
+or \codeindex{object} to the directive:
+
+\begin{lstlisting}
+global  kernel_ticks:export data
+\end{lstlisting}
+
+\subsection{\code{rdf} Extensions to the \code{EXTERN} Directive}
+\label{subsec:rdfimpt}
+\index{EXTERN!rdf extensions to}
+
+By default the \code{EXTERN} directive in \code{RDOFF} declares a "pure external"
+symbol (i.e. the static linker will complain if such a symbol is not resolved).
+To declare an "imported" symbol, which must be resolved later during a dynamic
+linking phase, \code{RDOFF} offers an additional \code{import} modifier. As in
+\code{GLOBAL}, you can also specify whether an imported symbol is a procedure
+(function) or data object. For example:
+
+\begin{lstlisting}
+library $libc
+extern  _open:import
+extern  _printf:import proc
+extern  _errno:import data
+\end{lstlisting}
+
+Here the directive \code{LIBRARY} is also included, which gives the dynamic linker
+a hint as to where to find requested symbols.
+
+\section{\codeindex{dbg}: Debugging Format}
+\label{sec:dbgfmt}
+
+The \code{dbg} format does not output an object file as such; instead,
+it outputs a text file which contains a complete list of all the
+transactions between the main body of NASM and the output-format
+back end module. It is primarily intended to aid people who want to
+write their own output drivers, so that they can get a clearer idea
+of the various requests the main program makes of the output driver,
+and in what order they happen.
+
+For simple files, one can easily use the \code{dbg} format like this:
+
+\begin{lstlisting}
+nasm -f dbg filename.asm
+\end{lstlisting}
+
+which will generate a diagnostic file called \code{filename.dbg}.
+However, this will not work well on files which were designed for a
+different object format, because each object format defines its own
+macros (usually user-level forms of directives), and those macros
+will not be defined in the \code{dbg} format. Therefore it can be
+useful to run NASM twice, in order to do the preprocessing with the
+native object format selected:
+
+\begin{lstlisting}
+nasm -e -f rdf -o rdfprog.i rdfprog.asm
+nasm -a -f dbg rdfprog.i
+\end{lstlisting}
+
+This preprocesses \code{rdfprog.asm} into \code{rdfprog.i}, keeping the
+\code{rdf} object format selected in order to make sure RDF special
+directives are converted into primitive form correctly. Then the
+preprocessed source is fed through the \code{dbg} format to generate
+the final diagnostic output.
+
+This workaround will still typically not work for programs intended
+for \code{obj} format, because the \code{obj}- \code{SEGMENT} and \code{GROUP}
+directives have side effects of defining the segment and group names
+as symbols; \code{dbg} will not do this, so the program will not
+assemble. You will have to work around that by defining the symbols
+yourself (using \code{EXTERN}, for example) if you really need to get a
+\code{dbg} trace of an \code{obj}-specific source file.
+
+\code{dbg} accepts any section name and any directives at all, and logs
+them all to its output file.
+
+\code{dbg} accepts and logs any \c{\%pragma}, but the specific
+\c{\%pragma}:
+
+\begin{lstlisting}
+%pragma dbg maxdump <size>
+\end{lstlisting}
+
+where \code{<size>} is either a number or \code{unlimited}, can be
+used to control the maximum size for dumping the full contents of a
+\code{rawdata} output object.
