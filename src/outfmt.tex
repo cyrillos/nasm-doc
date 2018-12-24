@@ -1155,64 +1155,69 @@ target operating system (OSABI). This field can be set by using the
 \code{osabi} directive with the numeric value (0-255) of the target
 system. If this directive is not used, the default value will be "UNIX
 System V ABI" (0) which will work on most systems which support ELF.
-%
-%\S{elfsect} \c{elf} extensions to the \c{SECTION} Directive
-%\I{SECTION, elf extensions to}
-%
-%Like the \c{obj} format, \c{elf} allows you to specify additional
-%information on the \c{SECTION} directive line, to control the type
-%and properties of sections you declare. Section types and properties
-%are generated automatically by NASM for the \i{standard section
-%names}, but may still be
-%overridden by these qualifiers.
-%
-%The available qualifiers are:
-%
-%\b \i\c{alloc} defines the section to be one which is loaded into
-%memory when the program is run. \i\c{noalloc} defines it to be one
-%which is not, such as an informational or comment section.
-%
-%\b \i\c{exec} defines the section to be one which should have execute
-%permission when the program is run. \i\c{noexec} defines it as one
-%which should not.
-%
-%\b \i\c{write} defines the section to be one which should be writable
-%when the program is run. \i\c{nowrite} defines it as one which should
-%not.
-%
-%\b \i\c{progbits} defines the section to be one with explicit contents
-%stored in the object file: an ordinary code or data section, for
-%example, \i\c{nobits} defines the section to be one with no explicit
-%contents given, such as a BSS section.
-%
-%\b \c{align=}, used with a trailing number as in \c{obj}, gives the
-%\I{section alignment, in elf}\I{alignment, in elf sections}alignment
-%requirements of the section.
-%
-%\b \i\c{tls} defines the section to be one which contains
-%thread local variables.
-%
-%The defaults assumed by NASM if you do not specify the above
-%qualifiers are:
-%
-%\I\c{.text} \I\c{.rodata} \I\c{.lrodata} \I\c{.data} \I\c{.ldata}
-%\I\c{.bss} \I\c{.lbss} \I\c{.tdata} \I\c{.tbss} \I\c\{.comment}
-%
-%\c section .text    progbits  alloc   exec    nowrite  align=16
-%\c section .rodata  progbits  alloc   noexec  nowrite  align=4
-%\c section .lrodata progbits  alloc   noexec  nowrite  align=4
-%\c section .data    progbits  alloc   noexec  write    align=4
-%\c section .ldata   progbits  alloc   noexec  write    align=4
-%\c section .bss     nobits    alloc   noexec  write    align=4
-%\c section .lbss    nobits    alloc   noexec  write    align=4
-%\c section .tdata   progbits  alloc   noexec  write    align=4    tls
-%\c section .tbss    nobits    alloc   noexec  write    align=4    tls
-%\c section .comment progbits  noalloc noexec  nowrite  align=1
-%\c section other    progbits  alloc   noexec  nowrite  align=1
-%
-%(Any section name other than those in the above table
-% is treated by default like \c{other} in the above table.
-% Please note that section names are case sensitive.)
+
+\subsection{\code{elf} extensions to the \code{SECTION} Directive}
+\label{subsec:elfsect}
+\index{SECTION!elf extensions to}
+
+Like the \code{obj} format, \code{elf} allows you to specify additional
+information on the \code{SECTION} directive line, to control the type
+and properties of sections you declare. Section types and properties
+are generated automatically by NASM for the \textindexlc{standard section
+names}, but may still be overridden by these qualifiers.
+
+The available qualifiers are:
+
+\begin{itemize}
+    \item{\codeindex{alloc} defines the section to be one which is loaded into
+        memory when the program is run. \codeindex{noalloc} defines it to be one
+        which is not, such as an informational or comment section.}
+
+    \item{\codeindex{exec} defines the section to be one which should have execute
+        permission when the program is run. \codeindex{noexec} defines it as one
+        which should not.}
+
+    \item{\codeindex{write} defines the section to be one which should be writable
+        when the program is run. \codeindex{nowrite} defines it as one which should
+        not.}
+
+    \item{\codeindex{progbits} defines the section to be one with explicit contents
+        stored in the object file: an ordinary code or data section, for
+        example, \codeindex{nobits} defines the section to be one with no explicit
+        contents given, such as a BSS section.}
+
+    \item{\code{align=}, used with a trailing number as in \code{obj}, gives the
+        \index{section alignment!in elf}\index{alignment!in elf sections}alignment
+        requirements of the section.}
+
+    \item{\codeindex{tls} defines the section to be one which contains
+        thread local variables.}
+\end{itemize}
+
+The defaults assumed by NASM if you do not specify the above
+qualifiers are:
+\indexcode{.text} \indexcode{.rodata} \indexcode{.lrodata}
+\indexcode{.data} \indexcode{.ldata} \indexcode{.bss}
+\indexcode{.lbss} \indexcode{.tdata} \indexcode{.tbss}
+\indexcode{.comment}
+
+\begin{lstlisting}
+section .text    progbits  alloc   exec    nowrite  align=16
+section .rodata  progbits  alloc   noexec  nowrite  align=4
+section .lrodata progbits  alloc   noexec  nowrite  align=4
+section .data    progbits  alloc   noexec  write    align=4
+section .ldata   progbits  alloc   noexec  write    align=4
+section .bss     nobits    alloc   noexec  write    align=4
+section .lbss    nobits    alloc   noexec  write    align=4
+section .tdata   progbits  alloc   noexec  write    align=4    tls
+section .tbss    nobits    alloc   noexec  write    align=4    tls
+section .comment progbits  noalloc noexec  nowrite  align=1
+section other    progbits  alloc   noexec  nowrite  align=1
+\end{lstlisting}
+
+(Any section name other than those in the above table is treated by
+default like \code{other} in the above. Please note that section
+names are case sensitive.)
 %
 %
 %\S{elfwrt} \i{Position-Independent Code}\I{PIC}: \c{macho} Special
