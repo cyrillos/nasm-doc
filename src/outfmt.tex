@@ -1047,31 +1047,25 @@ object files suitable for linking with the \textindex{MacOS X} linker.
 
 \code{macho} provides a default output file-name extension of \code{.o}.
 
-%\S{machosect} \c{macho} extensions to the \c{SECTION} Directive
-%\I{SECTION, macho extensions to}
-%
-%The \c{macho} output format specifies section names in the format
-%"\e{segment}\c{,}\e{section}".  No spaces are allowed around the
-%comma.  The following flags can also be specified:
-%
-%\b \c{data} - this section contains initialized data items
-%
-%\b \c{text} - this section contains code exclusively
-%
-%\b \c{mixed} - this section contains both code and data
-%
-%\b \c{bss} - this section is uninitialized and filled with zero
-%
-%\b \c{zerofill} - same as \c{bss}
-%
-%\b \c{no_dead_strip} - inhibit dead code stripping for this section
-%
-%\b \c{live_support} - set the live support flag for this section
-%
-%\b \c{strip_static_syms} - strip static symbols for this section
-%
-%\b \c{align=}\e{alignment} - specify section alignment
-%
+\subsection{\code{macho} extensions to the \code{SECTION} Directive}
+\label{subsec:machosect}
+\index{SECTION!macho extensions to}
+
+The \code{macho} output format specifies section names in the format
+"\emph{segment}\code{,}\emph{section}". No spaces are allowed around the
+comma. The following flags can also be specified:
+
+\begin{itemize}
+    \item{\code{data} - this section contains initialized data items}
+    \item{\code{text} - this section contains code exclusively}
+    \item{\code{mixed} - this section contains both code and data}
+    \item{\code{bss} - this section is uninitialized and filled with zero}
+    \item{\code{zerofill} - same as \code{bss}}
+    \item{\code{no\_dead\_strip} - inhibit dead code stripping for this section}
+    \item{\code{live\_support} - set the live support flag for this section}
+    \item{\code{strip\_static\_syms} - strip static symbols for this section}
+    \item{\code{align=}\emph{alignment} - specify section alignment}
+\end{itemize}
 %The default is \c{data}, unless the section name is \c{__text} or
 %\c{__bss} in which case the default is \c{text} or \c{bss},
 %respectively.
