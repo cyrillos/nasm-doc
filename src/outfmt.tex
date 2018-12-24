@@ -1278,28 +1278,26 @@ shared libraries entirely in NASM is given in \fullref{sec:picdll}.
 \label{subsec:elftls}
 \index{TLS}
 
-\begin{itemize}
-    \item{In ELF32 mode, referring to an external or global symbol using
-        \code{wrt ..tlsie}\indexcode{..tlsie} causes the linker to build
-        an entry \emph{in} the GOT containing the
-        offset of the symbol within the TLS block, so you can access the value
-        of the symbol with code such as:
-        \begin{lstlisting}
-        mov eax,[tid wrt ..tlsie]
-        mov [gs:eax],ebx
-        \end{lstlisting}
-        }
+In ELF32 mode, referring to an external or global symbol using
+\code{wrt ..tlsie}\indexcode{..tlsie} causes the linker to build
+an entry \emph{in} the GOT containing the
+offset of the symbol within the TLS block, so you can access the value
+of the symbol with code such as:
 
-    \item{In ELF64 or ELFx32 mode, referring to an external or global symbol using
-        \code{wrt ..gottpoff}\indexcode{..gottpoff} causes the linker to build an
-        entry \emph{in} the GOT containing the offset of the symbol within the TLS
-        block, so you can access the value of the symbol with code such as:
-        \begin{lstlisting}
-        mov	rax,[rel tid wrt ..gottpoff]
-        mov	rcx,[fs:rax]
-        \end{lstlisting}
-        }
-\end{itemize}
+\begin{lstlisting}
+mov eax,[tid wrt ..tlsie]
+mov [gs:eax],ebx
+\end{lstlisting}
+
+In ELF64 or ELFx32 mode, referring to an external or global symbol using
+\code{wrt ..gottpoff}\indexcode{..gottpoff} causes the linker to build an
+entry \emph{in} the GOT containing the offset of the symbol within the TLS
+block, so you can access the value of the symbol with code such as:
+
+\begin{lstlisting}
+mov rax,[rel tid wrt ..gottpoff]
+mov rcx,[fs:rax]
+\end{lstlisting}
 
 %\S{elfglob} \c{elf} Extensions to the \c{GLOBAL} Directive\I{GLOBAL,
 %elf extensions to}\I{GLOBAL, aoutb extensions to}
