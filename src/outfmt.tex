@@ -1086,40 +1086,48 @@ into the \code{\_\_TEXT,\_\_const} section unless this section has already
 been specified explicitly. However, it is probably better to specify
 \code{\_\_TEXT,\_\_const} and \code{\_\_DATA,\_\_const} explicitly as appropriate.
 
-%\S{machotls} \i{Thread Local Storage in Mach-O}\I{TLS}: \c{macho} special
-%symbols and \i\c{WRT}
-%
-%Mach-O defines the following special symbols that can be used on the
-%right-hand side of the \c{WRT} operator:
-%
-%\b \c{..tlvp} is used to specify access to thread-local storage.
-%
-%\b \c{..gotpcrel} is used to specify references to the Global Offset
-%   Table.  The GOT is supported in the \c{macho64} format only.
-%
-%\S{macho-ssvs} \c{macho} specfic directive \i\c{subsections_via_symbols}
-%
-%The directive \c{subsections_via_symbols} sets the
-%\c{MH_SUBSECTIONS_VIA_SYMBOLS} flag in the Mach-O header, which tells
-%the linker that the symbols in the file matches the conventions
-%required to allow for link-time dead code elimination.
-%
-%This directive takes no arguments.
-%
-%This is a macro implemented as a \c{%pragma}.  It can also be
-%specified in its \c{%pragma} form, in which case it will not affect
-%non-Mach-O builds of the same source code:
-%
-%\c      %pragma macho subsections_via_symbols
-%
-%\S{macho-ssvs} \c{macho} specfic directive \i\c{no_dead_strip}
-%
-%The directive \c{no_dead_strip} sets the Mach-O \c{SH_NO_DEAD_STRIP}
-%section flag on the section containing a a specific symbol.  This
-%directive takes a list of symbols as its arguments.
-%
-%This is a macro implemented as a \c{%pragma}.  It can also be
-%specified in its \c{%pragma} form, in which case it will not affect
-%non-Mach-O builds of the same source code:
-%
-%\c      %pragma macho no_dead_strip symbol...
+\subsection{\textindexlc{Thread Local Storage in Mach-O}\index{TLS}:
+\code{macho} special symbols and \codeindex{WRT}}
+\label{subsec:machotls}
+
+Mach-O defines the following special symbols that can be used on the
+right-hand side of the \code{WRT} operator:
+
+\begin{itemize}
+    \item{\code{..tlvp} is used to specify access to thread-local storage.}
+    \item{\code{..gotpcrel} is used to specify references to the Global Offset Table.
+        The GOT is supported in the \code{macho64} format only.}
+\end{itemize}
+
+\subsection{\code{macho} specfic directive \codeindex{subsections\_via\_symbols}}
+\label{subsec:macho-ssvs}
+
+The directive \code{subsections\_via\_symbols} sets the
+\code{MH\_SUBSECTIONS\_VIA\_SYMBOLS} flag in the Mach-O header, which tells
+the linker that the symbols in the file matches the conventions
+required to allow for link-time dead code elimination.
+
+This directive takes no arguments.
+
+This is a macro implemented as a \code{\%pragma}. It can also be
+specified in its \code{\%pragma} form, in which case it will not affect
+non-Mach-O builds of the same source code:
+
+\begin{lstlisting}
+%pragma macho subsections_via_symbols
+\end{lstlisting}
+
+\subsection{\code{macho} specfic directive \codeindex{no\_dead\_strip}}
+\label{subsec:macho-ssvs}
+
+The directive \code{no\_dead\_strip} sets the Mach-O \code{SH\_NO\_DEAD\_STRIP}
+section flag on the section containing a a specific symbol. This directive takes
+a list of symbols as its arguments.
+
+This is a macro implemented as a \code{\%pragma}.  It can also be
+specified in its \code{\%pragma} form, in which case it will not affect
+non-Mach-O builds of the same source code:
+
+\begin{lstlisting}
+%pragma macho no_dead_strip symbol...
+\end{lstlisting}
