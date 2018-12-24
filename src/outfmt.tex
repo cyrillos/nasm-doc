@@ -1299,53 +1299,59 @@ mov rax,[rel tid wrt ..gottpoff]
 mov rcx,[fs:rax]
 \end{lstlisting}
 
-%\S{elfglob} \c{elf} Extensions to the \c{GLOBAL} Directive\I{GLOBAL,
-%elf extensions to}\I{GLOBAL, aoutb extensions to}
-%
-%\c{ELF} object files can contain more information about a global symbol
-%than just its address: they can contain the \I{symbol sizes,
-%specifying}\I{size, of symbols}size of the symbol and its \I{symbol
-%types, specifying}\I{type, of symbols}type as well. These are not
-%merely debugger conveniences, but are actually necessary when the
-%program being written is a \i{shared library}. NASM therefore
-%supports some extensions to the \c{GLOBAL} directive, allowing you
-%to specify these features.
-%
-%You can specify whether a global variable is a function or a data
-%object by suffixing the name with a colon and the word
-%\i\c{function} or \i\c{data}. (\i\c{object} is a synonym for
-%\c{data}.) For example:
-%
-%\c global   hashlookup:function, hashtable:data
-%
-%exports the global symbol \c{hashlookup} as a function and
-%\c{hashtable} as a data object.
-%
-%Optionally, you can control the ELF visibility of the symbol.  Just
-%add one of the visibility keywords: \i\c{default}, \i\c{internal},
-%\i\c{hidden}, or \i\c{protected}.  The default is \i\c{default} of
-%course.  For example, to make \c{hashlookup} hidden:
-%
-%\c global   hashlookup:function hidden
-%
-%You can also specify the size of the data associated with the
-%symbol, as a numeric expression (which may involve labels, and even
-%forward references) after the type specifier. Like this:
-%
-%\c global  hashtable:data (hashtable.end - hashtable)
-%\c
-%\c hashtable:
-%\c         db this,that,theother  ; some data here
-%\c .end:
-%
-%This makes NASM automatically calculate the length of the table and
-%place that information into the \c{ELF} symbol table.
-%
-%Declaring the type and size of global symbols is necessary when
-%writing shared library code. For more information, see
-%\k{picglobal}.
-%
-%
+\subsection{\code{elf} Extensions to the \code{GLOBAL} Directive}
+\label{subsec:elfglob}
+\index{GLOBAL!elf extensions to}
+
+\code{ELF} object files can contain more information about a global symbol
+than just its address: they can contain the \index{symbol sizes!specifying}
+\index{size!of symbols}size of the symbol and its \index{symbol types!specifying}
+\index{type!of symbols}type as well. These are not merely debugger conveniences,
+but are actually necessary when the program being written is a
+\textindexlc{shared library}. NASM therefore supports some extensions to the
+\code{GLOBAL} directive, allowing you to specify these features.
+
+You can specify whether a global variable is a function or a data
+object by suffixing the name with a colon and the word
+\codeindex{function} or \codeindex{data}. (\codeindex{object} is
+a synonym for \code{data}.) For example:
+
+\begin{lstlisting}
+global  hashlookup:function, hashtable:data
+\end{lstlisting}
+
+exports the global symbol \code{hashlookup} as a function and
+\code{hashtable} as a data object.
+
+Optionally, you can control the ELF visibility of the symbol. Just
+add one of the visibility keywords: \codeindex{default},
+\codeindex{internal}, \codeindex{hidden}, or \codeindex{protected}.
+The default is \code{default} of course. For example, to make
+\code{hashlookup} hidden:
+
+\begin{lstlisting}
+global  hashlookup:function hidden
+\end{lstlisting}
+
+You can also specify the size of the data associated with the
+symbol, as a numeric expression (which may involve labels, and even
+forward references) after the type specifier. Like this:
+
+\begin{lstlisting}
+global  hashtable:data (hashtable.end - hashtable)
+
+hashtable:
+        db this,that,theother   ; some data here
+.end:
+\end{lstlisting}
+
+This makes NASM automatically calculate the length of the table and
+place that information into the \code{ELF} symbol table.
+
+Declaring the type and size of global symbols is necessary when
+writing shared library code. For more information, see
+\fullref{sec:picglobal}.
+
 %\S{elfcomm} \c{elf} Extensions to the \c{COMMON} Directive
 %\I{COMMON, elf extensions to}
 %
