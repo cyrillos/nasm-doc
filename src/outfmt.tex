@@ -1218,82 +1218,89 @@ section other    progbits  alloc   noexec  nowrite  align=1
 (Any section name other than those in the above table is treated by
 default like \code{other} in the above. Please note that section
 names are case sensitive.)
-%
-%
-%\S{elfwrt} \i{Position-Independent Code}\I{PIC}: \c{macho} Special
-%Symbols and \i\c{WRT}
-%
-%Since \c{ELF} does not support segment-base references, the \c{WRT}
-%operator is not used for its normal purpose; therefore NASM's
-%\c{elf} output format makes use of \c{WRT} for a different purpose,
-%namely the PIC-specific \I{relocations, PIC-specific}relocation
-%types.
-%
-%\c{elf} defines five special symbols which you can use as the
-%right-hand side of the \c{WRT} operator to obtain PIC relocation
-%types. They are \i\c{..gotpc}, \i\c{..gotoff}, \i\c{..got},
-%\i\c{..plt} and \i\c{..sym}. Their functions are summarized here:
-%
-%\b Referring to the symbol marking the global offset table base
-%using \c{wrt ..gotpc} will end up giving the distance from the
-%beginning of the current section to the global offset table.
-%(\i\c{_GLOBAL_OFFSET_TABLE_} is the standard symbol name used to
-%refer to the \i{GOT}.) So you would then need to add \i\c{$$} to the
-%result to get the real address of the GOT.
-%
-%\b Referring to a location in one of your own sections using \c{wrt
-%..gotoff} will give the distance from the beginning of the GOT to
-%the specified location, so that adding on the address of the GOT
-%would give the real address of the location you wanted.
-%
-%\b Referring to an external or global symbol using \c{wrt ..got}
-%causes the linker to build an entry \e{in} the GOT containing the
-%address of the symbol, and the reference gives the distance from the
-%beginning of the GOT to the entry; so you can add on the address of
-%the GOT, load from the resulting address, and end up with the
-%address of the symbol.
-%
-%\b Referring to a procedure name using \c{wrt ..plt} causes the
-%linker to build a \i{procedure linkage table} entry for the symbol,
-%and the reference gives the address of the \i{PLT} entry. You can
-%only use this in contexts which would generate a PC-relative
-%relocation normally (i.e. as the destination for \c{CALL} or
-%\c{JMP}), since ELF contains no relocation type to refer to PLT
-%entries absolutely.
-%
-%\b Referring to a symbol name using \c{wrt ..sym} causes NASM to
-%write an ordinary relocation, but instead of making the relocation
-%relative to the start of the section and then adding on the offset
-%to the symbol, it will write a relocation record aimed directly at
-%the symbol in question. The distinction is a necessary one due to a
-%peculiarity of the dynamic linker.
-%
-%A fuller explanation of how to use these relocation types to write
-%shared libraries entirely in NASM is given in \k{picdll}.
-%
-%\S{elftls} \i{Thread Local Storage in ELF}\I{TLS}: \c{elf} Special
-%Symbols and \i\c{WRT}
-%
-%\b In ELF32 mode, referring to an external or global symbol using
-%\c{wrt ..tlsie} \I\c{..tlsie}
-%causes the linker to build an entry \e{in} the GOT containing the
-%offset of the symbol within the TLS block, so you can access the value
-%of the symbol with code such as:
-%
-%\c	  mov  eax,[tid wrt ..tlsie]
-%\c	  mov  [gs:eax],ebx
-%
-%
-%\b In ELF64 or ELFx32 mode, referring to an external or global symbol using
-%\c{wrt ..gottpoff} \I\c{..gottpoff}
-%causes the linker to build an entry \e{in} the GOT containing the
-%offset of the symbol within the TLS block, so you can access the value
-%of the symbol with code such as:
-%
-%\c	  mov	rax,[rel tid wrt ..gottpoff]
-%\c	  mov	rcx,[fs:rax]
-%
-%
+
+\subsection{\textindexlc{Position-Independent Code}: \code{elf}
+Special Symbols and \codeindex{WRT}}
+\label{subsec:elfwrt}
+\index{PIC}
+
+Since \code{ELF} does not support segment-base references, the \code{WRT}
+operator is not used for its normal purpose; therefore NASM's \code{elf}
+output format makes use of \code{WRT} for a different purpose, namely the
+PIC-specific \index{relocations!PIC-specific}relocation types.
+
+\code{elf} defines five special symbols which you can use as the
+right-hand side of the \code{WRT} operator to obtain PIC relocation
+types. They are \codeindex{..gotpc}, \codeindex{..gotoff}, \codeindex{..got},
+\codeindex{..plt} and \codeindex{..sym}. Their functions are summarized here:
+
+\begin{itemize}
+    \item{Referring to the symbol marking the global offset table base
+        using \code{wrt ..gotpc} will end up giving the distance from the
+        beginning of the current section to the global offset table.
+        (\codeindex{\_GLOBAL\_OFFSET\_TABLE\_} is the standard symbol name
+        used to refer to the \textindex{GOT}.) So you would then need to add
+        \codeindex{\$\$} to the result to get the real address of the GOT.}
+
+    \item{Referring to a location in one of your own sections using
+        \code{wrt ..gotoff} will give the distance from the beginning of
+        the GOT to the specified location, so that adding on the address
+        of the GOT would give the real address of the location you wanted.}
+
+    \item{Referring to an external or global symbol using \code{wrt ..got}
+        causes the linker to build an entry \emph{in} the GOT containing the
+        address of the symbol, and the reference gives the distance from the
+        beginning of the GOT to the entry; so you can add on the address of
+        the GOT, load from the resulting address, and end up with the
+        address of the symbol.}
+
+    \item{Referring to a procedure name using \code{wrt ..plt} causes the
+        linker to build a \textindex{procedure linkage table} entry for the symbol,
+        and the reference gives the address of the \textindex{PLT} entry. You can
+        only use this in contexts which would generate a PC-relative
+        relocation normally (i.e. as the destination for \code{CALL} or
+        \code{JMP}), since ELF contains no relocation type to refer to PLT
+        entries absolutely.}
+
+    \item{Referring to a symbol name using \code{wrt ..sym} causes NASM to
+        write an ordinary relocation, but instead of making the relocation
+        relative to the start of the section and then adding on the offset
+        to the symbol, it will write a relocation record aimed directly at
+        the symbol in question. The distinction is a necessary one due to a
+        peculiarity of the dynamic linker.}
+\end{itemize}
+
+A fuller explanation of how to use these relocation types to write
+shared libraries entirely in NASM is given in \fullref{sec:picdll}.
+
+\subsection{\textindexlc{Thread Local Storage in ELF}:
+\code{elf} Special Symbols and \codeindex{WRT}}
+\label{subsec:elftls}
+\index{TLS}
+
+\begin{itemize}
+    \item{In ELF32 mode, referring to an external or global symbol using
+        \code{wrt ..tlsie}\indexcode{..tlsie} causes the linker to build
+        an entry \emph{in} the GOT containing the
+        offset of the symbol within the TLS block, so you can access the value
+        of the symbol with code such as:
+        \begin{lstlisting}
+        mov eax,[tid wrt ..tlsie]
+        mov [gs:eax],ebx
+        \end{lstlisting}
+        }
+
+    \item{In ELF64 or ELFx32 mode, referring to an external or global symbol using
+        \code{wrt ..gottpoff}\indexcode{..gottpoff} causes the linker to build an
+        entry \emph{in} the GOT containing the offset of the symbol within the TLS
+        block, so you can access the value of the symbol with code such as:
+        \begin{lstlisting}
+        mov	rax,[rel tid wrt ..gottpoff]
+        mov	rcx,[fs:rax]
+        \end{lstlisting}
+        }
+\end{itemize}
+
 %\S{elfglob} \c{elf} Extensions to the \c{GLOBAL} Directive\I{GLOBAL,
 %elf extensions to}\I{GLOBAL, aoutb extensions to}
 %
