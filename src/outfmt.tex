@@ -1410,3 +1410,50 @@ directives, no special symbols, no use of \code{SEG} or \code{WRT}, and no
 extensions to any standard directives. It supports only the three
 \textindexlc{standard section names} \codeindex{.text}, \codeindex{.data}
 and \codeindex{.bss}.
+
+\section{\codeindex{aoutb}: \textindex{NetBSD}/\textindex{FreeBSD}/\textindex{OpenBSD}
+\code{a.out} Object Files}
+\label{sec:aoutfmt}
+\index{a.out!BSD version}
+
+The \code{aoutb} format generates \code{a.out} object files, in the form
+used by the various free \code{BSD Unix} clones, \code{NetBSD}, \code{FreeBSD}
+and \code{OpenBSD}. For simple object files, this object format is exactly
+the same as \code{aout} except for the magic number in the first four bytes
+of the file. However, the \code{aoutb} format supports
+\index{PIC}\textindexlc{position-independent code} in the same way as the
+\code{elf} format, so you can use it to write \code{BSD}
+\textindexlc{shared libraries}.
+
+\code{aoutb} provides a default output file-name extension of \code{.o}.
+
+\code{aoutb} supports no special directives, no special symbols, and
+only the three \textindexlc{standard section names} \codeindex{.text},
+\codeindex{.data} and \codeindex{.bss}. However, it also supports the same
+use of \codeindex{WRT} as \code{elf} does, to provide position-independent
+code relocation types. See \fullref{subsec:elfwrt} for full documentation
+of this feature.
+
+\code{aoutb} also supports the same extensions to the \code{GLOBAL}
+directive as \code{elf} does: see \fullref{subsec:elfglob} for
+documentation of this.
+
+\section{\code{as86}: \textindex{Minix}/Linux \codeindex{as86} Object Files}
+\label{sec:as86fmt}
+\index{linux!as86}
+
+The Minix/Linux 16-bit assembler \code{as86} has its own non-standard
+object file format. Although its companion linker \codeindex{ld86}
+produces something close to ordinary \code{a.out} binaries as output,
+the object file format used to communicate between \code{as86} and
+\code{ld86} is not itself \code{a.out}.
+
+NASM supports this format, just in case it is useful, as \code{as86}.
+\code{as86} provides a default output file-name extension of \code{.o}.
+
+\code{as86} is a very simple object format (from the NASM user's point
+of view). It supports no special directives, no use of \code{SEG} or
+\code{WRT}, and no extensions to any standard directives. It supports
+only the three \textindexlc{standard section names} \codeindex{.text},
+\codeindex{.data} and \codeindex{.bss}. The only special symbol supported
+is \code{..start}.
