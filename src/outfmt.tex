@@ -1352,52 +1352,61 @@ Declaring the type and size of global symbols is necessary when
 writing shared library code. For more information, see
 \fullref{sec:picglobal}.
 
-%\S{elfcomm} \c{elf} Extensions to the \c{COMMON} Directive
-%\I{COMMON, elf extensions to}
-%
-%\c{ELF} also allows you to specify alignment requirements \I{common
-%variables, alignment in elf}\I{alignment, of elf common variables}on
-%common variables. This is done by putting a number (which must be a
-%power of two) after the name and size of the common variable,
-%separated (as usual) by a colon. For example, an array of
-%doublewords would benefit from 4-byte alignment:
-%
-%\c common  dwordarray 128:4
-%
-%This declares the total size of the array to be 128 bytes, and
-%requires that it be aligned on a 4-byte boundary.
-%
-%
-%\S{elf16} 16-bit code and ELF
-%\I{ELF, 16-bit code and}
-%
-%The \c{ELF32} specification doesn't provide relocations for 8- and
-%16-bit values, but the GNU \c{ld} linker adds these as an extension.
-%NASM can generate GNU-compatible relocations, to allow 16-bit code to
-%be linked as ELF using GNU \c{ld}. If NASM is used with the
-%\c{-w+gnu-elf-extensions} option, a warning is issued when one of
-%these relocations is generated.
-%
-%\S{elfdbg} Debug formats and ELF
-%\I{ELF, Debug formats and}
-%
-%ELF provides debug information in \c{STABS} and \c{DWARF} formats.
-%Line number information is generated for all executable sections, but please
-%note that only the ".text" section is executable by default.
-%
-%\H{aoutfmt} \i\c{aout}: Linux \I{a.out, Linux version}\I{linux, a.out}\c{a.out} Object Files
-%
-%The \c{aout} format generates \c{a.out} object files, in the form used
-%by early Linux systems (current Linux systems use ELF, see
-%\k{elffmt}.) These differ from other \c{a.out} object files in that
-%the magic number in the first four bytes of the file is
-%different; also, some implementations of \c{a.out}, for example
-%NetBSD's, support position-independent code, which Linux's
-%implementation does not.
-%
-%\c{a.out} provides a default output file-name extension of \c{.o}.
-%
-%\c{a.out} is a very simple object format. It supports no special
-%directives, no special symbols, no use of \c{SEG} or \c{WRT}, and no
-%extensions to any standard directives. It supports only the three
-%\i{standard section names} \i\c{.text}, \i\c{.data} and \i\c{.bss}.
+\subsection{\code{elf} Extensions to the \code{COMMON} Directive}
+\label{subsec:elfcomm}
+\index{COMMON!elf extensions to}
+
+\code{ELF} also allows you to specify alignment requirements
+\index{common variables!alignment in elf}
+\index{alignment!of elf common variables} on common variables.
+This is done by putting a number (which must be a power of two)
+after the name and size of the common variable, separated (as usual)
+by a colon. For example, an array of doublewords would benefit from
+4-byte alignment:
+
+\begin{lstlisting}
+common dwordarray 128:4
+\end{lstlisting}
+
+This declares the total size of the array to be 128 bytes, and
+requires that it be aligned on a 4-byte boundary.
+
+\subsection{16-bit code and ELF}
+\label{subsec:elf16}
+\index{ELF!16-bit code and}
+
+The \code{ELF32} specification doesn't provide relocations for 8- and
+16-bit values, but the GNU \code{ld} linker adds these as an extension.
+NASM can generate GNU-compatible relocations, to allow 16-bit code to
+be linked as ELF using GNU \code{ld}. If NASM is used with the
+\code{-w+gnu-elf-extensions} option, a warning is issued when one of
+these relocations is generated.
+
+\subsection{Debug formats and ELF}
+\label{subsec:elfdbg}
+\index{ELF!Debug formats}
+
+ELF provides debug information in \code{STABS} and \code{DWARF} formats.
+Line number information is generated for all executable sections, but please
+note that only the ".text" section is executable by default.
+
+\section{\codeindex{aout}: Linux \code{a.out} Object Files}
+\label{sec:aoutfmt}
+\index{a.out!Linux version}
+\index{linux!a.out}
+
+The \code{aout} format generates \code{a.out} object files, in the
+form used by early Linux systems (current Linux systems use ELF, see
+\fullref{sec:elffmt}.) These differ from other \code{a.out} object
+files in that the magic number in the first four bytes of the file is
+different; also, some implementations of \code{a.out}, for example
+NetBSD's, support position-independent code, which Linux's
+implementation does not.
+
+\code{a.out} provides a default output file-name extension of \code{.o}.
+
+\code{a.out} is a very simple object format. It supports no special
+directives, no special symbols, no use of \code{SEG} or \code{WRT}, and no
+extensions to any standard directives. It supports only the three
+\textindexlc{standard section names} \codeindex{.text}, \codeindex{.data}
+and \codeindex{.bss}.
