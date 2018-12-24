@@ -1066,23 +1066,26 @@ comma. The following flags can also be specified:
     \item{\code{strip\_static\_syms} - strip static symbols for this section}
     \item{\code{align=}\emph{alignment} - specify section alignment}
 \end{itemize}
-%The default is \c{data}, unless the section name is \c{__text} or
-%\c{__bss} in which case the default is \c{text} or \c{bss},
-%respectively.
-%
-%For compatibility with other Unix platforms, the following standard
-%names are also supported:
-%
-%\c .text    = __TEXT,__text  text
-%\c .rodata  = __DATA,__const data
-%\c .data    = __DATA,__data  data
-%\c .bss     = __DATA,__bss   bss
-%
-%If the \c{.rodata} section contains no relocations, it is instead put
-%into the \c{__TEXT,__const} section unless this section has already
-%been specified explicitly.  However, it is probably better to specify
-%\c{__TEXT,__const} and \c{__DATA,__const} explicitly as appropriate.
-%
+
+The default is \code{data}, unless the section name is \code{\_\_text} or
+\code{\_\_bss} in which case the default is \code{text} or \code{bss},
+respectively.
+
+For compatibility with other Unix platforms, the following standard
+names are also supported:
+
+\begin{lstlisting}
+.text   = __TEXT,__text     text
+.rodata = __DATA,__const    data
+.data   = __DATA,__data     data
+.bss    = __DATA,__bss      bss
+\end{lstlisting}
+
+If the \code{.rodata} section contains no relocations, it is instead put
+into the \code{\_\_TEXT,\_\_const} section unless this section has already
+been specified explicitly. However, it is probably better to specify
+\code{\_\_TEXT,\_\_const} and \code{\_\_DATA,\_\_const} explicitly as appropriate.
+
 %\S{machotls} \i{Thread Local Storage in Mach-O}\I{TLS}: \c{macho} special
 %symbols and \i\c{WRT}
 %
