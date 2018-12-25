@@ -1,0 +1,132 @@
+\chapter{Writing 16-bit Code (DOS, Windows 3/3.1)}
+\label{ch:16bit}
+
+This chapter attempts to cover some of the common issues encountered
+when writing 16-bit code to run under \code{MS-DOS} or \code{Windows 3.x}.
+It covers how to link programs to produce \code{.EXE} or \code{.COM} files,
+how to write \code{.SYS} device drivers, and how to interface assembly
+language code with 16-bit C compilers and with Borland Pascal.
+
+\section{Producing \codeindex{.EXE} Files}
+\label{sec:exefiles}
+
+Any large program written under DOS needs to be built as a \code{.EXE}
+file: only \code{.EXE} files have the necessary internal structure
+required to span more than one 64K segment. \textindex{Windows} programs,
+also, have to be built as \code{.EXE} files, since Windows does not
+support the \code{.COM} format.
+
+In general, you generate \code{.EXE} files by using the \code{obj} output
+format to produce one or more \codeindex{.OBJ} files, and then linking
+them together using a linker. However, NASM also supports the direct
+generation of simple DOS \code{.EXE} files using the \code{bin} output
+format (by using \code{DB} and \code{DW} to construct the \code{.EXE} file
+header), and a macro package is supplied to do this. Thanks to
+Yann Guidon for contributing the code for this.
+
+NASM may also support \code{.EXE} natively as another output format in
+future releases.
+
+\subsection{Using the \code{obj} Format To Generate \code{.EXE} Files}
+\label{subsec:objexe}
+
+This section describes the usual method of generating \code{.EXE} files
+by linking \code{.OBJ} files together.
+
+Most 16-bit programming language packages come with a suitable
+linker; if you have none of these, there is a free linker called
+\textindex{VALX}\index{linker!free}, available as a part of
+CC386 compiler on
+\href{http://ladsoft.tripod.com/cc386\_compiler.html}{ladsoft.tripod.com}.
+
+There is another `free' linker (though this one doesn't come with
+sources) called \textindex{FREELINK}, available from
+\href{http://www.pcorner.com/tpc/old/3-101.html}{www.pcorner.com}.
+
+A third, \codeindex{djlink}, written by DJ Delorie, is available at
+\href{http://www.delorie.com/djgpp/16bit/djlink/}{www.delorie.com}.
+
+A fourth linker, \codeindex{ALINK}, written by Anthony A.J. Williams, is
+available at \href{http://alink.sourceforge.net}{alink.sourceforge.net}.
+
+When linking several \code{.OBJ} files into a \code{.EXE} file, you should
+ensure that exactly one of them has a start point defined (using the
+\index{program entry point}\codeindex{..start} special symbol defined by the
+\code{obj} format: see \fullref{sec:dotdotstart}). If no module defines a start
+point, the linker will not know what value to give the entry-point
+field in the output file header; if more than one defines a start
+point, the linker will not know \emph{which} value to use.
+
+An example of a NASM source file which can be assembled to a
+\code{.OBJ} file and linked on its own to a \code{.EXE} is given here. It
+demonstrates the basic principles of defining a stack, initialising
+the segment registers, and declaring a start point. This file is
+also provided in the \index{test subdirectory}\code{test} subdirectory of
+the NASM archives, under the name \code{objexe.asm}.
+
+\begin{lstlisting}
+segment code
+
+..start:
+    mov     ax,data
+    mov     ds,ax
+    mov     ax,stack
+    mov     ss,ax
+    mov     sp,stacktop
+\end{lstlisting}
+
+This initial piece of code sets up \code{DS} to point to the data
+segment, and initializes \code{SS} and \code{SP} to point to the top of
+the provided stack. Notice that interrupts are implicitly disabled
+for one instruction after a move into \code{SS}, precisely for this
+situation, so that there's no chance of an interrupt occurring
+between the loads of \code{SS} and \code{SP} and not having a stack to
+execute on.
+
+Note also that the special symbol \code{..start} is defined at the
+beginning of this code, which means that will be the entry point
+into the resulting executable file.
+
+\begin{lstlisting}
+    mov     dx,hello
+    mov     ah,9
+    int     0x21
+\end{lstlisting}
+
+The above is the main program: load \code{DS:DX} with a pointer to the
+greeting message (\code{hello} is implicitly relative to the segment
+\code{data}, which was loaded into \code{DS} in the setup code, so the
+full pointer is valid), and call the DOS print-string function.
+
+\begin{lstlisting}
+    mov     ax,0x4c00
+    int     0x21
+\end{lstlisting}
+
+This terminates the program using another DOS system call.
+
+\begin{lstlisting}
+segment data
+
+hello:  db      'hello, world', 13, 10, '$'
+\end{lstlisting}
+
+The data segment contains the string we want to display.
+
+\begin{lstlisting}
+segment stack stack
+    resb 64
+stacktop:
+\end{lstlisting}
+
+The above code declares a stack segment containing 64 bytes of
+uninitialized stack space, and points \code{stacktop} at the top of it.
+The directive \code{segment stack stack} defines a segment \emph{called}
+\code{stack}, and also of \emph{type} \code{STACK}. The latter is not
+necessary to the correct running of the program, but linkers are
+likely to issue warnings or errors if your program has no segment of
+type \code{STACK}.
+
+The above file, when assembled into a \code{.OBJ} file, will link on
+its own to a valid \code{.EXE} file, which when run will print `hello,
+world' and then exit.
