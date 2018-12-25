@@ -35,19 +35,20 @@ by linking \code{.OBJ} files together.
 
 Most 16-bit programming language packages come with a suitable
 linker; if you have none of these, there is a free linker called
-\textindex{VALX}\index{linker!free}, available as a part of
-CC386 compiler on
-\href{http://ladsoft.tripod.com/cc386\_compiler.html}{ladsoft.tripod.com}.
+\textindex{VALX}\index{linker!VALX}, available as a part of
+CC386 compiler on \href{http://ladsoft.tripod.com/cc386\_compiler.html}
+{ladsoft.tripod.com}.
 
 There is another `free' linker (though this one doesn't come with
-sources) called \textindex{FREELINK}, available from
-\href{http://www.pcorner.com/tpc/old/3-101.html}{www.pcorner.com}.
+sources) called \textindex{FREELINK}\index{linker!FREELINK}, available
+from \href{http://www.pcorner.com/tpc/old/3-101.html}{www.pcorner.com}.
 
-A third, \codeindex{djlink}, written by DJ Delorie, is available at
+A third, \textindex{djlink}, written by DJ Delorie, is available at
 \href{http://www.delorie.com/djgpp/16bit/djlink/}{www.delorie.com}.
 
-A fourth linker, \codeindex{ALINK}, written by Anthony A.J. Williams, is
-available at \href{http://alink.sourceforge.net}{alink.sourceforge.net}.
+A fourth linker, \textindex{ALINK}\index{linker!ALINK}, written by
+Anthony A.J. Williams, is available at \href{http://alink.sourceforge.net}
+{alink.sourceforge.net}.
 
 When linking several \code{.OBJ} files into a \code{.EXE} file, you should
 ensure that exactly one of them has a start point defined (using the
@@ -261,3 +262,32 @@ If you do this, you need to take care of several things:
         relative to the same segment base. This is because, when a \code{.COM}
         file is loaded, all the segment registers contain the same value.}
 \end{itemize}
+
+\section{Producing \codeindex{.SYS} Files}
+\label{sec:sysfiles}
+
+\textindex{MS-DOS device drivers} - \code{.SYS} files - are pure binary files,
+similar to \code{.COM} files, except that they start at origin zero
+rather than \code{100h}. Therefore, if you are writing a device driver
+using the \code{bin} format, you do not need the \code{ORG} directive,
+since the default origin for \code{bin} is zero. Similarly, if you are
+using \code{obj}, you do not need the \code{RESB 100h} at the start of
+your code segment.
+
+\code{.SYS} files start with a header structure, containing pointers to
+the various routines inside the driver which do the work. This
+structure should be defined at the start of the code segment, even
+though it is not actually code.
+
+For more information on the format of \code{.SYS} files, and the data
+which has to go in the header structure, a list of books is given in
+the Frequently Asked Questions list for the newsgroup
+\href{news:comp.os.msdos.programmer}{comp.os.msdos.programmer}.
+
+\section{Interfacing to 16-bit C Programs}
+\label{sec:16c}
+
+This section covers the basics of writing assembly routines that
+call, or are called from, C programs. To do this, you would
+typically write an assembly module as a \code{.OBJ} file, and link it
+with your C modules to produce a \textindex{mixed-language program}.
