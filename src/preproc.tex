@@ -1,5 +1,4 @@
-\chapter{The NASM \textindexlc{Preprocessor}}
-\label{ch:preproc}
+\xchapter{preproc}{The NASM \textindexlc{Preprocessor}}
 
 NASM contains a powerful \textindex{macro processor}, which supports
 conditional assembly, multi-level file inclusion, two forms of macro
@@ -19,8 +18,7 @@ Thus:
 will work like a single-line macro without the backslash-newline
 sequence.
 
-\section{\textindexlc{Single-Line Macros}}
-\label{sec:slmacro}
+\xsection{slmacro}{\textindexlc{Single-Line Macros}}
 
 \subsection{The Normal Way: \indexcode{\%idefine}\codeindex{\%define}}
 \label{subsec:define}
@@ -386,8 +384,7 @@ is equivalent to
 %define test TEST
 \end{lstlisting}
 
-\section{\textindexlc{String Manipulation in Macros}}
-\label{sec:strlen}
+\xsection{strlen}{\textindexlc{String Manipulation in Macros}}
 
 It's often useful to be able to handle strings in macros. NASM
 supports a few simple string handling macro operators from which
@@ -473,8 +470,7 @@ A negative length means ``until N-1 characters before the end of string'',
 i.e. \code{-1} means until end of string, \code{-2} until one character
 before, etc.
 
-\section{\textindexlc{Multi-Line Macros}: \indexcode{\%imacro}\codeindex{\%macro}}
-\label{sec:mlmacro}
+\xsection{mlmacro}{\textindexlc{Multi-Line Macros}: \indexcode{\%imacro}\codeindex{\%macro}}
 
 Multi-line macros are much more like the type of macro seen in MASM
 and TASM: a multi-line macro definition in NASM looks something like
@@ -1040,8 +1036,7 @@ removes the previously defined macro \code{foo}, but
 does \emph{not} remove the macro \code{bar}, since the argument
 specification does not match exactly.
 
-\section{\textindexlc{Conditional Assembly}\indexcode{\%if}}
-\label{sec:condasm}
+\xsection{condasm}{\textindexlc{Conditional Assembly}\indexcode{\%if}}
 
 Similarly to the C preprocessor, NASM allows sections of a source
 file to be assembled only if certain conditions are met. The general
@@ -1333,8 +1328,7 @@ Just as for \code{\%^^21}\emph{variable} the argument should be written as a
 string if it contains characters that would not be legal in an
 identifier. See \fullref{subsec:getenv}.
 
-\section{\textindexlc{Preprocessor Loops}\index{repeating code}: \codeindex{\%rep}}
-\label{sec:rep}
+\xsection{rep}{\textindexlc{Preprocessor Loops}\index{repeating code}: \codeindex{\%rep}}
 
 NASM's \code{TIMES} prefix, though useful, cannot be used to invoke a
 multi-line macro multiple times, because it is processed by NASM
@@ -1389,8 +1383,7 @@ be gradually used up and other applications to start crashing.
 Note a maximum repeat count is limited by 62 bit number, though it
 is hardly possible that you ever need anything bigger.
 
-\section{Source Files and Dependencies}
-\label{sec:files}
+\xsection{files}{Source Files and Dependencies}
 
 These commands allow you to split your sources into multiple files.
 
@@ -1497,8 +1490,7 @@ standard macro package is used, a testable single-line macro of the
 form \code{\_\_USE\_\emph{package}\_\_} is also defined,
 see \fullref{subsec:use-def}.
 
-\section{The \textindexlc{Context Stack}}
-\label{sec:ctxstack}
+\xsection{ctxstack}{The \textindexlc{Context Stack}}
 
 Having labels that are local to a macro definition is sometimes not
 quite powerful enough: sometimes you want to be able to share labels
@@ -1762,8 +1754,7 @@ pushing another context, describing the inner \code{if}, on top of the
 one describing the outer \code{if}; thus \code{else} and \code{endif}
 always refer to the last unmatched \code{if} or \code{else}.
 
-\section{\textindexlc{Stack Relative Preprocessor Directives}}
-\label{sec:stackrel}
+\xsection{stackrel}{\textindexlc{Stack Relative Preprocessor Directives}}
 
 The following preprocessor directives provide a way to use
 labels to refer to local variables allocated on the stack:
@@ -1897,9 +1888,8 @@ each \code{\%local} variable declared. It then may be used in
 the construction of an appropriately sized ENTER instruction
 as shown in the example.
 
-\section{Reporting \textindexlc{User-Defined Errors}:
+\xsection{pperror}{Reporting \textindexlc{User-Defined Errors}:
 \codeindex{\%error}, \codeindex{\%warning}, \codeindex{\%fatal}}
-\label{sec:pperror}
 
 The preprocessor directive \code{\%error} will cause NASM to report an
 error if it occurs in assembled code. So if other users are going to
@@ -1955,8 +1945,7 @@ the user. For example:
 %endif
 \end{lstlisting}
 
-\section{\textindexlc{Other Preprocessor Directives}}
-\label{sec:otherpreproc}
+\xsection{otherpreproc}{\textindexlc{Other Preprocessor Directives}}
 
 NASM also has preprocessor directives which allow access to
 information from external sources. Currently they include:
@@ -2025,8 +2014,7 @@ variable, for example:
 %defstr C_colon      %!'C:'
 \end{lstlisting}
 
-\section{\textindexlc{Standard Macros}}
-\label{ch:stdmac}
+\xsection{stdmac}{\textindexlc{Standard Macros}}
 
 NASM defines a set of standard macros, which are already defined
 when it starts to process any source file. If you really need a

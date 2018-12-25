@@ -1,5 +1,4 @@
-\chapter{\textindexlc{Assembler Directives}}
-\label{ch:directive}
+\xchapter{directive}{\textindexlc{Assembler Directives}}
 
 NASM, though it attempts to avoid the bureaucracy of assemblers like
 MASM and TASM, is nevertheless forced to support a \emph{few}
@@ -22,8 +21,7 @@ order to control particular features of that file format. These
 documented along with the formats that implement them, in
 \fullref{sec:outfmt}.
 
-\section{\codeindex{BITS}: Specifying Target \textindexlc{Processor Mode}}
-\label{sec:bits}
+\xsection{bits}{\codeindex{BITS}: Specifying Target \textindexlc{Processor Mode}}
 
 The \code{BITS} directive specifies whether NASM should generate code
 \index{16-bit mode, versus 32-bit mode}designed to run on a processor
@@ -91,8 +89,7 @@ The \code{USE16}, \code{USE32} and \code{USE64} directives can be used
 in place of \code{BITS 16}, \code{BITS 32} and \code{BITS 64}, for
 compatibility with other assemblers.
 
-\section{\codeindex{DEFAULT}: Change the assembler defaults}
-\label{sec:default}
+\xsection{default}{\codeindex{DEFAULT}: Change the assembler defaults}
 
 The \code{DEFAULT} directive changes the assembler defaults. Normally,
 NASM defaults to a mode where the programmer is expected to explicitly
@@ -139,9 +136,8 @@ in code.
 \code{DEFAULT BND} is expected to be the normal configuration
 for writing MPX-enabled code.
 
-\section{\codeindex{SECTION} or \codeindex{SEGMENT}: Changing and
+\xsection{section}{\codeindex{SECTION} or \codeindex{SEGMENT}: Changing and
 \textindexlc{Defining Sections}}
-\label{sec:section}
 
 \index{sections!changing}\index{sections!switching between}
 The \code{SECTION} directive (\code{SEGMENT} is an exactly equivalent
@@ -213,8 +209,7 @@ to jump over the data, and also does not fail if, in a complicated
 \code{OBJ} format module, the user could potentially be assembling the
 code in any of several separate code sections.
 
-\section{\codeindex{ABSOLUTE}: Defining Absolute Labels}
-\label{subsec:absolute}
+\xsection{absolute}{\codeindex{ABSOLUTE}: Defining Absolute Labels}
 
 The \code{ABSOLUTE} directive can be thought of as an alternative form
 of \code{SECTION}: it causes the subsequent code to be directed at no
@@ -269,8 +264,7 @@ re-used as data storage for the running TSR. The symbol
 \code{tsr\_end} can be used to calculate the total size of
 the part of the TSR that needs to be made resident.
 
-\section{\codeindex{EXTERN}: \textindexlc{Importing Symbols} from Other Modules}
-\label{sec:extern}
+\xsection{extern}{\codeindex{EXTERN}: \textindexlc{Importing Symbols} from Other Modules}
 
 \code{EXTERN} is similar to the MASM directive \code{EXTRN} and
 the C keyword \code{extern}: it is used to declare a symbol which
@@ -307,8 +301,7 @@ NASM will quietly ignore the second and later redeclarations.
 You can't declare a variable as \code{EXTERN} as well as something
 else, though.
 
-\section{\codeindex{GLOBAL}: \textindexlc{Exporting Symbols} to Other Modules}
-\label{sec:global}
+\xsection{global}{\codeindex{GLOBAL}: \textindexlc{Exporting Symbols} to Other Modules}
 
 \code{GLOBAL} is the other end of \code{EXTERN}: if one module declares a
 symbol as \code{EXTERN} and refers to it, then in order to prevent
@@ -342,8 +335,7 @@ Like \code{EXTERN}, the primitive form of \code{GLOBAL} differs
 from the user-level form only in that it can take only one argument
 at a time.
 
-\section{\codeindex{COMMON}: Defining Common Data Areas}
-\label{sec:common}
+\xsection{common}{\codeindex{COMMON}: Defining Common Data Areas}
 
 The \code{COMMON} directive is used to declare \textindex{\emph{common
 variables}}. A common variable is much like a global variable declared
@@ -382,8 +374,7 @@ Once again, like \code{EXTERN} and \code{GLOBAL}, the primitive form of
 \code{COMMON} differs from the user-level form only in that it can take
 only one argument at a time.
 
-\section{\codeindex{CPU}: Defining CPU Dependencies}
-\label{sec:cpu}
+\xsection{cpu}{\codeindex{CPU}: Defining CPU Dependencies}
 
 The \code{CPU} directive restricts assembly to those instructions which
 are available on the specified CPU.
@@ -414,8 +405,8 @@ All options are case insensitive. All instructions will be selected
 only if they apply to the selected CPU or lower. By default, all
 instructions are available.
 
-\section{\codeindex{FLOAT}: Handling of \index{constants!floating-point}floating-point constants}
-\label{sec:float}
+\xsection{float}{\codeindex{FLOAT}: Handling of \index{constants!floating-point}
+floating-point constants}
 
 By default, floating-point constants are rounded to nearest, and IEEE
 denormals are supported. The following options can be set to alter
@@ -439,8 +430,7 @@ of the brackeded primitive form, (\code{[FLOAT]}).
 \code{\_\_FLOAT\_\_} contains the full set of floating-point settings;
 this value can be saved away and invoked later to restore the setting.
 
-\section{\codeindex{[WARNING]}: Enable or disable warnings}
-\label{sec:asmdirwarning}
+\xsection{asmdirwarning}{\codeindex{[WARNING]}: Enable or disable warnings}
 
 The \code{[WARNING]} directive can be used to enable or disable classes
 of warnings in the same way as the \code{-w} option, see \fullref{sec:optw}

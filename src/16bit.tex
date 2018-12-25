@@ -1,5 +1,4 @@
-\chapter{Writing 16-bit Code (DOS, Windows 3/3.1)}
-\label{ch:16bit}
+\xchapter{16bit}{Writing 16-bit Code (DOS, Windows 3/3.1)}
 
 This chapter attempts to cover some of the common issues encountered
 when writing 16-bit code to run under \code{MS-DOS} or \code{Windows 3.x}.
@@ -7,8 +6,7 @@ It covers how to link programs to produce \code{.EXE} or \code{.COM} files,
 how to write \code{.SYS} device drivers, and how to interface assembly
 language code with 16-bit C compilers and with Borland Pascal.
 
-\section{Producing \codeindex{.EXE} Files}
-\label{sec:exefiles}
+\xsection{exefiles}{Producing \codeindex{.EXE} Files}
 
 Any large program written under DOS needs to be built as a \code{.EXE}
 file: only \code{.EXE} files have the necessary internal structure
@@ -180,8 +178,7 @@ A sample program which generates a \code{.EXE} file in this way is
 given in the \code{test} subdirectory of the NASM archive, as
 \code{binexe.asm}.
 
-\section{Producing \codeindex{.COM} Files}
-\label{sec:comfiles}
+\xsection{comfiles}{Producing \codeindex{.COM} Files}
 
 While large DOS programs must be written as \code{.EXE} files, small
 ones are often better written as \code{.COM} files. \code{.COM} files are
@@ -263,8 +260,7 @@ If you do this, you need to take care of several things:
         file is loaded, all the segment registers contain the same value.}
 \end{itemize}
 
-\section{Producing \codeindex{.SYS} Files}
-\label{sec:sysfiles}
+\xsection{sysfiles}{Producing \codeindex{.SYS} Files}
 
 \textindex{MS-DOS device drivers} - \code{.SYS} files - are pure binary files,
 similar to \code{.COM} files, except that they start at origin zero
@@ -284,8 +280,7 @@ which has to go in the header structure, a list of books is given in
 the Frequently Asked Questions list for the newsgroup
 \href{news:comp.os.msdos.programmer}{comp.os.msdos.programmer}.
 
-\section{Interfacing to 16-bit C Programs}
-\label{sec:16c}
+\xsection{16c}{Interfacing to 16-bit C Programs}
 
 This section covers the basics of writing assembly routines that
 call, or are called from, C programs. To do this, you would

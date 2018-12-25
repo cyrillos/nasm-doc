@@ -1,5 +1,4 @@
-\chapter{\textindexlc{Output Formats}}
-\label{ch:outfmt}
+\xchapter{outfmt}{\textindexlc{Output Formats}}
 
 NASM is a portable assembler, designed to be able to compile on any
 ANSI C-supporting platform and produce output to run on a variety of
@@ -8,8 +7,7 @@ of available output formats, selected using the \codeindex{-f} option
 on the NASM \textindex{command line}. Each of these formats, along with
 its extensions to the base NASM syntax, is detailed in this chapter.
 
-\section{\codeindex{bin}: \textindexlc{Flat-Form Binary}\index{pure binary} Output}
-\label{sec:binfmt}
+\xsection{binfmt}{\codeindex{bin}: \textindexlc{Flat-Form Binary}\index{pure binary} Output}
 \index{file extension!bin}
 
 The \code{bin} format does not produce object files: it generates
@@ -140,8 +138,7 @@ to \code{stdout} (default), \code{stderr}, or a specified file. E.g.
 \code{[map symbols myfile.map]}. No ``user form'' exists, the square
 brackets must be used.
 
-\section{\codeindex{ith}: \textindexlc{Intel Hex} Output}
-\label{sec:ithfmt}
+\xsection{ithfmt}{\codeindex{ith}: \textindexlc{Intel Hex} Output}
 \index{file extension!ith}
 
 The \code{ith} file format produces Intel hex-format files. Just as the
@@ -154,8 +151,7 @@ the \code{ith} file format.
 
 \code{ith} provides a default output file-name extension of \code{.ith}.
 
-\section{\codeindex{srec}: \textindexlc{Motorola S-Records} Output}
-\label{sec:srecfmt}
+\xsection{srecfmt}{\codeindex{srec}: \textindexlc{Motorola S-Records} Output}
 \index{file extension!srec}
 
 The \code{srec} file format produces Motorola S-records files. Just as the
@@ -168,8 +164,7 @@ the \code{srec} file format.
 
 \code{srec} provides a default output file-name extension of \code{.srec}.
 
-\section{\codeindex{obj}: \textindexlc{Microsoft OMF}\index{OMF} Object Files}
-\label{sec:objfmt}
+\xsection{objfmt}{\codeindex{obj}: \textindexlc{Microsoft OMF}\index{OMF} Object Files}
 \index{file extension!obj}
 
 The \code{obj} file format (NASM calls it \code{obj} rather than
@@ -560,8 +555,7 @@ common  bar     16:far 2:wrt data
 common  baz     24:wrt data:6
 \end{lstlisting}
 
-\section{\codeindex{win32}: Microsoft Win32 Object Files}
-\label{sec:win32fmt}
+\xsection{win32fmt}{\codeindex{win32}: Microsoft Win32 Object Files}
 
 The \code{win32} output format generates Microsoft Win32 object files,
 suitable for passing to Microsoft linkers such as \emph{Visual C++}.
@@ -744,8 +738,7 @@ debugging format. Currently CodeView version 8 format is supported
 (\i\c{cv8}), but newer versions of the CodeView debugger should be
 able to handle this format as well.
 
-\section{\codeindex{win64}: Microsoft Win64 Object Files}
-\label{sec:win64fmt}
+\xsection{win64fmt}{\codeindex{win64}: Microsoft Win64 Object Files}
 
 The \code{win64} output format generates Microsoft Win64 object files,
 which is nearly 100\% identical to the \code{win32} object format
@@ -1024,8 +1017,7 @@ As custom handler mimics leaf function, corresponding \code{UNWIND\_INFO}
 structure does not have to contain any information about stack frame
 and its layout.
 
-\section{\codeindex{coff}: \textindexlc{Common Object File Format}}
-\label{sec:cofffmt}
+\xsection{cofffmt}{\codeindex{coff}: \textindexlc{Common Object File Format}}
 
 The \code{coff} output type produces \code{COFF} object files suitable for
 linking with the \textindex{DJGPP} linker.
@@ -1036,9 +1028,8 @@ The \code{coff} format supports the same extensions to the \code{SECTION}
 directive as \code{win32} does, except that the \code{align} qualifier and
 the \code{info} section type are not supported.
 
-\section{\codeindex{macho32} and \codeindex{macho64}:
+\xsection{machofmt}{\codeindex{macho32} and \codeindex{macho64}:
 \textindexlc{Mach Object File Format}}
-\label{sec:machofmt}
 \index{Mach-O}
 
 The \code{macho32}, \code{macho64} output formts produces Mach-O
@@ -1132,9 +1123,8 @@ non-Mach-O builds of the same source code:
 %pragma macho no_dead_strip symbol...
 \end{lstlisting}
 
-\section{\codeindex{elf32}, \codeindex{elf64}, \codeindex{elfx32}:
+\xsection{elffmt}{\codeindex{elf32}, \codeindex{elf64}, \codeindex{elfx32}:
 \textindexlc{Executable and Linkable Format} Object Files}
-\label{sec:elffmt}
 \index{ELF}\index{linux!elf}
 
 The \code{elf32}, \code{elf64} and \code{elfx32} output formats generate
@@ -1390,8 +1380,7 @@ ELF provides debug information in \code{STABS} and \code{DWARF} formats.
 Line number information is generated for all executable sections, but please
 note that only the ".text" section is executable by default.
 
-\section{\codeindex{aout}: Linux \code{a.out} Object Files}
-\label{sec:aoutfmt}
+\xsection{aoutfmt}{\codeindex{aout}: Linux \code{a.out} Object Files}
 \index{a.out!Linux version}
 \index{linux!a.out}
 
@@ -1411,9 +1400,8 @@ extensions to any standard directives. It supports only the three
 \textindexlc{standard section names} \codeindex{.text}, \codeindex{.data}
 and \codeindex{.bss}.
 
-\section{\codeindex{aoutb}: \textindex{NetBSD}/\textindex{FreeBSD}/\textindex{OpenBSD}
+\xsection{aoutfmt}{\codeindex{aoutb}: \textindex{NetBSD}/\textindex{FreeBSD}/\textindex{OpenBSD}
 \code{a.out} Object Files}
-\label{sec:aoutfmt}
 \index{a.out!BSD version}
 
 The \code{aoutb} format generates \code{a.out} object files, in the form
@@ -1438,8 +1426,7 @@ of this feature.
 directive as \code{elf} does: see \fullref{subsec:elfglob} for
 documentation of this.
 
-\section{\code{as86}: \textindex{Minix}/Linux \codeindex{as86} Object Files}
-\label{sec:as86fmt}
+\xsection{as86fmt}{\code{as86}: \textindex{Minix}/Linux \codeindex{as86} Object Files}
 \index{linux!as86}
 
 The Minix/Linux 16-bit assembler \code{as86} has its own non-standard
@@ -1458,9 +1445,8 @@ only the three \textindexlc{standard section names} \codeindex{.text},
 \codeindex{.data} and \codeindex{.bss}. The only special symbol supported
 is \code{..start}.
 
-\section{\index{RDOFF}\codeindex{rdf}: \textindexlc{Relocatable Dynamic
+\xsection{rdffmt}{\index{RDOFF}\codeindex{rdf}: \textindexlc{Relocatable Dynamic
 Object File Format}}
-\label{sec:rdffmt}
 
 The \code{rdf} output format produces \code{RDOFF} object files.
 \code{RDOFF} (Relocatable Dynamic Object File Format) is a home-grown
@@ -1566,8 +1552,7 @@ extern  _errno:import data
 Here the directive \code{LIBRARY} is also included, which gives the dynamic linker
 a hint as to where to find requested symbols.
 
-\section{\codeindex{dbg}: Debugging Format}
-\label{sec:dbgfmt}
+\xsection{dbgfmt}{\codeindex{dbg}: Debugging Format}
 
 The \code{dbg} format does not output an object file as such; instead,
 it outputs a text file which contains a complete list of all the

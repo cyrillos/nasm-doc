@@ -1,8 +1,6 @@
-\chapter{The NASM Language}
-\label{ch:lang}
+\xchapter{lang}{The NASM Language}
 
-\section{Layout of a NASM Source Line}
-\label{sec:syntax}
+\xsection{syntax}{Layout of a NASM Source Line}
 
 Like most assemblers, each NASM source line contains (unless it
 is a macro, a preprocessor directive or an assembler directive: see
@@ -96,8 +94,7 @@ use one of the prefixes \codeindex{DWORD}, \codeindex{QWORD} or
 \codeindex{TWORD} to indicate what size of \textindex{memory operand}
 it refers to.
 
-\section{\textindexlc{Pseudo-Instructions}}
-\label{sec:pseudop}
+\xsection{pseudop}{\textindexlc{Pseudo-Instructions}}
 
 Pseudo-instructions are things which, though not real x86 machine
 instructions, are used in the instruction field anyway because that's
@@ -245,8 +242,7 @@ allows the argument to \code{TIMES} to contain expressions such as
 \code{64-\$+buffer} as above. To repeat more than one line of code,
 or a complex macro, use the preprocessor \codeindex{\%rep} directive.
 
-\section{Effective Addresses}
-\label{sec:effaddr}
+\xsection{effaddr}{Effective Addresses}
 
 An \textindex{effective address} is any operand to an instruction which
 \index{memory reference}references memory. Effective addresses, in NASM,
@@ -361,8 +357,7 @@ VDIVPS zmm4, zmm5, dword [rbx]{1to16}   ; single-precision float
 VDIVPS zmm4, zmm5, zword [rbx]          ; packed 512 bit memory
 \end{lstlisting}
 
-\section{\textindexlc{Constants}}
-\label{sec:const}
+\xsection{const}{\textindexlc{Constants}}
 
 NASM understands four different types of constant: numeric,
 character, string and floating-point.
@@ -649,8 +644,7 @@ dt +0p33
 dt 33p
 \end{lstlisting}
 
-\section{\textindex{Expressions}}
-\label{sec:expr}
+\xsection{expr}{\textindex{Expressions}}
 
 Expressions in NASM are similar in syntax to those in C. Expressions
 are evaluated as 64-bit integers which are then adjusted to the
@@ -741,8 +735,7 @@ A set of additional operators with leading and trailing double
 underscores are used to implement the integer functions of the
 \code{ifunc} macro package, see \fullref{sec:pkg_ifunc}.
 
-\section{\codeindex{SEG} and \codeindex{WRT}}
-\label{sec:segwrt}
+\xsection{segwrt}{\codeindex{SEG} and \codeindex{WRT}}
 
 When writing large 16-bit programs, which must be split into
 multiple \textindex{segments}, it is often necessary to be able
@@ -807,8 +800,7 @@ dw      symbol, seg symbol
 NASM supports no convenient synonym for this, though you can always
 invent one using the macro processor.
 
-\section{\codeindex{STRICT}: Inhibiting Optimization}
-\label{sec:strict}
+\xsection{strict}{\codeindex{STRICT}: Inhibiting Optimization}
 
 When assembling with the optimizer set to level 2 or higher (see
 \fullref{sec:opt-O-cap}), NASM will use size specifiers (\code{BYTE},
@@ -834,9 +826,7 @@ is encoded in six bytes, with a full dword immediate operand
 With the optimizer off, the same code (six bytes) is generated whether
 the \code{STRICT} keyword was used or not.
 
-
-\section{\textindexlc{Critical Expressions}}
-\label{sec:crit}
+\xsection{crit}{\textindexlc{Critical Expressions}}
 
 Although NASM has an optional multi-pass optimizer, there are some
 expressions which must be resolvable on the first pass. These are
@@ -874,8 +864,7 @@ the first pass, and which must therefore depend only
 on symbols defined before it. The argument to the \code{TIMES}
 prefix is a critical expression.
 
-\section{\textindexlc{Local Labels}}
-\label{sec:locallab}
+\xsection{locallab}{\textindexlc{Local Labels}}
 
 NASM gives special treatment to symbols beginning with a \textindex{period}.
 A label beginning with a single period is treated as a \emph{local}

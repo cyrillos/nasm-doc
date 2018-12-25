@@ -1,5 +1,4 @@
-\chapter{\textindexlc{Standard Macro Packages}}
-\label{ch:macropkg}
+\xchapter{macropkg}{\textindexlc{Standard Macro Packages}}
 
 The \codeindex{\%use} directive (see \fullref{sec:use}) includes one of
 the standard macro packages included with the NASM distribution and compiled
@@ -9,8 +8,7 @@ into the NASM binary. It operates like the \code{\%include} directive (see
 The names of standard macro packages are case insensitive, and can be
 quoted or not.
 
-\section{\codeindex{altreg}: \textindexlc{Alternate Register Names}}
-\label{sec:pkgaltreg}
+\xsection{pkgaltreg}{\codeindex{altreg}: \textindexlc{Alternate Register Names}}
 
 The \code{altreg} standard macro package provides alternate register
 names. It provides numeric register names for all registers (not just
@@ -32,8 +30,7 @@ proc:
 
 See also \fullref{sec:reg64}.
 
-\section{\codeindex{smartalign}\index{align, smart}: Smart \code{ALIGN} Macro}
-\label{sec:pkgsmartalign}
+\xsection{pkgsmartalign}{\codeindex{smartalign}\index{align, smart}: Smart \code{ALIGN} Macro}
 
 The \code{smartalign} standard macro package provides for an
 \codeindex{ALIGN} macro which is more powerful than the default (and
@@ -79,8 +76,7 @@ The macro \codeindex{\_\_ALIGNMODE\_\_} is defined to contain the
 current alignment mode. A number of other macros beginning with
 \code{\_\_ALIGN\_} are used internally by this macro package.
 
-\section{\codeindex{fp}: Floating-point macros}
-\label{sec:pkgfp}
+\xsection{pkgfp}{\codeindex{fp}: Floating-point macros}
 
 This packages contains the following floating-point convenience macros:
 
@@ -100,8 +96,7 @@ This packages contains the following floating-point convenience macros:
 %define float128h(x)    __float128h__(x)
 \end{lstlisting}
 
-\section{\codeindex{ifunc}: \textindexlc{Integer functions}}
-\label{sec:pkgifunc}
+\xsection{pkgifunc}{\codeindex{ifunc}: \textindexlc{Integer functions}}
 
 This package contains a set of macros which implement integer
 functions. These are actually implemented as special operators, but
