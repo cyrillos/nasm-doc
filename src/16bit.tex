@@ -561,54 +561,61 @@ functions expect far calls in large model; and \code{SP} has to be
 increased by 6 rather than 4 afterwards to make up for the extra
 word of parameters.
 
-%\S{16cdata} Accessing Data Items
-%
-%To get at the contents of C variables, or to declare variables which
-%C can access, you need only declare the names as \c{GLOBAL} or
-%\c{EXTERN}. (Again, the names require leading underscores, as stated
-%in \k{16cunder}.) Thus, a C variable declared as \c{int i} can be
-%accessed from assembler as
-%
-%\c extern _i
-%\c
-%\c         mov ax,[_i]
-%
-%And to declare your own integer variable which C programs can access
-%as \c{extern int j}, you do this (making sure you are assembling in
-%the \c{_DATA} segment, if necessary):
-%
-%\c global  _j
-%\c
-%\c _j      dw      0
-%
-%To access a C array, you need to know the size of the components of
-%the array. For example, \c{int} variables are two bytes long, so if
-%a C program declares an array as \c{int a[10]}, you can access
-%\c{a[3]} by coding \c{mov ax,[_a+6]}. (The byte offset 6 is obtained
-%by multiplying the desired array index, 3, by the size of the array
-%element, 2.) The sizes of the C base types in 16-bit compilers are:
-%1 for \c{char}, 2 for \c{short} and \c{int}, 4 for \c{long} and
-%\c{float}, and 8 for \c{double}.
-%
-%To access a C \i{data structure}, you need to know the offset from
-%the base of the structure to the field you are interested in. You
-%can either do this by converting the C structure definition into a
-%NASM structure definition (using \i\c{STRUC}), or by calculating the
-%one offset and using just that.
-%
-%To do either of these, you should read your C compiler's manual to
-%find out how it organizes data structures. NASM gives no special
-%alignment to structure members in its own \c{STRUC} macro, so you
-%have to specify alignment yourself if the C compiler generates it.
-%Typically, you might find that a structure like
-%
-%\c struct {
-%\c     char c;
-%\c     int i;
-%\c } foo;
-%
-%might be four bytes long rather than three, since the \c{int} field
-%would be aligned to a two-byte boundary. However, this sort of
-%feature tends to be a configurable option in the C compiler, either
-%using command-line options or \c{#pragma} lines, so you have to find
-%out how your own compiler does it.
+\subsection{Accessing Data Items}
+\label{sebsec:16cdata}
+
+To get at the contents of C variables, or to declare variables which
+C can access, you need only declare the names as \code{GLOBAL} or
+\code{EXTERN}. (Again, the names require leading underscores, as stated
+in \fullref{subsec:16cunder}.) Thus, a C variable declared as \code{int i}
+can be accessed from assembler as
+
+\begin{lstlisting}
+extern _i
+
+    mov ax,[_i]
+\end{lstlisting}
+
+And to declare your own integer variable which C programs can access
+as \code{extern int j}, you do this (making sure you are assembling in
+the \code{\_DATA} segment, if necessary):
+
+\begin{lstlisting}
+global  _j
+
+_j      dw  0
+\end{lstlisting}
+
+To access a C array, you need to know the size of the components of
+the array. For example, \code{int} variables are two bytes long, so if
+a C program declares an array as \code{int a[10]}, you can access
+\code{a[3]} by coding \code{mov ax,[\_a+6]}. (The byte offset 6 is obtained
+by multiplying the desired array index, 3, by the size of the array
+element, 2.) The sizes of the C base types in 16-bit compilers are:
+1 for \code{char}, 2 for \code{short} and \code{int}, 4 for \code{long}
+and \code{float}, and 8 for \code{double}.
+
+To access a C \textindex{data structure}, you need to know the offset from
+the base of the structure to the field you are interested in. You
+can either do this by converting the C structure definition into a
+NASM structure definition (using \codeindex{STRUC}), or by calculating the
+one offset and using just that.
+
+To do either of these, you should read your C compiler's manual to
+find out how it organizes data structures. NASM gives no special
+alignment to structure members in its own \code{STRUC} macro, so you
+have to specify alignment yourself if the C compiler generates it.
+Typically, you might find that a structure like
+
+\begin{lstlisting}
+struct {
+    char c;
+    int i;
+} foo;
+\end{lstlisting}
+
+might be four bytes long rather than three, since the \code{int} field
+would be aligned to a two-byte boundary. However, this sort of
+feature tends to be a configurable option in the C compiler, either
+using command-line options or \code{\#pragma} lines, so you have to find
+out how your own compiler does it.
