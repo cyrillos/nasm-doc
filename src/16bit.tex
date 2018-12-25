@@ -291,3 +291,118 @@ This section covers the basics of writing assembly routines that
 call, or are called from, C programs. To do this, you would
 typically write an assembly module as a \code{.OBJ} file, and link it
 with your C modules to produce a \textindex{mixed-language program}.
+
+\subsection{External Symbol Names}
+\label{subsec:16cunder}
+
+\index{C symbol names}\index{underscore!in C symbols}C compilers have the
+convention that the names of all global symbols (functions or data)
+they define are formed by prefixing an underscore to the name as it
+appears in the C program. So, for example, the function a C
+programmer thinks of as \code{printf} appears to an assembly language
+programmer as \code{\_printf}. This means that in your assembly
+programs, you can define symbols without a leading underscore, and
+not have to worry about name clashes with C symbols.
+
+If you find the underscores inconvenient, you can define macros to
+replace the \code{GLOBAL} and \code{EXTERN} directives as follows:
+
+\begin{lstlisting}
+%macro  cglobal 1
+    global  _%1
+    %define %1 _%1
+%endmacro
+
+%macro  cextern 1
+    extern  _%1
+    %define %1 _%1
+%endmacro
+\end{lstlisting}
+
+(These forms of the macros only take one argument at a time; a
+\code{\%rep} construct could solve this.)
+
+If you then declare an external like this:
+
+\begin{lstlisting}
+cextern printf
+\end{lstlisting}
+
+then the macro will expand it as
+
+\begin{lstlisting}
+extern  _printf
+%define printf _printf
+\end{lstlisting}
+
+Thereafter, you can reference \code{printf} as if it was a symbol, and
+the preprocessor will put the leading underscore on where necessary.
+
+The \code{cglobal} macro works similarly. You must use \code{cglobal}
+before defining the symbol in question, but you would have had to do
+that anyway if you used \code{GLOBAL}.
+
+Also see \fullref{opt-pfix}.
+
+\subsection{\textindexlc{Memory Models}}
+\label{subsec:16cmodels}
+
+NASM contains no mechanism to support the various C memory models
+directly; you have to keep track yourself of which one you are
+writing for. This means you have to keep track of the following
+things:
+
+\begin{itemize}
+    \item{In models using a single code segment (tiny, small and compact),
+        functions are near. This means that function pointers, when stored
+        in data segments or pushed on the stack as function arguments, are
+        16 bits long and contain only an offset field (the \code{CS} register
+        never changes its value, and always gives the segment part of the
+        full function address), and that functions are called using ordinary
+        near \code{CALL} instructions and return using \code{RETN} (which, in
+        NASM, is synonymous with \code{RET} anyway). This means both that you
+        should write your own routines to return with \code{RETN}, and that you
+        should call external C routines with near \code{CALL} instructions.}
+
+    \item{In models using more than one code segment (medium, large and
+        huge), functions are far. This means that function pointers are 32
+        bits long (consisting of a 16-bit offset followed by a 16-bit
+        segment), and that functions are called using \code{CALL FAR} (or
+        \code{CALL seg:offset}) and return using \code{RETF}. Again, you should
+        therefore write your own routines to return with \c{RETF} and use
+        \code{CALL FAR} to call external routines.}
+
+    \item{In models using a single data segment (tiny, small and medium),
+        data pointers are 16 bits long, containing only an offset field (the
+        \code{DS} register doesn't change its value, and always gives the
+        segment part of the full data item address).}
+
+    \item{In models using more than one data segment (compact, large and
+        huge), data pointers are 32 bits long, consisting of a 16-bit offset
+        followed by a 16-bit segment. You should still be careful not to
+        modify \code{DS} in your routines without restoring it afterwards, but
+        \code{ES} is free for you to use to access the contents of 32-bit data
+        pointers you are passed.}
+
+    \item{The huge memory model allows single data items to exceed 64K in
+        size. In all other memory models, you can access the whole of a data
+        item just by doing arithmetic on the offset field of the pointer you
+        are given, whether a segment field is present or not; in huge model,
+        you have to be more careful of your pointer arithmetic.}
+
+    \item{In most memory models, there is a \emph{default} data segment, whose
+        segment address is kept in \code{DS} throughout the program. This data
+        segment is typically the same segment as the stack, kept in \code{SS},
+        so that functions' local variables (which are stored on the stack)
+        and global data items can both be accessed easily without changing
+        \code{DS}. Particularly large data items are typically stored in other
+        segments. However, some memory models (though not the standard
+        ones, usually) allow the assumption that \code{SS} and \code{DS} hold the
+        same value to be removed. Be careful about functions' local
+        variables in this latter case.}
+\end{itemize}
+
+In models with a single code segment, the segment is called \codeindex{\_TEXT},
+so your code segment must also go by this name in order to be linked into the
+same place as the main code segment. In models with a single data segment,
+or with a default data segment, it is called \codeindex{\_DATA}.
