@@ -486,76 +486,81 @@ sequence points without performance suffering.
 Thus, you would define a function in C style in the following way.
 The following example is for small model:
 
-%\c global  _myfunc
-%\c
-%\c _myfunc:
-%\c         push    bp
-%\c         mov     bp,sp
-%\c         sub     sp,0x40         ; 64 bytes of local stack space
-%\c         mov     bx,[bp+4]       ; first parameter to function
-%\c
-%\c         ; some more code
-%\c
-%\c         mov     sp,bp           ; undo "sub sp,0x40" above
-%\c         pop     bp
-%\c         ret
-%
-%For a large-model function, you would replace \c{RET} by \c{RETF},
-%and look for the first parameter at \c{[BP+6]} instead of
-%\c{[BP+4]}. Of course, if one of the parameters is a pointer, then
-%the offsets of \e{subsequent} parameters will change depending on
-%the memory model as well: far pointers take up four bytes on the
-%stack when passed as a parameter, whereas near pointers take up two.
-%
-%At the other end of the process, to call a C function from your
-%assembly code, you would do something like this:
-%
-%\c extern  _printf
-%\c
-%\c       ; and then, further down...
-%\c
-%\c       push    word [myint]        ; one of my integer variables
-%\c       push    word mystring       ; pointer into my data segment
-%\c       call    _printf
-%\c       add     sp,byte 4           ; `byte' saves space
-%\c
-%\c       ; then those data items...
-%\c
-%\c segment _DATA
-%\c
-%\c myint         dw    1234
-%\c mystring      db    'This number -> %d <- should be 1234',10,0
-%
-%This piece of code is the small-model assembly equivalent of the C
-%code
-%
-%\c     int myint = 1234;
-%\c     printf("This number -> %d <- should be 1234\n", myint);
-%
-%In large model, the function-call code might look more like this. In
-%this example, it is assumed that \c{DS} already holds the segment
-%base of the segment \c{_DATA}. If not, you would have to initialize
-%it first.
-%
-%\c       push    word [myint]
-%\c       push    word seg mystring   ; Now push the segment, and...
-%\c       push    word mystring       ; ... offset of "mystring"
-%\c       call    far _printf
-%\c       add    sp,byte 6
-%
-%The integer value still takes up one word on the stack, since large
-%model does not affect the size of the \c{int} data type. The first
-%argument (pushed last) to \c{printf}, however, is a data pointer,
-%and therefore has to contain a segment and offset part. The segment
-%should be stored second in memory, and therefore must be pushed
-%first. (Of course, \c{PUSH DS} would have been a shorter instruction
-%than \c{PUSH WORD SEG mystring}, if \c{DS} was set up as the above
-%example assumed.) Then the actual call becomes a far call, since
-%functions expect far calls in large model; and \c{SP} has to be
-%increased by 6 rather than 4 afterwards to make up for the extra
-%word of parameters.
-%
-%
+\begin{lstlisting}
+global  _myfunc
+
+_myfunc:
+    push    bp
+    mov     bp,sp
+    sub     sp,0x40         ; 64 bytes of local stack space
+    mov     bx,[bp+4]       ; first parameter to function
+
+    ; some more code
+
+    mov     sp,bp           ; undo "sub sp,0x40" above
+    pop     bp
+    ret
+\end{lstlisting}
+
+For a large-model function, you would replace \code{RET} by \code{RETF},
+and look for the first parameter at \code{[BP+6]} instead of
+\code{[BP+4]}. Of course, if one of the parameters is a pointer, then
+the offsets of \emph{subsequent} parameters will change depending on
+the memory model as well: far pointers take up four bytes on the
+stack when passed as a parameter, whereas near pointers take up two.
+
+At the other end of the process, to call a C function from your
+assembly code, you would do something like this:
+
+\begin{lstlisting}
+extern  _printf
+    ; and then, further down...
+
+    push    word [myint]        ; one of my integer variables
+    push    word mystring       ; pointer into my data segment
+    call    _printf
+    add     sp,byte 4           ; `byte' saves space
+
+    ; then those data items...
+segment _DATA
+
+myint       dw  1234
+mystring    db  'This number -> %d <- should be 1234',10,0
+\end{lstlisting}
+
+This piece of code is the small-model assembly equivalent of the C
+code
+
+\begin{lstlisting}
+    int myint = 1234;
+    printf("This number -> %d <- should be 1234\n", myint);
+\end{lstlisting}
+
+In large model, the function-call code might look more like this. In
+this example, it is assumed that \code{DS} already holds the segment
+base of the segment \code{\_DATA}. If not, you would have to initialize
+it first.
+
+\begin{lstlisting}
+    push    word [myint]
+    push    word seg mystring   ; Now push the segment, and...
+    push    word mystring       ; ... offset of "mystring"
+    call    far _printf
+    add    sp,byte 6
+\end{lstlisting}
+
+The integer value still takes up one word on the stack, since large
+model does not affect the size of the \code{int} data type. The first
+argument (pushed last) to \code{printf}, however, is a data pointer,
+and therefore has to contain a segment and offset part. The segment
+should be stored second in memory, and therefore must be pushed
+first. (Of course, \code{PUSH DS} would have been a shorter instruction
+than \code{PUSH WORD SEG mystring}, if \code{DS} was set up as the above
+example assumed.) Then the actual call becomes a far call, since
+functions expect far calls in large model; and \code{SP} has to be
+increased by 6 rather than 4 afterwards to make up for the extra
+word of parameters.
+
 %\S{16cdata} Accessing Data Items
 %
 %To get at the contents of C variables, or to declare variables which
