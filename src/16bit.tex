@@ -367,7 +367,7 @@ things:
         bits long (consisting of a 16-bit offset followed by a 16-bit
         segment), and that functions are called using \code{CALL FAR} (or
         \code{CALL seg:offset}) and return using \code{RETF}. Again, you should
-        therefore write your own routines to return with \c{RETF} and use
+        therefore write your own routines to return with \code{RETF} and use
         \code{CALL FAR} to call external routines.}
 
     \item{In models using a single data segment (tiny, small and medium),
@@ -456,7 +456,7 @@ doing the calling and the function which gets called.
         (depending on the compiler) returned in \code{ST0}.}
 
     \item{Once the callee has finished processing, it restores \code{SP} from
-        \c{BP} if it had allocated local stack space, then pops the previous
+        \code{BP} if it had allocated local stack space, then pops the previous
         value of \code{BP}, and returns via \code{RETN} or \code{RETF} depending on
         memory model.}
 
@@ -684,3 +684,194 @@ endproc
 This makes use of the argument to the \code{arg} macro to define a
 parameter of size 4, because \code{j} is now a far pointer. When we
 load from \code{j}, we must load a segment and an offset.
+
+\xsection{16bp}{Interfacing to \textindex{Borland Pascal} Programs}
+
+Interfacing to Borland Pascal programs is similar in concept to
+interfacing to 16-bit C programs. The differences are:
+
+\begin{itemize}
+    \item{The leading underscore required for interfacing to C programs is
+        not required for Pascal.}
+
+    \item{The memory model is always large: functions are far, data
+        pointers are far, and no data item can be more than 64K long.
+        (Actually, some functions are near, but only those functions that
+        are local to a Pascal unit and never called from outside it. All
+        assembly functions that Pascal calls, and all Pascal functions that
+        assembly routines are able to call, are far.) However, all static
+        data declared in a Pascal program goes into the default data
+        segment, which is the one whose segment address will be in \code{DS}
+        when control is passed to your assembly code. The only things that
+        do not live in the default data segment are local variables (they
+        live in the stack segment) and dynamically allocated variables. All
+        data \emph{pointers}, however, are far.}
+
+    \item{The function calling convention is different - described below.}
+
+    \item{Some data types, such as strings, are stored differently.}
+
+    \item{There are restrictions on the segment names you are allowed to
+        use - Borland Pascal will ignore code or data declared in a segment
+        it doesn't like the name of. The restrictions are described below.}
+\end{itemize}
+
+\xsubsection{16bpfunc}{The Pascal Calling Convention}
+
+\index{functions!Pascal calling convention}\index{Pascal calling
+convention}The 16-bit Pascal calling convention is as follows. In
+the following description, the words \emph{caller} and \emph{callee} are
+used to denote the function doing the calling and the function which
+gets called.
+
+\begin{itemize}
+    \item{The caller pushes the function's parameters on the stack, one
+        after another, in normal order (left to right, so that the first
+        argument specified to the function is pushed first).}
+
+    \item{The caller then executes a far \code{CALL} instruction to pass
+        control to the callee.}
+
+    \item{The callee receives control, and typically (although this is not
+        actually necessary, in functions which do not need to access their
+        parameters) starts by saving the value of \code{SP} in \code{BP} so as to
+        be able to use \code{BP} as a base pointer to find its parameters on
+        the stack. However, the caller was probably doing this too, so part
+        of the calling convention states that \code{BP} must be preserved by
+        any function. Hence the callee, if it is going to set up \code{BP} as a
+        \textindex{frame pointer}, must push the previous value first.}
+
+    \item{The callee may then access its parameters relative to \code{BP}.
+        The word at \code{[BP]} holds the previous value of \code{BP} as it was
+        pushed. The next word, at \code{[BP+2]}, holds the offset part of the
+        return address, and the next one at \code{[BP+4]} the segment part. The
+        parameters begin at \code{[BP+6]}. The rightmost parameter of the
+        function, since it was pushed last, is accessible at this offset
+        from \code{BP}; the others follow, at successively greater offsets.}
+
+    \item{The callee may also wish to decrease \code{SP} further, so as to
+        allocate space on the stack for local variables, which will then be
+        accessible at negative offsets from \code{BP}.}
+
+    \item{The callee, if it wishes to return a value to the caller, should
+        leave the value in \code{AL}, \code{AX} or \code{DX:AX} depending on
+        the size of the value. Floating-point results are returned in \code{ST0}.
+        Results of type \code{Real} (Borland's own custom floating-point data
+        type, not handled directly by the FPU) are returned in \code{DX:BX:AX}.
+        To return a result of type \code{String}, the caller pushes a pointer
+        to a temporary string before pushing the parameters, and the callee
+        places the returned string value at that location. The pointer is
+        not a parameter, and should not be removed from the stack by the
+        \code{RETF} instruction.}
+
+    \item{Once the callee has finished processing, it restores \code{SP} from
+        \code{BP} if it had allocated local stack space, then pops the previous
+        value of \code{BP}, and returns via \code{RETF}. It uses the form of
+        \code{RETF} with an immediate parameter, giving the number of bytes
+        taken up by the parameters on the stack. This causes the parameters
+        to be removed from the stack as a side effect of the return
+        instruction.}
+
+    \item{When the caller regains control from the callee, the function
+        parameters have already been removed from the stack, so it needs to
+        do nothing further.}
+\end{itemize}
+
+Thus, you would define a function in Pascal style, taking two
+\code{Integer}-type parameters, in the following way:
+
+\begin{lstlisting}
+global  myfunc
+
+myfunc:
+    push    bp
+    mov     bp,sp
+    sub     sp,0x40     ; 64 bytes of local stack space
+    mov     bx,[bp+8]   ; first parameter to function
+    mov     bx,[bp+6]   ; second parameter to function
+
+    ; some more code
+
+    mov     sp,bp       ; undo "sub sp,0x40" above
+    pop     bp
+    retf    4           ; total size of params is 4
+\end{lstlisting}
+
+At the other end of the process, to call a Pascal function from your
+assembly code, you would do something like this:
+
+\begin{lstlisting}
+extern  SomeFunc
+    ; and then, further down...
+    push    word seg mystring   ; Now push the segment, and...
+    push    word mystring       ; ... offset of "mystring"
+    push    word [myint]        ; one of my variables
+    call    far SomeFunc
+\end{lstlisting}
+
+This is equivalent to the Pascal code
+
+\begin{lstlisting}
+procedure SomeFunc(String: PChar; Int: Integer);
+    SomeFunc(@mystring, myint);
+\end{lstlisting}
+
+\xsubsection{16bpseg}{Borland Pascal Segment Name Restrictions}
+\index{segment names!Borland Pascal}
+
+Since Borland Pascal's internal unit file format is completely
+different from \code{OBJ}, it only makes a very sketchy job of actually
+reading and understanding the various information contained in a
+real \code{OBJ} file when it links that in. Therefore an object file
+intended to be linked to a Pascal program must obey a number of
+restrictions:
+
+\begin{itemize}
+    \item{Procedures and functions must be in a segment whose name is
+        either \code{CODE}, \code{CSEG}, or something ending in
+        \code{\_TEXT}.}
+
+    \item{initialized data must be in a segment whose name is either
+        \code{CONST} or something ending in \code{\_DATA}.}
+
+    \item{Uninitialized data must be in a segment whose name is either
+        \code{DATA}, \code{DSEG}, or something ending in \code{\_BSS}.}
+
+    \item{Any other segments in the object file are completely ignored.
+        \code{GROUP} directives and segment attributes are also ignored.}
+\end{itemize}
+
+
+\xsubsection{16bpmacro}{Using \codeindex{c16.mac} With Pascal Programs}
+
+The \code{c16.mac} macro package, described in \fullref{subsec:16cmacro},
+can also be used to simplify writing functions to be called from Pascal
+programs, if you code \indexcode{PASCAL}\code{\%define PASCAL}. This
+definition ensures that functions are far (it implies \codeindex{FARCODE}),
+and also causes procedure return instructions to be generated with
+an operand.
+
+Defining \code{PASCAL} does not change the code which calculates the
+argument offsets; you must declare your function's arguments in
+reverse order. For example:
+
+\begin{lstlisting}
+%define PASCAL
+
+proc    _pascalproc
+%$j     arg 4
+%$i     arg
+        mov     ax,[bp + %$i]
+        mov     bx,[bp + %$j]
+        mov     es,[bp + %$j + 2]
+        add     ax,[bx]
+endproc
+\end{lstlisting}
+
+This defines the same routine, conceptually, as the example in
+\fullref{sub:16cmacro}: it defines a function taking two arguments,
+an integer and a pointer to an integer, which returns the sum of
+the integer and the contents of the pointer. The only difference
+between this code and the large-model C version is that \code{PASCAL}
+is defined instead of \code{FARCODE}, and that the arguments are
+declared in reverse order.
