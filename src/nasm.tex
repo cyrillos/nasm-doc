@@ -5,19 +5,20 @@
 
 \usepackage[a4paper,margin=72pt]{geometry}
 
-\usepackage{listings}		% nasm listings
-\usepackage{imakeidx}		% indexing
-\usepackage{hyperref}		% pdf bookmarks and such
-\usepackage[Sonny]{fncychap}	% chapter style
-\usepackage{parskip}		% no indent on first line
-\usepackage{fontspec}		% selecting fonts
-\usepackage{xunicode}		% unicode support
-\usepackage{xcolor}		% coloring
-\usepackage{xspace}		% spacing
-%\usepackage{xstring}		% strings for code
-\usepackage{sectsty}		% colors for sections
-\usepackage{graphicx}		% images
-\usepackage[titles]{tocloft}	% coloring TOC
+\usepackage{listings}           % nasm listings
+\usepackage{imakeidx}           % indexing
+\usepackage{hyperref}           % pdf bookmarks and such
+\usepackage[Sonny]{fncychap}    % chapter style
+\usepackage{parskip}            % no indent on first line
+\usepackage{fontspec}           % selecting fonts
+\usepackage{xunicode}           % unicode support
+\usepackage{xcolor}             % coloring
+\usepackage{xspace}             % spacing
+\usepackage[toc,page]{appendix} % appendix
+%\usepackage{xstring}            % strings for code
+\usepackage{sectsty}            % colors for sections
+\usepackage{graphicx}           % images
+\usepackage[titles]{tocloft}    % coloring TOC
 
 \title{NASM -- The Netwide Assembler}
 \author{The NASM Development Team}
@@ -28,10 +29,10 @@
 % No rectangles
 \makeatletter
 \hypersetup{
-	pdfauthor=\@author,
-	pdftitle=\@title,
-	pdfkeywords={NASM,Netwide Assembler},
-	hidelinks,
+    pdfauthor=\@author,
+    pdftitle=\@title,
+    pdfkeywords={NASM,Netwide Assembler},
+    hidelinks,
 }
 \makeatother
 
@@ -51,20 +52,20 @@
 % Listings font and settings
 \newfontfamily{\lstsansserif}{FreeMono}
 \lstset{
-	keepspaces=true,
-	backgroundcolor=\color{light-gray},
-	basicstyle=\lstsansserif,
-	breaklines=true,
-	breakatwhitespace=true,
-        framesep=10pt,
-        framexleftmargin=10pt,
-        frame=tb,
-        framerule=0pt,
-        xleftmargin=10pt,
-        xrightmargin=10pt,
-        aboveskip=10pt,
-        belowskip=5pt,
-        literate={-}{{-}}1
+    keepspaces=true,
+    backgroundcolor=\color{light-gray},
+    basicstyle=\lstsansserif,
+    breaklines=true,
+    breakatwhitespace=true,
+    framesep=10pt,
+    framexleftmargin=10pt,
+    frame=tb,
+    framerule=0pt,
+    xleftmargin=10pt,
+    xrightmargin=10pt,
+    aboveskip=10pt,
+    belowskip=5pt,
+    literate={-}{{-}}1
 }
 
 %
@@ -119,17 +120,17 @@
 
 \makeatletter
 \begin{titlepage}
-	\begin{center} \vspace*{\fill}
-		\begin{flushleft}
-		{\huge \bfseries {\@title}}				\\
-		\end{flushleft}
-		\noindent\makebox[\linewidth]{\rule{\textwidth}{2pt}}	\\
-		\begin{flushright}
-		{\large \bfseries \emph{version \version}}		\\[8ex]
-		\end{flushright}
-		\includegraphics[width=6cm]{src/nasmlogo.eps}
-	\vspace*{\fill} \end{center}
-   \end{titlepage}
+    \begin{center} \vspace*{\fill}
+        \begin{flushleft}
+            {\huge \bfseries {\@title}}                         \\
+        \end{flushleft}
+        \noindent\makebox[\linewidth]{\rule{\textwidth}{2pt}}   \\
+        \begin{flushright}
+            {\large \bfseries \emph{version \version}}          \\[8ex]
+        \end{flushright}
+        \includegraphics[width=6cm]{src/nasmlogo.eps}
+    \vspace*{\fill} \end{center}
+\end{titlepage}
 \makeatother
 \thispagestyle{empty}
 
