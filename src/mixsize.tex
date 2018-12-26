@@ -156,18 +156,14 @@ the corresponding \code{a16} prefix can be used.
 The \code{a16}, \code{a32} and \code{a64} prefixes can be applied to
 any instruction in NASM's instruction table, but most of them can
 generate all the useful forms without them. The prefixes are necessary
-only for instructions with implicit addressing:
-%\# \code{CMPSx} (\k{insCMPSB}),
-%\# \code{SCASx} (\k{insSCASB}), \code{LODSx} (\k{insLODSB}), \code{STOSx}
-%\# (\k{insSTOSB}), \code{MOVSx} (\k{insMOVSB}), \code{INSx} (\k{insINSB}),
-%\# \code{OUTSx} (\k{insOUTSB}), and \code{XLATB} (\k{insXLATB}).
-%\code{CMPSx}, \code{SCASx}, \code{LODSx}, \code{STOSx}, \code{MOVSx}, \code{INSx},
-%\code{OUTSx}, and \code{XLATB}.
-Also, the various push and pop instructions (\code{PUSHA} and \code{POPF}
-as well as the more usual \code{PUSH} and \code{POP}) can accept
-\code{a16}, \code{a32} or \code{a64} prefixes to force a particular
-one of \code{SP}, \code{ESP} or \code{RSP} to be used as a stack pointer,
-in case the stack segment in use is a different size from the code segment.
+only for instructions with implicit addressing: \code{CMPSx},
+\code{SCASx}, \code{LODSx}, \code{STOSx}, \code{MOVSx}, \code{INSx},
+\code{OUTSx}, and \code{XLATB}. Also, the various push and pop
+instructions (\code{PUSHA} and \code{POPF} as well as the more usual
+\code{PUSH} and \code{POP}) can accept \code{a16}, \code{a32} or
+\code{a64} prefixes to force a particular one of \code{SP}, \code{ESP} or
+\code{RSP} to be used as a stack pointer, in case the stack segment in
+use is a different size from the code segment.
 
 \code{PUSH} and \code{POP}, when applied to segment registers in 32-bit
 mode, also have the slightly odd behaviour that they push and pop 4
