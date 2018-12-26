@@ -95,7 +95,7 @@ the function doing the calling and the function which gets called.
         are typically returned in \code{ST0}.}
 
     \item{Once the callee has finished processing, it restores 
-        \code{ESP} from \c{EBP} if it had allocated local stack space,
+        \code{ESP} from \code{EBP} if it had allocated local stack space,
         then pops the previous value of \code{EBP}, and returns via
         \code{RET} (equivalently, \code{RETN}).}
 
@@ -256,3 +256,284 @@ in later procedures. Of course, you don't \emph{have} to do that.
 \code{arg} can take an optional parameter, giving the size of the
 argument. If no size is given, 4 is assumed, since it is likely that
 many function parameters will be of type \code{int} or pointers.
+
+\xsection{picdll}{Writing NetBSD/FreeBSD/OpenBSD and Linux/ELF}
+\index{Shared Libraries}
+
+\code{ELF} replaced the older \code{a.out} object file format under Linux
+because it contains support for \textindex{position-independent code}
+(\textindex{PIC}), which makes writing shared libraries much easier. NASM
+supports the \code{ELF} position-independent code features, so you can
+write Linux \code{ELF} shared libraries in NASM.
+
+\textindex{NetBSD}, and its close cousins \textindex{FreeBSD} and
+\textindex{OpenBSD}, take a different approach by hacking PIC support
+into the \code{a.out} format. NASM supports this as the \codeindex{aoutb}
+output format, so you can write \textindex{BSD} shared libraries in
+NASM too.
+
+The operating system loads a PIC shared library by memory-mapping
+the library file at an arbitrarily chosen point in the address space
+of the running process. The contents of the library's code section
+must therefore not depend on where it is loaded in memory.
+
+Therefore, you cannot get at your variables by writing code like
+this:
+
+\begin{lstlisting}
+    mov     eax,[myvar]             ; WRONG
+\end{lstlisting}
+
+Instead, the linker provides an area of memory called the
+\textindex{global offset table}, or \textindex{GOT}; the GOT is situated
+at a constant distance from your library's code, so if you can find out
+where your library is loaded (which is typically done using a \code{CALL}
+and \code{POP} combination), you can obtain the address of the GOT, and
+you can then load the addresses of your variables out of linker-generated
+entries in the GOT.
+
+The \emph{data} section of a PIC shared library does not have these
+restrictions: since the data section is writable, it has to be
+copied into memory anyway rather than just paged in from the library
+file, so as long as it's being copied it can be relocated too. So
+you can put ordinary types of relocation in the data section without
+too much worry (but see \fullref{sec:picglobal} for a caveat).
+
+\xsubsection{picgot}{Obtaining the Address of the GOT}
+
+Each code module in your shared library should define the GOT as an
+external symbol:
+
+\begin{lstlisting}
+extern  _GLOBAL_OFFSET_TABLE_   ; in ELF
+extern  __GLOBAL_OFFSET_TABLE_  ; in BSD a.out
+\end{lstlisting}
+
+At the beginning of any function in your shared library which plans
+to access your data or BSS sections, you must first calculate the
+address of the GOT. This is typically done by writing the function
+in this form:
+
+\begin{lstlisting}
+func:
+    push    ebp
+    mov     ebp,esp
+    push    ebx
+    call    .get_GOT
+.get_GOT:
+    pop     ebx
+    add     ebx,_GLOBAL_OFFSET_TABLE_+$$-.get_GOT wrt ..gotpc
+
+    ; the function body comes here
+
+    mov     ebx,[ebp-4]
+    mov     esp,ebp
+    pop     ebp
+    ret
+\end{lstlisting}
+
+(For BSD, again, the symbol \code{\_GLOBAL\_OFFSET\_TABLE} requires a
+second leading underscore.)
+
+The first two lines of this function are simply the standard C
+prologue to set up a stack frame, and the last three lines are
+standard C function epilogue. The third line, and the fourth to last
+line, save and restore the \code{EBX} register, because PIC shared
+libraries use this register to store the address of the GOT.
+
+The interesting bit is the \code{CALL} instruction and the following
+two lines. The \code{CALL} and \code{POP} combination obtains the address
+of the label \code{.get\_GOT}, without having to know in advance where
+the program was loaded (since the \code{CALL} instruction is encoded
+relative to the current position). The \code{ADD} instruction makes use
+of one of the special PIC relocation types: \textindex{GOTPC relocation}.
+With the \codeindex{WRT ..gotpc} qualifier specified, the symbol
+referenced (here \code{\_GLOBAL\_OFFSET\_TABLE\_}, the special symbol
+assigned to the GOT) is given as an offset from the beginning of the
+section. (Actually, \code{ELF} encodes it as the offset from the operand
+field of the \code{ADD} instruction, but NASM simplifies this
+deliberately, so you do things the same way for both \code{ELF} and
+\code{BSD}.) So the instruction then \emph{adds} the beginning of the
+section, to get the real address of the GOT, and subtracts the value of
+\code{.get\_GOT} which it knows is in \code{EBX}. Therefore, by the time
+that instruction has finished, \code{EBX} contains the address of the GOT.
+
+If you didn't follow that, don't worry: it's never necessary to
+obtain the address of the GOT by any other means, so you can put
+those three instructions into a macro and safely ignore them:
+
+\begin{lstlisting}
+%macro  get_GOT 0
+    call    %%getgot
+%%getgot:
+    pop     ebx
+    add     ebx,_GLOBAL_OFFSET_TABLE_+$$-%%getgot wrt ..gotpc
+%endmacro
+\end{lstlisting}
+
+\xsubsection{piclocal}{Finding Your Local Data Items}
+
+Having got the GOT, you can then use it to obtain the addresses of
+your data items. Most variables will reside in the sections you have
+declared; they can be accessed using the \index{GOTOFF relocation}
+\code{..gotoff} special \indexcode{WRT ..gotoff}\code{WRT} type. The
+way this works is like this:
+
+\begin{lstlisting}
+    lea     eax,[ebx+myvar wrt ..gotoff]
+\end{lstlisting}
+
+The expression \code{myvar wrt ..gotoff} is calculated, when the shared
+library is linked, to be the offset to the local variable \code{myvar}
+from the beginning of the GOT. Therefore, adding it to \code{EBX} as
+above will place the real address of \code{myvar} in \code{EAX}.
+
+If you declare variables as \code{GLOBAL} without specifying a size for
+them, they are shared between code modules in the library, but do
+not get exported from the library to the program that loaded it.
+They will still be in your ordinary data and BSS sections, so you
+can access them in the same way as local variables, using the above
+\code{..gotoff} mechanism.
+
+Note that due to a peculiarity of the way BSD \code{a.out} format
+handles this relocation type, there must be at least one non-local
+symbol in the same section as the address you're trying to access.
+
+\xsubsection{picextern}{Finding External and Common Data Items}
+
+If your library needs to get at an external variable (external to
+the \emph{library}, not just to one of the modules within it), you must
+use the \index{GOT relocations}\indexcode{WRT ..got}\code{..got} type
+to get at it. The \code{..got} type, instead of giving you the offset from
+the GOT base to the variable, gives you the offset from the GOT base to
+a GOT \emph{entry} containing the address of the variable. The linker
+will set up this GOT entry when it builds the library, and the
+dynamic linker will place the correct address in it at load time. So
+to obtain the address of an external variable \code{extvar} in \code{EAX},
+you would code
+
+\begin{lstlisting}
+    mov     eax,[ebx+extvar wrt ..got]
+\end{lstlisting}
+
+This loads the address of \code{extvar} out of an entry in the GOT. The
+linker, when it builds the shared library, collects together every
+relocation of type \code{..got}, and builds the GOT so as to ensure it
+has every necessary entry present.
+
+Common variables must also be accessed in this way.
+
+\xsubsection{picglobal}{Exporting Symbols to the Library User}
+
+If you want to export symbols to the user of the library, you have
+to declare whether they are functions or data, and if they are data,
+you have to give the size of the data item. This is because the
+dynamic linker has to build \index{PLT}\textindex{procedure linkage table}
+entries for any exported functions, and also moves exported data
+items away from the library's data section in which they were
+declared.
+
+So to export a function to users of the library, you must use
+
+\begin{lstlisting}
+global  func:function               ; declare it as a function
+func:
+    push    ebp
+    ; etc.
+\end{lstlisting}
+
+And to export a data item such as an array, you would have to code
+
+\begin{lstlisting}
+global  array:data array.end-array  ; give the size too
+    array:  resd    128
+.end:
+\end{lstlisting}
+
+Be careful: If you export a variable to the library user, by
+declaring it as \code{GLOBAL} and supplying a size, the variable will
+end up living in the data section of the main program, rather than
+in your library's data section, where you declared it. So you will
+have to access your own global variable with the \code{..got} mechanism
+rather than \code{..gotoff}, as if it were external (which,
+effectively, it has become).
+
+Equally, if you need to store the address of an exported global in
+one of your data sections, you can't do it by means of the standard
+sort of code:
+
+\begin{lstlisting}
+dataptr:    dd  global_data_item    ; WRONG
+\end{lstlisting}
+
+NASM will interpret this code as an ordinary relocation, in which
+\code{global\_data\_item} is merely an offset from the beginning of the
+\code{.data} section (or whatever); so this reference will end up
+pointing at your data section instead of at the exported global
+which resides elsewhere.
+
+Instead of the above code, then, you must write
+
+\begin{lstlisting}
+dataptr:    dd  global_data_item wrt ..sym
+\end{lstlisting}
+
+which makes use of the special \code{WRT} type \indexcode{WRT ..sym}
+\code{..sym} to instruct NASM to search the symbol table for a particular
+symbol at that address, rather than just relocating by section base.
+
+Either method will work for functions: referring to one of your
+functions by means of
+
+\begin{lstlisting}
+funcptr:    dd  my_function
+\end{lstlisting}
+
+will give the user the address of the code you wrote, whereas
+
+\begin{lstlisting}
+funcptr:    dd  my_function wrt ..sym
+\end{lstlisting}
+
+will give the address of the procedure linkage table for the
+function, which is where the calling program will \emph{believe} the
+function lives. Either address is a valid way to call the function.
+
+\xsubsection{picproc}{Calling Procedures Outside the Library}
+
+Calling procedures outside your shared library has to be done by
+means of a \textindex{procedure linkage table}, or \textindex{PLT}.
+The PLT is placed at a known offset from where the library is loaded,
+so the library code can make calls to the PLT in a position-independent
+way. Within the PLT there is code to jump to offsets contained in
+the GOT, so function calls to other shared libraries or to routines
+in the main program can be transparently passed off to their real
+destinations.
+
+To call an external routine, you must use another special PIC
+relocation type, \index{PLT relocations}\codeindex{WRT ..plt}. This is
+much easier than the GOT-based ones: you simply replace calls such as
+\code{CALL printf} with the PLT-relative version \code{CALL printf WRT
+..plt}.
+
+\xsubsection{link}{Generating the Library File}
+
+Having written some code modules and assembled them to \code{.o} files,
+you then generate your shared library with a command such as
+
+\begin{lstlisting}
+ld -shared -o library.so module1.o module2.o        # for ELF
+ld -Bshareable -o library.so module1.o module2.o    # for BSD
+\end{lstlisting}
+
+For ELF, if your shared library is going to reside in system
+directories such as \code{/usr/lib} or \code{/lib}, it is usually worth
+using the \codeindex{-soname} flag to the linker, to store the final
+library file name, with a version number, into the library:
+
+\begin{lstlisting}
+ld -shared -soname library.so.1 -o library.so.1.2 *.o
+\end{lstlisting}
+
+You would then copy \code{library.so.1.2} into the library directory,
+and create \code{library.so.1} as a symbolic link to it.
