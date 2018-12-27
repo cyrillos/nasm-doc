@@ -435,8 +435,7 @@ macro that expands to a string, as in the following example:
 As in the first case, this would result in \code{charcnt} being
 assigned the value of 9.
 
-\subsection{\textindexlc{Extracting Substrings}: \codeindex{\%substr}}
-\label{subsec:substr}
+\xsubsection{substr}{\textindexlc{Extracting Substrings}: \codeindex{\%substr}}
 
 Individual letters or substrings in strings can be extracted using the
 \code{\%substr} operator. An example of its use is probably more useful
@@ -520,8 +519,8 @@ things like
         silly {13,10}, crlf             ; crlf:      db 13,10
 \end{lstlisting}
 
-\subsection{Overloading Multi-Line Macros\index{overloading!multi-line macros}}
-\label{subsec:mlmacover}
+\xsubsection{mlmacover}{Overloading Multi-Line Macros}
+\index{overloading!multi-line macros}
 
 As with single-line macros, multi-line macros can be overloaded by
 defining the same macro name several times with different numbers of
@@ -566,8 +565,7 @@ given. The correct code will still be generated, but the assembler
 will give a warning. This warning can be disabled by the use of the
 \code{-w-macro-params} command-line option (see \fullref{subsec:opt-w}).
 
-\subsection{\textindexlc{Macro-Local Labels}}
-\label{subsec:maclocal}
+\xsubsection{maclocal}{\textindexlc{Macro-Local Labels}}
 
 NASM allows you to define labels within a multi-line macro definition
 in such a way as to make them local to the macro call: so calling
@@ -596,8 +594,7 @@ interfering with the local label mechanism, as described in
 in this form (the \code{..@} prefix, then a number, then another period)
 in case they interfere with macro-local labels.
 
-\subsection{\textindexlc{Greedy Macro Parameters}}
-\label{subsec:mlmacgre}
+\xsubsection{mlmacgre}{\textindexlc{Greedy Macro Parameters}}
 
 Occasionally it is useful to define a macro which lumps its entire
 command line into one parameter definition, possibly after
@@ -663,8 +660,7 @@ definition.
 
 See \fullref{subsec:sectmac} for a better way to write the above macro.
 
-\subsection{\textindexlc{Macro Parameters Range}}
-\label{subsec:mlmacrange}
+\xsubsection{mlmacrange}{\textindexlc{Macro Parameters Range}}
 
 NASM allows you to expand parameters via special construction \code{\%\{x:y\}}
 where \code{x} is the first parameter index and \code{y} is the last.
@@ -713,8 +709,7 @@ Note that NASM uses \textindex{comma} to separate parameters being expanded.
 By the way, here is a trick - you might use the index \code{\%{-1:-1}}
 which gives you the \textindex{last} argument passed to a macro.
 
-\subsection{\textindexlc{Default Macro Parameters}}
-\label{subsec:mlmacdef}
+\xsubsection{mlmacdef}{\textindexlc{Default Macro Parameters}}
 
 NASM also allows you to define a multi-line macro with a \emph{range}
 of allowable parameter counts. If you do this, you can specify
@@ -784,8 +779,7 @@ this case, of course, it is impossible to provide a \emph{full} set of
 default parameters. Examples of this usage are shown in
 \fullref{subsec:rotate}.
 
-\subsection{\codeindex{\%0}: \index{counting macro parameters}Macro Parameter Counter}
-\label{subsec:percent0}
+\xsubsection{percent0}{\codeindex{\%0}: \index{counting macro parameters}Macro Parameter Counter}
 
 The parameter reference \code{\%0} will return a numeric constant giving the
 number of parameters received, that is, if \code{\%0} is n then \code{\%}n
@@ -794,15 +788,13 @@ number of parameters. It can be used as an argument to \code{\%rep}
 (see \fullref{subsec:rep}) in order to iterate through all the parameters
 of a macro. Examples are given in \fullref{subsec:rotate}.
 
-\subsection{\codeindex{\%00}: \index{label preceeding macro}Label Preceeding Macro}
-\label{subsec:percent00}
+\xsubsection{percent00}{\codeindex{\%00}: \index{label preceeding macro}Label Preceeding Macro}
 
 \code{\%00} will return the label preceeding the macro invocation, if any. The
 label must be on the same line as the macro invocation, may be a local label
 (see \fullref{locallab}), and need not end in a colon.
 
-\subsection{\codeindex{\%rotate}: \textindexlc{Rotating Macro Parameters}}
-\label{subsec:rotate}
+\xsubsection{rotate}{\codeindex{\%rotate}: \textindexlc{Rotating Macro Parameters}}
 
 Unix shell programmers will be familiar with the \index{shift
 command}\code{shift} shell command, which allows the arguments passed
@@ -874,8 +866,7 @@ as \code{\%1}. This is then popped, and the arguments are rotated
 right again, socthe second-to-last argument becomes \code{\%1}.
 Thus the arguments are iterated through in reverse order.
 
-\subsection{\textindexlc{Concatenating Macro Parameters}}
-\label{subsec:concat}
+\xsubsection{concat}{\textindexlc{Concatenating Macro Parameters}}
 
 NASM can concatenate macro parameters and macro indirection constructs
 on to other text surrounding them. This allows you to declare a family
@@ -938,8 +929,7 @@ parameters for the purpose of concatenation.
 
 See also the \code{\%+} operator, \fullref{subsec:concatmacro}.
 
-\subsection{\textindexlc{Condition Codes as Macro Parameters}}
-\label{subsec:mlmaccc}
+\xsubsection{mlmaccc}{\textindexlc{Condition Codes as Macro Parameters}}
 
 NASM can give special treatment to a macro parameter which contains
 a condition code. For a start, you can refer to the macro parameter
@@ -974,8 +964,7 @@ the arguments \code{CXZ} and \code{ECXZ} as valid condition codes;
 however, \code{\%-1} will report an error if passed either of these,
 because no inverse condition code exists.
 
-\subsection{\textindexlc{Disabling Listing Expansion}\indexcode{.nolist}}
-\label{subsec:nolist}
+\xsubsection{nolist}{\textindexlc{Disabling Listing Expansion}\indexcode{.nolist}}
 
 When NASM is generating a listing file from your program, it will
 generally expand multi-line macros by means of writing the macro
@@ -999,8 +988,7 @@ Or like this:
 %macro bar 1-5+.nolist a,b,c,d,e,f,g,h
 \end{lstlisting}
 
-\subsection{Undefining Multi-Line Macros: \codeindex{\%unmacro}}
-\label{subsec:unmacro}
+\xsubsection{unmacro}{Undefining Multi-Line Macros: \codeindex{\%unmacro}}
 
 Multi-line macros can be removed with the \code{\%unmacro} directive.
 Unlike the \code{\%undef} directive, however, \code{\%unmacro} takes an
@@ -1054,9 +1042,8 @@ corresponding \code{\%elif}, \code{\%ifn}, and \code{\%elifn} directives; for
 example, the equivalents to the \code{\%ifdef} directive are \code{\%elifdef},
 \code{\%ifndef}, and \code{\%elifndef}.
 
-\subsection{\codeindex{\%ifdef}: Testing Single-Line Macro Existence
+\xsubsection{ifdef}{\codeindex{\%ifdef}: Testing Single-Line Macro Existence
 \index{testing, single-line macro existence}}
-\label{susbec:ifdef}
 
 Beginning a conditional-assembly block with the line \code{\%ifdef MACRO}
 will assemble the subsequent code if, and only if, a single-line macro called
@@ -1083,9 +1070,8 @@ You can test for a macro \emph{not} being defined by using
 for macro definitions in \code{\%elif} blocks by using
 \codeindex{\%elifdef} and \codeindex{\%elifndef}.
 
-\subsection{\codeindex{\%ifmacro}: Testing Multi-Line Macro Existence
+\xsubsection{ifmacro}{\codeindex{\%ifmacro}: Testing Multi-Line Macro Existence
 \index{testing!multi-line macro existence}}
-\label{subsec:ifmacro}
 
 The \code{\%ifmacro} directive operates in the same way as the \code{\%ifdef}
 directive, except that it checks for the existence of a multi-line macro.
@@ -1123,9 +1109,8 @@ instead of \code{\%ifmacro}. Additional tests can be performed in
 \code{\%elif} blocks by using \codeindex{\%elifmacro} and
 \codeindex{\%elifnmacro}.
 
-\subsection{\codeindex{\%ifctx}: Testing the Context Stack
-\index{testing, context stack}}
-\label{subsec:ifctx}
+\xsubsection{ifctx}{\codeindex{\%ifctx}: Testing the Context Stack
+\index{testing!context stack}}
 
 The conditional-assembly construct \code{\%ifctx} will cause the
 subsequent code to be assembled if and only if the top context on
@@ -1136,9 +1121,8 @@ As with \code{\%ifdef}, the inverse and \code{\%elif} forms \codeindex{\%ifnctx}
 For more details of the context stack, see \fullref{sec:ctxstack}.
 For a sample use of \code{\%ifctx}, see \fullref{sec:blockif}.
 
-\subsection{\codeindex{\%if}: Testing Arbitrary Numeric Expressions}
+\xsubsection{if}{\codeindex{\%if}: Testing Arbitrary Numeric Expressions}
 \index{testing!arbitrary numeric expressions}
-\label{subsec:if}
 
 The conditional-assembly construct \code{\%if expr} will cause the
 subsequent code to be assembled if and only if the value of the
@@ -1169,9 +1153,8 @@ for true and 0 for false.
 Like other \code{\%if} constructs, \code{\%if} has a counterpart
 \codeindex{\%elif}, and negative forms \codeindex{\%ifn} and \codeindex{\%elifn}.
 
-\subsection{\codeindex{\%ifidn} and \codeindex{\%ifidni}: Testing Exact Text Identity}
-\label{subsec:ifidn}
-\index{testing, exact text identity}
+\xsubsection{ifidn}{\codeindex{\%ifidn} and \codeindex{\%ifidni}: Testing Exact Text Identity}
+\index{testing!exact text identity}
 
 The construct \code{\%ifidn text1,text2} will cause the subsequent code
 to be assembled if and only if \code{text1} and \code{text2}, after
@@ -1201,9 +1184,8 @@ Like other \code{\%if} constructs, \code{\%ifidn} has a counterpart
 \codeindex{\%elifnidn}. Similarly, \code{\%ifidni} has counterparts
 \codeindex{\%elifidni}, \codeindex{\%ifnidni} and \codeindex{\%elifnidni}.
 
-\label{subsec:iftyp}
-\subsection{\codeindex{\%ifid}, \codeindex{\%ifnum}, \codeindex{\%ifstr}: Testing Token Types}
-\index{testing, token types}
+\xsubsection{iftyp}{\codeindex{\%ifid}, \codeindex{\%ifnum}, \codeindex{\%ifstr}: Testing Token Types}
+\index{testing!token types}
 
 Some macros will want to perform different tasks depending on
 whether they are passed a number, a string, or an identifier. For
@@ -1267,8 +1249,7 @@ The usual \indexcode{\%elifid}\indexcode{\%elifnum}\indexcode{\%elifstr}\code{\%
 \indexcode{\%elifnid}\indexcode{\%elifnnum}\indexcode{\%elifnstr}\code{\%elifn}...
 versions exist for each of \code{\%ifid}, \code{\%ifnum} and \code{\%ifstr}.
 
-\subsection{\codeindex{\%iftoken}: Test for a Single Token}
-\label{subsec:iftoken}
+\xsubsection{iftoken}{\codeindex{\%iftoken}: Test for a Single Token}
 
 Some macros will want to do different things depending on if it is
 passed a single token (e.g. paste it to something else using \code{\%+})
@@ -1296,8 +1277,7 @@ will not, since \code{-1} contains two tokens: the unary minus operator
 The usual \codeindex{\%eliftoken}, \codeindex{\%ifntoken}, and
 \codeindex{\%elifntoken} variants are also provided.
 
-\subsection{\codeindex{\%ifempty}: Test for Empty Expansion}
-\label{subsec:ifempty}
+\xsubsection{ifempty}{\codeindex{\%ifempty}: Test for Empty Expansion}
 
 The conditional assembly construct \code{\%ifempty} assembles the
 subsequent code if and only if the expanded parameters do not contain
@@ -1306,8 +1286,7 @@ any tokens at all, whitespace excepted.
 The usual \codeindex{\%elifempty}, \codeindex{\%ifnempty}, and
 \codeindex{\%elifnempty} variants are also provided.
 
-\subsection{\codeindex{\%ifenv}: Test If Environment Variable Exists}
-\label{subsec:ifenv}
+\xsubsection{ifenv}{\codeindex{\%ifenv}: Test If Environment Variable Exists}
 
 The conditional assembly construct \code{\%ifenv} assembles the
 subsequent code if and only if the environment variable referenced by
@@ -1379,8 +1358,7 @@ is hardly possible that you ever need anything bigger.
 
 These commands allow you to split your sources into multiple files.
 
-\label{subsec:include}
-\subsection{\codeindex{\%include}: \textindexlc{Including Other Files}}
+\xsubsection{include}{\codeindex{\%include}: \textindexlc{Including Other Files}}
 
 Using, once again, a very similar syntax to the C preprocessor,
 NASM's preprocessor lets you include other source files into your
@@ -1418,8 +1396,7 @@ You can force a file to be included even if there is no \code{\%include}
 directive that explicitly includes it, by using the \codeindex{-p} option
 on the NASM command line (see \fullref{subsec:opt-p}).
 
-\subsection{\codeindex{\%pathsearch}: Search the Include Path}
-\label{subsec:pathsearch}
+\xsubsection{pathsearch}{\codeindex{\%pathsearch}: Search the Include Path}
 
 The \code{\%pathsearch} directive takes a single-line macro name and a
 filename, and declare or redefines the specified single-line macro to
@@ -1435,8 +1412,7 @@ For example,
 ... with \code{-Ibins/} in the include path may end up defining the macro
 \code{MyFoo} to be \code{"bins/foo.bin"}.
 
-\subsection{\codeindex{\%depend}: Add Dependent Files}
-\label{subsec:depend}
+\xsubsection{depend}{\codeindex{\%depend}: Add Dependent Files}
 
 The \code{\%depend} directive takes a filename and adds it to the list of
 files to be emitted as dependency generation when the \code{-M} options
@@ -1459,8 +1435,7 @@ This first resolves the location of the file into the macro \code{dep},
 then adds it to the dependency lists, and finally issues the
 assembler-level \code{INCBIN} directive.
 
-\subsection{\codeindex{\%use}: Include Standard Macro Package}
-\label{subsec:use}
+\xsubsection{use}{\codeindex{\%use}: Include Standard Macro Package}
 
 The \code{\%use} directive is similar to \code{\%include}, but rather than
 including the contents of a file, it includes a named standard macro
@@ -1498,10 +1473,9 @@ characterized by a name. You add a new context to the stack using
 the \codeindex{\%push} directive, and remove one using \codeindex{\%pop}.
 You can define labels that are local to a particular context on the stack.
 
-\subsection{\codeindex{\%push} and \codeindex{\%pop}: Creating and Removing Contexts}
-\label{subsec:pushpop}
-\index{creating contexts}
-\index{removing contexts}
+\xsubsection{pushpop}{\codeindex{\%push} and \codeindex{\%pop}: Creating and Removing Contexts}
+\index{context!create}
+\index{context!remove }
 
 The \code{\%push} directive is used to create a new context and place it
 on the top of the context stack. \code{\%push} takes an optional argument,
@@ -1522,8 +1496,7 @@ context from the context stack and destroys it, along with any
 labels associated with it.  If an argument is given, it must match the
 name of the current context, otherwise it will issue an error.
 
-\subsection{\textindexlc{Context-Local Labels}}
-\label{subsec:ctxlocal}
+\xsubsection{ctxlocal}{\textindexlc{Context-Local Labels}}
 
 Just as the usage \code{\%\%foo} defines a label which is local to the
 particular macro call in which it is used, the usage \indexcode{\%\$}\code{\%\$foo}
@@ -1565,8 +1538,7 @@ If you need to define, or access, labels local to the context
 \indexcode{\%\$\$}\code{\%\$\$foo}, or \code{\%\$\$\$foo} for
 the context below that, and so on.
 
-\subsection{\textindexlc{Context-Local Single-Line Macros}}
-\label{subsec:ctxdefine}
+\xsubsection{ctxdefine}{\textindexlc{Context-Local Single-Line Macros}}
 
 NASM also allows you to define single-line macros which are local to
 a particular context, in just the same way:
@@ -1579,8 +1551,7 @@ will define the single-line macro \code{\%\$localmac} to be local to the
 top context on the stack. Of course, after a subsequent \code{\%push},
 it can then still be accessed by the name \code{\%\$\$localmac}.
 
-\subsection{\textindexlc{Context Fall-Through Lookup} \emph{(deprecated)}}
-\label{subsec:ctxfallthrough}
+\xsubsection{ctxfallthrough}{\textindexlc{Context Fall-Through Lookup} \emph{(deprecated)}}
 
 Context fall-through lookup (automatic searching of outer contexts)
 is a feature that was added in NASM version 0.98.03. Unfortunately,
@@ -1637,9 +1608,8 @@ reference to \code{\%\$external} within \code{ctx2} has been fully qualified wit
 the proper context depth, \code{\%\$\$external}, and thus is no longer ambiguous,
 unintuitive or erroneous.
 
-\subsection{\codeindex{\%repl}: Renaming a Context}
-\label{subsec:ctxrepl}
-\index{renaming contexts}
+\xsubsection{ctxrepl}{\codeindex{\%repl}: Renaming a Context}
+\index{context!rename}
 
 If you need to change the name of the top context on the stack (in
 order, for example, to have it respond differently to \code{\%ifctx}),
@@ -1658,8 +1628,8 @@ labels. So you could replace the destructive code
 
 with the non-destructive version \code{\%repl newname}.
 
-\subsection{Example Use of the \textindexlc{Context Stack}: \textindexlc{Block IFs}}
-\label{subsec:blockif}
+\xsubsection{blockif}{Example Use of the \textindexlc{Context Stack}:
+\textindexlc{Block IFs}}
 
 This example makes use of almost all the context-stack features,
 including the conditional-assembly construct \codeindex{\%ifctx}, to
@@ -1757,8 +1727,7 @@ labels to refer to local variables allocated on the stack:
 	\item{\code{\%local}  (see \fullref{subsec:local}).}
 \end{itemize}
 
-\subsection{\codeindex{\%arg} Directive}
-\label{subsec:arg}
+\xsubsection{arg}{\codeindex{\%arg} Directive}
 
 The \code{\%arg} directive is used to simplify the handling of
 parameters passed on the stack. Stack based parameter passing
@@ -1789,8 +1758,7 @@ and adds the value in i to the value pointed to by j\_ptr and returns
 the sum in the ax register. See \fullref{subsec:pushpop} for an
 explanation of \code{push} and \code{pop} and the use of context stacks.
 
-\subsection{\codeindex{\%stacksize} Directive}
-\label{subsec:stacksize}
+\xsubsection{stacksize}{\codeindex{\%stacksize} Directive}
 
 The \code{\%stacksize} directive is used in conjunction with the
 \code{\%arg} (see \fullref{subsec:arg}) and the \code{\%local}
@@ -1836,9 +1804,7 @@ may have been allocated by \code{ENTER}. This form is probably most
 useful when used in combination with the \code{\%local} directive
 (see \fullref{subsec:local}).
 
-
-\subsection{\codeindex{\%local} Directive}
-\label{subsec:local}
+\xsubsection{local}{\codeindex{\%local} Directive}
 
 The \code{\%local} directive is used to simplify the use of local
 temporary stack variables allocated in a stack frame. Automatic
@@ -1950,8 +1916,7 @@ information from external sources. Currently they include:
 	your program (see \fullref{subsec:getenv}).}
 \end{itemize}
 
-\subsection{\codeindex{\%line} Directive}
-\label{subsec:line}
+\xsubsection{line}{\codeindex{\%line} Directive}
 
 The \code{\%line} directive is used to notify NASM that the input line
 corresponds to a specific line number in another file. Typically
@@ -1980,8 +1945,7 @@ After reading a \code{\%line} preprocessor directive, NASM will report
 all file name and line numbers relative to the values specified
 therein.
 
-\subsection{\codeindex{\%^^21\emph{variable}}: Read an Environment Variable}
-\label{subsec:getenv}
+\xsubsection{getenv}{\codeindex{\%^^21\emph{variable}}: Read an Environment Variable}
 
 The \code{\%^^21\emph{variable}} directive makes it possible to read the
 value of an environment variable at assembly time. This could, for example,
@@ -2018,8 +1982,7 @@ Most \textindex{user-level assembler directives} are implemented as macros
 which invoke primitive directives; these are described in \fullref{sec:directive}.
 The rest of the standard macro set is described here.
 
-\subsection{\textindexlc{NASM Version} Macros}
-\label{sec:stdmacver}
+\xsubsection{stdmacver}{\textindexlc{NASM Version} Macros}
 
 The single-line macros \codeindex{\_\_NASM\_MAJOR\_\_}, \codeindex{\_\_NASM\_MINOR\_\_},
 \codeindex{\_\_NASM\_SUBMINOR\_\_} and \codeindex{\_\_NASM\_PATCHLEVEL\_\_} expand to
@@ -2032,8 +1995,8 @@ would be defined as 1.
 Additionally, the macro \codeindex{\_\_NASM\_SNAPSHOT\_\_} is defined for
 automatically generated snapshot releases \emph{only}.
 
-\subsection{\codeindex{\_\_NASM\_VERSION\_ID\_\_}: \textindexlc{NASM Version ID}}
-\label{sec:stdmacverid}
+\xsubsection{stdmacverid}{\codeindex{\_\_NASM\_VERSION\_ID\_\_}:
+\textindexlc{NASM Version ID}}
 
 The single-line macro \code{\_\_NASM\_VERSION\_ID\_\_} expands to a dword integer
 representing the full version number of the version of nasm being used.
@@ -2057,8 +2020,8 @@ line is used just to give an indication of the order that the separate
 values will be present in memory.
 
 
-\subsection{\codeindex{\_\_NASM\_VER\_\_}: \textindexlc{NASM Version string}}
-\label{sec:stdmacverstr}
+\xsubsection{stdmacverstr}{\codeindex{\_\_NASM\_VER\_\_}:
+\textindexlc{NASM Version string}}
 
 The single-line macro \code{\_\_NASM\_VER\_\_} expands to a string which defines
 the version number of nasm being used. So, under NASM 0.98.32 for example,
@@ -2073,8 +2036,8 @@ would expand to
 db      "0.98.32"
 \end{lstlisting}
 
-\subsection{\codeindex{\_\_FILE\_\_} and \codeindex{\_\_LINE\_\_}: File Name and Line Number}
-\label{sec:fileline}
+\xsubsection{fileline}{\codeindex{\_\_FILE\_\_} and \codeindex{\_\_LINE\_\_}:
+File Name and Line Number}
 
 Like the C preprocessor, NASM allows the user to find out the file
 name and line number containing the current instruction. The macro
@@ -2104,8 +2067,7 @@ You could then write a macro
 and then pepper your code with calls to \c{notdeadyet} until you
 find the crash point.
 
-\subsection{\codeindex{\_\_BITS\_\_}: Current BITS Mode}
-\label{sec:bitsm}
+\xsubsection{bitsm}{\codeindex{\_\_BITS\_\_}: Current BITS Mode}
 
 The \code{\_\_BITS\_\_} standard macro is updated every time that the BITS
 mode is set using the \code{BITS XX} or \code{[BITS XX]} directive,
@@ -2113,8 +2075,7 @@ where XX is a valid mode number of 16, 32 or 64. \code{\_\_BITS\_\_} receives
 the specified mode number and makes it globally available. This can be very
 useful for those who utilize mode-dependent macros.
 
-\subsection{\codeindex{\_\_OUTPUT\_FORMAT\_\_}: Current Output Format}
-\label{sec:ofmtm}
+\xsubsection{ofmtm}{\codeindex{\_\_OUTPUT\_FORMAT\_\_}: Current Output Format}
 
 The \code{\_\_OUTPUT\_FORMAT\_\_} standard macro holds the current output format,
 as given by the \code{-f} option or NASM's default. Type \code{nasm -hf} for a
@@ -2128,8 +2089,7 @@ list.
 %endif
 \end{lstlisting}
 
-\subsection{Assembly Date and Time Macros}
-\label{sec:datetime}
+\xsubsection{datetime}{Assembly Date and Time Macros}
 
 NASM provides a variety of macros that represent the timestamp of the
 assembly session.
@@ -2179,8 +2139,8 @@ __UTC_TIME_NUM__    210042
 __POSIX_TIME__      1262293242
 \end{lstlisting}
 
-\subsection{\indexcode{\_\_USE\_*\_\_}\code{\_\_USE\_}\emph{package}\code{\_\_}: Package Include Test}
-\label{sec:usedef}
+\xsubsection{usedef}{\indexcode{\_\_USE\_*\_\_}\code{\_\_USE\_}
+\emph{package}\code{\_\_}: Package Include Test}
 
 When a standard macro package (see \fullref{sec:macropkg}) is included with the
 \code{\%use} directive (see \fullref{sec:use}), a single-line macro of
@@ -2190,8 +2150,7 @@ This allows testing if a particular package is invoked or not.
 For example, if the \code{altreg} package is included (see \fullref{sec:pkgaltreg}),
 then the macro \code{\_\_USE\_ALTREG\_\_} is defined.
 
-\subsection{\codeindex{\_\_PASS\_\_}: Assembly Pass}
-\label{sec:usedef}
+\xsubsection{usedef}{\codeindex{\_\_PASS\_\_}: Assembly Pass}
 
 The macro \code{\_\_PASS\_\_} is defined to be \code{1} on preparatory passes,
 and \code{2} on the final pass.  In preprocess-only mode, it is set to
@@ -2202,8 +2161,8 @@ and \code{2} on the final pass.  In preprocess-only mode, it is set to
 to generate very strange errors by misusing it, and the semantics may
 change in future versions of NASM.}
 
-\subsection{\codeindex{STRUC} and \codeindex{ENDSTRUC}: \textindexlc{Declaring Structure} Data Types}
-\label{sec:struc}
+\subsection{struc}{\codeindex{STRUC} and \codeindex{ENDSTRUC}:
+\textindexlc{Declaring Structure} Data Types}
 
 The core of NASM contains no intrinsic means of defining data
 structures; instead, the preprocessor is sufficiently powerful that
@@ -2291,8 +2250,8 @@ And access an element this way:
 mov [ebp + mytype.word], ax
 \end{lstlisting}
 
-\subsection{\codeindex{ISTRUC}, \codeindex{AT} and \codeindex{IEND}: Declaring}
-\label{sec:istruc}
+\xsubsection{istruc}{\codeindex{ISTRUC}, \codeindex{AT} and
+\codeindex{IEND}: Declaring}
 \textindexlc{Instances of Structures}
 
 Having defined a structure type, the next thing you typically want
@@ -2336,8 +2295,7 @@ at mt_str
         db  13,10,0
 \end{lstlisting}
 
-\subsection{\codeindex{ALIGN} and \codeindex{ALIGNB}: Data Alignment}
-\label{sec:align}
+\xsubsection{align}{\codeindex{ALIGN} and \codeindex{ALIGNB}: Data Alignment}
 
 The \code{ALIGN} and \code{ALIGNB} macros provides a convenient way to
 align code or data on a word, longword, paragraph or other boundary.
@@ -2405,8 +2363,7 @@ See \fullref{sec:sectalign} for details.
 
 See also the \code{smartalign} standard macro package, \fullref{sec:pkgsmartalign}.
 
-\subsection{\codeindex{SECTALIGN}: Section Alignment}
-\label{sec:sectalign}
+\xsubsection{sectalign}{\codeindex{SECTALIGN}: Section Alignment}
 
 The \code{SECTALIGN} macros provides a way to modify alignment attribute
 of output file section. Unlike the \code{align=} attribute (which is allowed
