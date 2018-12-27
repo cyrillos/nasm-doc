@@ -343,8 +343,9 @@ more \code{-i} directives in the \code{NASMENV} environment variable (see
 For Makefile compatibility with many C compilers, this option can also
 be specified as \code{-I}.
 
-\subsection{The \codeindex{-p}\indexcode{-P} Option: \index{pre-including files}Pre-Include a File}
-\label{subsec:opt-p}
+\xsubsection{opt-p}{The \codeindex{-p}\indexcode{-P} Option:
+Pre-Include a File}
+\index{pre-including files}
 
 \indexcode{\%include}NASM allows you to specify files to be \emph{pre-included} into
 your source file, by the use of the \code{-p} option. So running
@@ -359,8 +360,9 @@ directive \code{\%include "myinc.inc"} at the start of the file.
 For consistency with the \code{-I}, \code{-D} and \code{-U} options,
 this option can also be specified as \code{-P}.
 
-\subsection{The \codeindex{-d}\indexcode{-D} Option: \index{pre-defining macros}Pre-Define a Macro}
-\label{subsec:opt-d}
+\xsubsection{opt-d}{The \codeindex{-d}\indexcode{-D} Option:
+Pre-Define a Macro}
+\index{pre-defining macros}
 
 \indexcode{\%define}Just as the \code{-p} option gives an alternative to placing
 \code{\%include} directives at the start of a source file, the \code{-d}
@@ -385,8 +387,9 @@ options} which are then tested using \code{\%ifdef}, for example \code{-dDEBUG}.
 For Makefile compatibility with many C compilers, this option can also
 be specified as \code{-D}.
 
-\subsection{The \codeindex{-u}\indexcode{-U} Option: \index{undefining macros}Undefine a Macro}
-\label{subsec:opt-u}
+\xsubsection{opt-u}{The \codeindex{-u}\indexcode{-U} Option:
+Undefine a Macro}
+\index{undefining macros}
 
 \indexcode{\%undef}The \code{-u} option undefines a macro that would otherwise
 have been pre-defined, either automatically or by a \code{-p} or \code{-d}
@@ -405,8 +408,7 @@ point in a Makefile.
 For Makefile compatibility with many C compilers, this option can also
 be specified as \code{-U}.
 
-\subsection{The \codeindex{-E}\indexcode{-e} Option: Preprocess Only}
-\label{subsec:opt-E-cap}
+\xsubsection{opt-E-cap}{The \codeindex{-E}\indexcode{-e} Option: Preprocess Only}
 
 NASM allows the \textindex{preprocessor} to be run on its own, up to a
 point. Using the \code{-E} option (which requires no arguments) will
@@ -430,8 +432,7 @@ For compatiblity with older version of NASM, this option can also be
 written \code{-e}. \code{-E} in older versions of NASM was the equivalent
 of the current \code{-Z} option, \fullref{subsec:opt-Z-cap}.
 
-\subsection{The \codeindex{-a} Option: Don't Preprocess At All}
-\label{subsec:opt-a}
+\xsubsection{opt-a}{The \codeindex{-a} Option: Don't Preprocess At All}
 
 If NASM is being used as the back end to a compiler, it might be
 desirable to \index{suppressing preprocessing}suppress preprocessing
@@ -440,8 +441,8 @@ and increase compilation speeds. The \code{-a} option, requiring no
 argument, instructs NASM to replace its powerful \textindex{preprocessor}
 with a \textindex{stub preprocessor} which does nothing.
 
-\subsection{The \codeindex{-O} Option: Specifying \textindexlc{Multipass Optimization}}
-\label{subsec:opt-O-cap}
+\subsection{opt-O-cap}{The \codeindex{-O} Option: Specifying
+\textindexlc{Multipass Optimization}}
 
 Using the \code{-O} option, you can tell NASM to carry out different
 levels of optimization. The syntax is:
@@ -470,29 +471,28 @@ since NASM 2.09.
 Note that this is a capital \code{O}, and is different from a small \code{o},
 which is used to specify the output file name. See \fullref{subsec:opt-o}.
 
-\subsection{The \codeindex{-t} Option: Enable TASM Compatibility Mode}
-\label{subsec:opt-t}
+\xsubsection{opt-t}{The \codeindex{-t} Option: Enable TASM Compatibility Mode}
 
 NASM includes a limited form of compatibility with Borland's \textindex{TASM}.
 When NASM's \code{-t} option is used, the following changes are made:
 
 \begin{itemize}
-	\item local labels may be prefixed with \code{@@} instead of \code{.};
+    \item{local labels may be prefixed with \code{@@} instead of \code{.};}
 
-	\item size override is supported within brackets. In TASM compatible mode,
-	a size override inside square brackets changes the size of the operand,
-	and not the address type of the operand as it does in NASM syntax. E.g.
-	\code{mov eax,[DWORD val]} is valid syntax in TASM compatibility mode.
-	Note that you lose the ability to override the default address type for
-	the instruction;
+    \item{size override is supported within brackets. In TASM compatible mode,
+        a size override inside square brackets changes the size of the operand,
+        and not the address type of the operand as it does in NASM syntax. E.g.
+        \code{mov eax,[DWORD val]} is valid syntax in TASM compatibility mode.
+        Note that you lose the ability to override the default address type for
+        the instruction;}
 
-	\item unprefixed forms of some directives supported (\code{arg}, \code{elif},
-	\code{else}, \code{endif}, \code{if}, \code{ifdef}, \code{ifdifi},
-	\code{ifndef}, \code{include}, \code{local}).
+    \item{unprefixed forms of some directives supported (\code{arg}, \code{elif},
+        \code{else}, \code{endif}, \code{if}, \code{ifdef}, \code{ifdifi},
+        \code{ifndef}, \code{include}, \code{local}).}
 \end{itemize}
 
-\subsection{The \codeindex{-w} and \codeindex{-W} Options: Enable or Disable Assembly \textindexlc{Warnings}}
-\label{subsec:opt-w}
+\xsubsection{opt-w}{The \codeindex{-w} and \codeindex{-W} Options:
+Enable or Disable Assembly \textindexlc{Warnings}}
 
 NASM can observe many conditions during the course of assembly which
 are worth mentioning to the user, but not a sufficiently severe
@@ -606,8 +606,7 @@ if no \emph{warning-class} is specified NASM treats it as
 In addition, you can control warnings in the source code itself, using
 the \codeindex{[WARNING]} directive. See \fullref{sec:asmdir-warning}.
 
-\subsection{The \codeindex{-v} Option: Display \textindexlc{Version} Info}
-\label{subsec:opt-v}
+\xsubsection{opt-v}{The \codeindex{-v} Option: Display \textindexlc{Version} Info}
 
 Typing \code{NASM -v} will display the version of NASM which you are using,
 and the date on which it was compiled.
@@ -617,8 +616,7 @@ You will need the version number if you report a bug.
 For command-line compatibility with Yasm, the form \codeindex{--v} is also
 accepted for this option starting in NASM version 2.11.05.
 
-\subsection{The \codeindex{-y} Option: Display Available Debug Info Formats}
-\label{subsec:opt-y}
+\xsubsection{opt-y}{The \codeindex{-y} Option: Display Available Debug Info Formats}
 
 Typing \code{nasm -f <option> -y} will display a list of the available
 debug info formats for the given output format. The default format
@@ -633,8 +631,7 @@ valid debug formats for 'elf32' output format are
   dwarf     elf32 (i386) dwarf debug format for Linux
 \end{lstlisting}
 
-\subsection{The \codeindex{--prefix} and \codeindex{--postfix} Options}
-\label{subsec:opt-pfix}
+\xsubsection{opt-pfix}{The \codeindex{--prefix} and \codeindex{--postfix} Options}
 
 The \code{--prefix} and \code{--postfix} options prepend or append
 (respectively) the given argument to all \code{global} or
@@ -642,8 +639,7 @@ The \code{--prefix} and \code{--postfix} options prepend or append
 underscore to all global and external variables, as C requires it in
 some, but not all, system calling conventions.
 
-\subsection{The \codeindex{NASMENV} \textindex{Environment} Variable}
-\label{subsec:nasmenv}
+\xsubsection{nasmenv}{The \codeindex{NASMENV} \textindex{Environment} Variable}
 
 If you define an environment variable called \code{NASMENV}, the program
 will interpret it as a list of extra command-line options, which are
@@ -678,8 +674,7 @@ attempts to outline the major differences between MASM's syntax and
 NASM's. If you're not already used to MASM, it's probably worth
 skipping this section.
 
-\subsection{NASM Is \index{case sensitivity}Case-Sensitive}
-\label{subsec:qscs}
+\xsubsection{qscs}{NASM Is \index{case sensitivity}Case-Sensitive}
 
 One simple difference is that NASM is case-sensitive. It makes a
 difference whether you call your label \code{foo}, \code{Foo} or
@@ -690,8 +685,8 @@ code modules are forced to be upper case; but even then, \emph{within}
 a single module, NASM will distinguish between labels differing only
 in case.
 
-\subsection{NASM Requires \textindexlc{Square Brackets} For \textindexlc{Memory References}}
-\label{subsec:qsbrackets}
+\xsubsection{qsbrackets}{NASM Requires \textindexlc{Square Brackets}
+For \textindexlc{Memory References}}
 
 NASM was designed with simplicity of syntax in mind. One of the
 \textindex{design goals} of NASM is that it should be possible,
@@ -745,8 +740,7 @@ portion outside square brackets and another portion inside. The
 correct syntax for the above is \code{mov ax,[table+bx]}. Likewise,
 \code{mov ax,es:[di]} is wrong and \code{mov ax,[es:di]} is right.
 
-\subsection{NASM Doesn't Store \textindexlc{Variable Types}}
-\label{subsec:qstypes}
+\xsubsection{qstypes}{NASM Doesn't Store \textindexlc{Variable Types}}
 
 NASM, by design, chooses not to remember the types of variables you
 declare. Whereas MASM will remember, on seeing \code{var dw 0}, that
@@ -762,16 +756,14 @@ instructions, but only supports the forms such as \code{LODSB},
 \code{MOVSW}, and \code{SCASD}, which explicitly specify the size
 of the components of the strings being manipulated.
 
-\subsection{NASM Doesn't \codeindex{ASSUME}}
-\label{subsec:qsassume}
+\xsubsection{qsassume}{NASM Doesn't \codeindex{ASSUME}}
 
 As part of NASM's drive for simplicity, it also does not support the
 \code{ASSUME} directive. NASM will not keep track of what values you
 choose to put in your segment registers, and will never \emph{automatically}
 generate a \textindex{segment override} prefix.
 
-\subsection{NASM Doesn't Support \textindexlc{Memory Models}}
-\label{subsec:qsmodel}
+\xsubsection{qsmodel}{NASM Doesn't Support \textindexlc{Memory Models}}
 
 NASM also does not have any directives to support different 16-bit
 memory models. The programmer has to keep track of which functions
@@ -784,8 +776,7 @@ necessary when calling \emph{external} functions, and must also keep
 track of which external variable definitions are far and which are
 near.
 
-\subsection{\textindexlc{Floating-Point} Differences}
-\label{subsec:qsfpu}
+\xsubsection{qsfpu}{\textindexlc{Floating-Point} Differences}
 
 NASM uses different names to refer to floating-point registers from
 MASM: where MASM would call them \code{ST(0)}, \code{ST(1)} and
@@ -797,8 +788,7 @@ As of version 0.96, NASM now treats the instructions with
 The idiosyncratic treatment employed by 0.95 and earlier was based
 on a misunderstanding by the authors.
 
-\subsection{Other Differences}
-\label{subsec:qsother}
+\xsubsection{qsother}{Other Differences}
 
 For historical reasons, NASM uses the keyword \codeindex{TWORD} where
 MASM and compatible assemblers use \codeindex{TBYTE}.
