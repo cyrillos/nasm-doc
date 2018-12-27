@@ -14,9 +14,9 @@ available in 64-bit mode. The one exception is the \code{FS} and
 
 Position independence in 64-bit mode is significantly simpler, since
 the processor supports \code{RIP}-relative addressing directly; see the
-\code{REL} keyword (\fullref{sec:effaddr}). On most 64-bit platforms,
+\code{REL} keyword (\nref{effaddr}). On most 64-bit platforms,
 it is probably desirable to make that the default, using the directive
-\code{DEFAULT REL} (\fullref{sec:default}).
+\code{DEFAULT REL} (\nref{default}).
 
 64-bit programming is relatively similar to 32-bit programming, but
 of course pointers are 64 bits long; additionally, all existing
@@ -52,7 +52,7 @@ assemblers. The Intel documentation, however, uses the names
 possible to use those names by definiting them as macros; similarly,
 if one wants to use numeric names for the low 8 registers, define them
 as macros. The standard macro package \code{altreg} (see
-\fullref{sec:pkg-altreg}) can be used for this purpose.
+\nref{pkg-altreg}) can be used for this purpose.
 
 \xsection{id64}{Immediates and Displacements in 64-bit Mode}
 

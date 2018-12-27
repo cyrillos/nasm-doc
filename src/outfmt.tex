@@ -22,10 +22,10 @@ and \textindex{boot loader} development.
 
 The \code{bin} format supports \textindex{multiple section names}.
 For details of how NASM handles sections in the \code{bin} format,
-see \fullref{sec:multisec}.
+see \nref{multisec}.
 
 Using the \code{bin} format puts NASM by default into 16-bit mode
-(see \fullref{sec:bits}). In order to use \code{bin} to write 32-bit
+(see \nref{bits}). In order to use \code{bin} to write 32-bit
 or 64-bit code, such as an OS kernel, you need to explicitly issue
 the \indexcode{BITS}\code{BITS 32} or \indexcode{BITS}\code{BITS 64}
 directive.
@@ -38,7 +38,7 @@ into a binary file called \code{binprog}.
 \xsubsection{binfmt}{\codeindex{ORG}: Binary File \textindexlc{Program Origin}}
 
 The \code{bin} format provides an additional directive to the list
-given in \fullref{sec:directive}: \code{ORG}. The function of the
+given in \nref{directive}: \code{ORG}. The function of the
 \code{ORG} directive is to specify the origin address which NASM
 will assume the program begins at when it is loaded into memory.
 
@@ -57,7 +57,7 @@ code you have already generated, NASM's \code{ORG} does exactly what
 the directive says: \emph{origin}. Its sole function is to specify one
 offset which is added to all internal address references within the
 section; it does not permit any of the trickery that MASM's version
-does. See \fullref{sec:proborg} for further comments.
+does. See \nref{proborg} for further comments.
 
 \xsubsection{binseg}{\code{bin} Extensions to the \code{SECTION} Directive}
 \index{section!bin extensions to}
@@ -105,7 +105,7 @@ besides the ``known'' \code{.text}, \code{.data}, and \code{.bss} names.
         an explicit start address.}
 
     \item{Arguments to \code{org}, \code{start}, \code{vstart}, and \code{align=}
-        are critical expressions. See \fullref{sec:crit}. E.g.
+        are critical expressions. See \nref{crit}. E.g.
         \code{align=(1 << ALIGN\_SHIFT)} - \code{ALIGN\_SHIFT} must be defined
         before it is used here.}
 
@@ -492,7 +492,7 @@ equivalent to \code{foo wrt dgroup}.
 This \index{default-WRT mechanism}default-\code{WRT} mechanism can be used
 to make externals appear to be relative to any group or segment in
 your program. It can also be applied to common variables: see
-\fullref{subsec:objcommon}.
+\nref{objcommon}.
 
 \xsubsection{objcommon}{\code{obj} Extensions to the \code{COMMON} Directive}
 \index{COMMON!obj extensions to}
@@ -537,7 +537,7 @@ common  c_2by5  10:2        ; five two-byte elements
 
 In addition to these extensions, the \code{COMMON} directive
 in \code{obj} also supports default-\code{WRT} specification
-like \code{EXTERN} does (explained in \fullref{subsec:objextern}).
+like \code{EXTERN} does (explained in \nref{objextern}).
 So you can also declare things like
 
 \begin{lstlisting}
@@ -551,7 +551,7 @@ common  baz     24:wrt data:6
 The \code{win32} output format generates Microsoft Win32 object files,
 suitable for passing to Microsoft linkers such as \emph{Visual C++}.
 Note that Borland Win32 compilers do not use this format, but use
-\code{obj} instead (see \fullref{sec:objfmt}).
+\code{obj} instead (see \nref{objfmt}).
 
 \code{win32} provides a default output file-name extension of \code{.obj}.
 
@@ -730,7 +730,7 @@ able to handle this format as well.
 
 The \code{win64} output format generates Microsoft Win64 object files,
 which is nearly 100\% identical to the \code{win32} object format
-(\fullref{sec:win32fmt}) with the exception that it is meant to target
+(\nref{win32fmt}) with the exception that it is meant to target
 64-bit code and the x86-64 platform altogether. This object file is used
 exactly the same as the \code{win32} object format, in NASM, with regard to this exception.
 
@@ -1240,7 +1240,7 @@ types. They are \codeindex{..gotpc}, \codeindex{..gotoff}, \codeindex{..got},
 \end{itemize}
 
 A fuller explanation of how to use these relocation types to write
-shared libraries entirely in NASM is given in \fullref{sec:picdll}.
+shared libraries entirely in NASM is given in \nref{picdll}.
 
 \xsubsection{elftls}{\textindexlc{Thread Local Storage in ELF}:
 \code{elf} Special Symbols and \codeindex{WRT}}
@@ -1317,7 +1317,7 @@ place that information into the \code{ELF} symbol table.
 
 Declaring the type and size of global symbols is necessary when
 writing shared library code. For more information, see
-\fullref{sec:picglobal}.
+\nref{picglobal}.
 
 \xsubsection{elfcomm}{\code{elf} Extensions to the \code{COMMON} Directive}
 \index{COMMON!elf extensions to}
@@ -1360,7 +1360,7 @@ note that only the ".text" section is executable by default.
 
 The \code{aout} format generates \code{a.out} object files, in the
 form used by early Linux systems (current Linux systems use ELF, see
-\fullref{sec:elffmt}.) These differ from other \code{a.out} object
+\nref{elffmt}.) These differ from other \code{a.out} object
 files in that the magic number in the first four bytes of the file is
 different; also, some implementations of \code{a.out}, for example
 NetBSD's, support position-independent code, which Linux's
@@ -1393,11 +1393,11 @@ of the file. However, the \code{aoutb} format supports
 only the three \textindexlc{standard section names} \codeindex{.text},
 \codeindex{.data} and \codeindex{.bss}. However, it also supports the same
 use of \codeindex{WRT} as \code{elf} does, to provide position-independent
-code relocation types. See \fullref{subsec:elfwrt} for full documentation
+code relocation types. See \nref{elfwrt} for full documentation
 of this feature.
 
 \code{aoutb} also supports the same extensions to the \code{GLOBAL}
-directive as \code{elf} does: see \fullref{subsec:elfglob} for
+directive as \code{elf} does: see \nref{elfglob} for
 documentation of this.
 
 \xsection{as86fmt}{\code{as86}: \textindex{Minix}/Linux \codeindex{as86} Object Files}

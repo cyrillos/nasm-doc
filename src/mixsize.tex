@@ -92,7 +92,7 @@ you are aiming at. The x86 architecture does allow 32-bit effective
 addresses to specify nothing but a 4-byte offset, so why shouldn't
 NASM be able to generate the best instruction for the purpose?
 
-It can. As in \fullref{subsec:mixjump}, you need only prefix the address
+It can. As in \nref{mixjump}, you need only prefix the address
 with the \code{DWORD} keyword, and it will be forced to be a 32-bit
 address:
 
@@ -100,7 +100,7 @@ address:
 mov     dword [fs:dword my_offset],0x11223344
 \end{lstlisting}
 
-Also as in \fullref{subsec:mixjump}, NASM is not fussy about whether the
+Also as in \nref{mixjump}, NASM is not fussy about whether the
 \code{DWORD} prefix comes before or after the segment override, so
 arguably a nicer-looking way to code the above instruction is
 

@@ -22,7 +22,7 @@ each object file format can optionally supply extra directives in
 order to control particular features of that file format. These
 \index{directives!format-specific}\emph{format-specific} directives are
 documented along with the formats that implement them, in
-\fullref{sec:outfmt}.
+\nref{outfmt}.
 
 \xsection{bits}{\codeindex{BITS}: Specifying Target \textindexlc{Processor Mode}}
 
@@ -106,7 +106,7 @@ and \code{NOBND}.
 
 This sets whether registerless instructions in 64-bit mode are
 \code{RIP}-relative or not. By default, they are absolute unless
-overridden with the \codeindex{REL} specifier (see \fullref{sec:effaddr}).
+overridden with the \codeindex{REL} specifier (see \nref{effaddr}).
 However, if \code{DEFAULT REL} is specified, \code{REL} is default, unless
 overridden with the \code{ABS} specifier, \emph{except when used with an
 FS or GS segment override}.
@@ -150,7 +150,7 @@ or may define a new section, if you try to switch to a section that does
 not (yet) exist.
 
 The Unix object formats, and the \code{bin} object format (but see
-\fullref{sec:multisec}), all support the \index{sections!standardized names}
+\nref{multisec}), all support the \index{sections!standardized names}
 standardized names \code{.text}, \code{.data} and \code{.bss} for the code,
 data and uninitialized-data sections. The \code{obj} format, by contrast,
 does not recognize these section names as being special, and indeed will
@@ -178,7 +178,7 @@ expands to the two lines
 \end{lstlisting}
 
 Users may find it useful to make use of this in their own macros.
-For example, the \code{writefile} macro defined in \fullref{sec:mlmacgre}
+For example, the \code{writefile} macro defined in \nref{mlmacgre}
 can be usefully rewritten in the following more sophisticated form:
 
 \begin{lstlisting}
@@ -239,7 +239,7 @@ which use \code{ABSOLUTE} (and also \code{\_\_SECT\_\_}).
 
 \code{ABSOLUTE} doesn't have to take an absolute constant as an
 argument: it can take an expression (actually, a \textindex{critical
-expression}: see \fullref{sec:crit}) and it can be a value in a segment.
+expression}: see \nref{crit}) and it can be a value in a segment.
 For example, a TSR can re-use its setup code as run-time BSS like this:
 
 \begin{lstlisting}
@@ -433,7 +433,7 @@ this value can be saved away and invoked later to restore the setting.
 \xsection{asmdirwarning}{\codeindex{[WARNING]}: Enable or disable warnings}
 
 The \code{[WARNING]} directive can be used to enable or disable classes
-of warnings in the same way as the \code{-w} option, see \fullref{sec:optw}
+of warnings in the same way as the \code{-w} option, see \nref{optw}
 for more details about warning classes.
 
 \begin{itemize}

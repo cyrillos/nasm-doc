@@ -26,7 +26,7 @@ long and contains only an offset part.
 
 \xsection{32c}{Interfacing to 32-bit C Programs}
 
-A lot of the discussion in \fullref{sec:16c}, about interfacing to
+A lot of the discussion in \nref{16c}, about interfacing to
 16-bit C programs, still applies when working in 32 bits. The absence of
 memory models or segmentation worries simplifies things a lot.
 
@@ -42,10 +42,10 @@ underscore on their assembly-language names.
 The older Linux \code{a.out} C compiler, all \code{Win32} compilers,
 \code{DJGPP}, and \code{NetBSD} and \code{FreeBSD}, all use the leading
 underscore; for these compilers, the macros \code{cextern} and
-\code{cglobal}, as given in \fullref{subsec:16cunder}, will still work.
+\code{cglobal}, as given in \nref{16cunder}, will still work.
 For \code{ELF}, though, the leading underscore should not be used.
 
-See also \fullref{subsec:opt-pfix}.
+See also \nref{opt-pfix}.
 
 \xsubsection{32cfunc}{Function Definitions and Function Calls}
 
@@ -168,7 +168,7 @@ This piece of code is the assembly equivalent of the C code
 To get at the contents of C variables, or to declare variables which
 C can access, you need only declare the names as \code{GLOBAL} or
 \code{EXTERN}. (Again, the names require leading underscores, as stated
-in \fullref{subsec:32cunder}.) Thus, a C variable declared as \code{int i}
+in \nref{32cunder}.) Thus, a C variable declared as \code{int i}
 can be accessed from assembler as
 
 \begin{lstlisting}
@@ -297,7 +297,7 @@ restrictions: since the data section is writable, it has to be
 copied into memory anyway rather than just paged in from the library
 file, so as long as it's being copied it can be relocated too. So
 you can put ordinary types of relocation in the data section without
-too much worry (but see \fullref{sec:picglobal} for a caveat).
+too much worry (but see \nref{picglobal} for a caveat).
 
 \xsubsection{picgot}{Obtaining the Address of the GOT}
 

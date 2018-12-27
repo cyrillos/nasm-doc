@@ -53,7 +53,7 @@ Anthony A.J. Williams, is available at \href{http://alink.sourceforge.net}
 When linking several \code{.OBJ} files into a \code{.EXE} file, you should
 ensure that exactly one of them has a start point defined (using the
 \index{program entry point}\codeindex{..start} special symbol defined by the
-\code{obj} format: see \fullref{sec:dotdotstart}). If no module defines a start
+\code{obj} format: see \nref{dotdotstart}). If no module defines a start
 point, the linker will not know what value to give the entry-point
 field in the output file header; if more than one defines a start
 point, the linker will not know \emph{which} value to use.
@@ -335,7 +335,7 @@ The \code{cglobal} macro works similarly. You must use \code{cglobal}
 before defining the symbol in question, but you would have had to do
 that anyway if you used \code{GLOBAL}.
 
-Also see \fullref{opt-pfix}.
+Also see \nref{opt-pfix}.
 
 \xsubsection{16cmodels}{\textindexlc{Memory Models}}
 
@@ -464,7 +464,7 @@ doing the calling and the function which gets called.
 \end{itemize}
 
 It is instructive to compare this calling convention with that for
-Pascal programs (described in \fullref{subsec:16bpfunc}). Pascal has
+Pascal programs (described in \nref{16bpfunc}). Pascal has
 a simpler convention, since no functions have variable numbers of parameters.
 Therefore the callee knows how many parameters it should have been
 passed, and is able to deallocate them from the stack itself by
@@ -557,7 +557,7 @@ word of parameters.
 To get at the contents of C variables, or to declare variables which
 C can access, you need only declare the names as \code{GLOBAL} or
 \code{EXTERN}. (Again, the names require leading underscores, as stated
-in \fullref{subsec:16cunder}.) Thus, a C variable declared as \code{int i}
+in \nref{16cunder}.) Thus, a C variable declared as \code{int i}
 can be accessed from assembler as
 
 \begin{lstlisting}
@@ -619,7 +619,7 @@ to be used for C-style procedure definitions, and they automate a lot of
 the work involved in keeping track of the calling convention.
 
 (An alternative, TASM compatible form of \code{arg} is also now built
-into NASM's preprocessor. See \fullref{sec:stackrel} for details.)
+into NASM's preprocessor. See \nref{stackrel} for details.)
 
 An example of an assembly function using the macro set is given
 here:
@@ -836,7 +836,7 @@ restrictions:
 
 \xsubsection{16bpmacro}{Using \codeindex{c16.mac} With Pascal Programs}
 
-The \code{c16.mac} macro package, described in \fullref{subsec:16cmacro},
+The \code{c16.mac} macro package, described in \nref{16cmacro},
 can also be used to simplify writing functions to be called from Pascal
 programs, if you code \indexcode{PASCAL}\code{\%define PASCAL}. This
 definition ensures that functions are far (it implies \codeindex{FARCODE}),
@@ -861,7 +861,7 @@ endproc
 \end{lstlisting}
 
 This defines the same routine, conceptually, as the example in
-\fullref{sub:16cmacro}: it defines a function taking two arguments,
+\nref{16cmacro}: it defines a function taking two arguments,
 an integer and a pointer to an integer, which returns the sum of
 the integer and the contents of the pointer. The only difference
 between this code and the large-model C version is that \code{PASCAL}

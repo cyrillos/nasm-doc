@@ -7,7 +7,7 @@
 
 Like most assemblers, each NASM source line contains (unless it
 is a macro, a preprocessor directive or an assembler directive: see
-\fullref{sec:preproc} and \fullref{sec:directive}) some combination
+\nref{preproc} and \nref{directive}) some combination
 of the four fields
 
 \begin{lstlisting}
@@ -37,7 +37,7 @@ a \textindex{trailing colon}.)
 \code{\$}, \code{\#}, \code{\@}, \code{~}, \code{.}, and \code{?}.
 The only characters which may be used as the \emph{first} character of
 an identifier are letters, \code{\.} (with special meaning: see
-\fullref{sec:locallab}), \code{\_} and \code{?}.
+\nref{locallab}), \code{\_} and \code{?}.
 An identifier may also be prefixed with a \index{\$}\index{prefix}
 \code{\$} to indicate that it is intended to be read as an identifier
 and not a reserved word; thus, if some other module you are linking with
@@ -54,7 +54,7 @@ prefixed by \code{LOCK}, \code{REP}, \code{REPE}/\code{REPZ},
 \index{address-size!prefixes}address-size and \textindex{operand-size!prefixes}
 \codeindex{A16}, \codeindex{A32}, \codeindex{A64}, \codeindex{O16}
 and \codeindex{O32}, \codeindex{O64} are provided~-- one example of their
-use is given in \fullref{sec:mixsize}. You can also use the name of a
+use is given in \nref{mixsize}. You can also use the name of a
 \index{segment override}segment register as an instruction prefix: coding
 \code{es mov [bx],ax} is equivalent to coding \code{mov [es:bx],ax}.
 We recommend the latter syntax, since it is consistent with other syntactic
@@ -73,15 +73,14 @@ Instruction \textindex{operands} may take a number of forms: they can be
 registers, described simply by the register name (e.g. \code{ax},
 \code{bp}, \code{ebx}, \code{cr0}: NASM does not use the \code{gas}-style
 syntax in which register names must be prefixed by a \code{\%} sign),
-or they can be \textindex{effective addresses} (see \fullref{sec:effaddr}),
-constants (\fullref{sec:const}) or expressions (\fullref{sec:expr}).
+or they can be \textindex{effective addresses} (see \nref{effaddr}),
+constants (\nref{const}) or expressions (\nref{expr}).
 
 For x87 \textindex{floating-point} instructions, NASM accepts a wide
 range of syntaxes: you can use two-operand forms like MASM supports,
 or you can use NASM's native single-operand forms in most cases.
-% Details of
-% all forms of each supported instruction are given in
-% \fullref{sec:iref}.
+% Details of all forms of each supported instruction are given in
+% \nref{iref}.
 For example, you can code:
 
 \begin{lstlisting}
@@ -144,11 +143,11 @@ dt    1.234567e20         ; extended-precision float
 are designed to be used in the BSS section of a module: they declare
 \emph{uninitialized} storage space. Each takes a single operand, which is
 the number of bytes, words, doublewords or whatever to reserve. As stated
-in \fullref{sec:qsother}, NASM does not support the MASM/TASM syntax of
+in \nref{qsother}, NASM does not support the MASM/TASM syntax of
 reserving uninitialized space by writing \index{?}\code{DW ?} or similar
 things: this is what it does instead. The operand to a \code{RESB}-type
 pseudo-instruction is a \textindex{critical expression}:
-see \fullref{sec:crit}.
+see \nref{crit}.
 
 For example:
 
@@ -195,7 +194,7 @@ msglen          equ     $-message
 defines \code{msglen} to be the constant 12. \code{msglen} may
 not then be redefined later. This is not a \textindex{preprocessor}
 definition either: the value of \code{msglen} is evaluated \code{once},
-using the value of \code{\$} (see \fullref{sec:expr} for an explanation
+using the value of \code{\$} (see \nref{expr} for an explanation
 of \code{\$}) at the point of definition, rather than being evaluated
 wherever it is referenced and using the value of \code{\$} at
 the point of reference.
@@ -232,7 +231,7 @@ Note that there is no effective difference between \code{times 100 resb
 1} and \code{resb 100}, except that the latter will be assembled about
 100 times faster due to the internal structure of the assembler.
 
-The operand to \code{TIMES} is a critical expression (\fullref{sec:crit}).
+The operand to \code{TIMES} is a critical expression (\nref{crit}).
 
 Note also that \code{TIMES} can't be applied to \textindex{macros}: the reason
 for this is that \code{TIMES} is processed after the macro phase, which
@@ -293,7 +292,7 @@ particular form by the use of the keywords \code{BYTE}, \code{WORD},
 assembled using a double-word offset field instead of the one byte NASM
 will normally generate, you can code \code{[dword eax+3]}. Similarly, you
 can force NASM to use a byte offset for a small value which it hasn't seen
-on the first pass (see \fullref{sec:crit} for an example of such a code
+on the first pass (see \nref{crit} for an example of such a code
 fragment) by using \code{[byte eax+offset]}. As special cases, \code{[byte eax]}
 will code \code{[eax+0]} with a byte offset of zero, and \code{[dword eax]}
 will code it with a double-word offset of zero. The normal form, \code{[eax]},
@@ -302,7 +301,7 @@ will be coded with no offset field.
 The form described in the previous paragraph is also useful if you
 are trying to access data in a 32-bit segment from within 16 bit code.
 For more information on this see the section on mixed-size addressing
-(\fullref{sec:mixaddr}). In particular, if you need to access data with
+(\nref{mixaddr}). In particular, if you need to access data with
 a known offset that is larger than will fit in a 16-bit value, if you don't
 specify that it is a dword offset, nasm will cause the high word of
 the offset to be lost.
@@ -320,7 +319,7 @@ is considered as \code{[eax+eax]}.
 In 64-bit mode, NASM will by default generate absolute addresses. The
 \codeindex{REL} keyword makes it produce \code{RIP}-relative addresses.
 Since this is frequently the normally desired behaviour, see the \code{DEFAULT}
-directive (\fullref{sec:default}). The keyword \codeindex{ABS} overrides
+directive (\nref{default}). The keyword \codeindex{ABS} overrides
 \codeindex{REL}.
 
 A new form of split effective addres syntax is also supported. This is
@@ -370,7 +369,7 @@ suffix \code{H} or \code{X}, \code{D} or \code{T}, \code{Q} or
 or you can prefix \code{0x}, for hexadecimal in the style of C, or you
 can prefix \code{\$} for hexadecimal in the style of Borland Pascal or
 Motorola Assemblers. Note, though, that the \index{\$} \index{prefix}\code{\$}
-prefix does double duty as a prefix on identifiers (see \fullref{sec:syntax}),
+prefix does double duty as a prefix on identifiers (see \nref{syntax}),
 so a hex number prefixed with a \code{\$} sign must have a digit after the
 \code{\$} rather than a letter. In addition, current versions of NASM accept
 the prefix \code{0h} for hexadecimal, \code{0d} or \code{0t} for decimal,
@@ -615,7 +614,7 @@ respectively. These are normally used as macros:
 \end{lstlisting}
 
 The \code{\%use fp} standard macro package contains a set of convenience
-macros. See \fullref{sec:pkg_fp}.
+macros. See \nref{pkg_fp}.
 
 \xsubsection{bcdconst}{\index{floating-point!packed BCD constants}Packed BCD Constants}
 
@@ -715,11 +714,11 @@ symmetry with \code{-}), \code{\textasciitilde} computes the
 \textindex{logical negation} operator.
 
 \code{SEG} provides the \textindex{segment address}
-of its operand (explained in more detail in \fullref{sec:segwrt}).
+of its operand (explained in more detail in \nref{segwrt}).
 
 A set of additional operators with leading and trailing double
 underscores are used to implement the integer functions of the
-\code{ifunc} macro package, see \fullref{sec:pkg_ifunc}.
+\code{ifunc} macro package, see \nref{pkg_ifunc}.
 
 \xsection{segwrt}{\codeindex{SEG} and \codeindex{WRT}}
 
@@ -789,7 +788,7 @@ invent one using the macro processor.
 \xsection{strict}{\codeindex{STRICT}: Inhibiting Optimization}
 
 When assembling with the optimizer set to level 2 or higher (see
-\fullref{sec:opt-O-cap}), NASM will use size specifiers (\code{BYTE},
+\nref{opt-O-cap}), NASM will use size specifiers (\code{BYTE},
 \code{WORD}, \code{DWORD}, \code{QWORD}, \code{TWORD}, \code{OWORD},
 \code{YWORD} or \code{ZWORD}), but will give them the smallest possible
 size. The keyword \code{STRICT} can be used to inhibit optimization
@@ -919,8 +918,8 @@ label2:             ; another non-local label
 
 NASM has the capacity to define other special symbols beginning with
 a double period: for example, \code{..start} is used to specify the
-entry point in the \code{obj} output format (see \fullref{sec:dotdotstart}),
+entry point in the \code{obj} output format (see \nref{dotdotstart}),
 \code{..imagebase} is used to find out the offset from a base address
 of the current image in the \code{win64} output format
-(see \fullref{sec:win64pic}). So just keep in mind that symbols
+(see \nref{win64pic}). So just keep in mind that symbols
 beginning with a double period are special.

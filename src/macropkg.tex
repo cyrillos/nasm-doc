@@ -3,10 +3,10 @@
 %
 \xchapter{macropkg}{\textindexlc{Standard Macro Packages}}
 
-The \codeindex{\%use} directive (see \fullref{sec:use}) includes one of
+The \codeindex{\%use} directive (see \nref{use}) includes one of
 the standard macro packages included with the NASM distribution and compiled
 into the NASM binary. It operates like the \code{\%include} directive (see
-\fullref{sec:include}), but the included contents is provided by NASM itself.
+\nref{include}), but the included contents is provided by NASM itself.
 
 The names of standard macro packages are case insensitive, and can be
 quoted or not.
@@ -31,13 +31,13 @@ proc:
     ret
 \end{lstlisting}
 
-See also \fullref{sec:reg64}.
+See also \nref{reg64}.
 
 \xsection{pkgsmartalign}{\codeindex{smartalign}\index{align, smart}: Smart \code{ALIGN} Macro}
 
 The \code{smartalign} standard macro package provides for an
 \codeindex{ALIGN} macro which is more powerful than the default (and
-backwards-compatible) one (see \fullref{sec:align}). When the
+backwards-compatible) one (see \nref{align}). When the
 \code{smartalign} package is enabled, when \code{ALIGN} is used without
 a second argument, NASM will generate a sequence of instructions more
 efficient than a series of \code{NOP}. Furthermore, if the padding
