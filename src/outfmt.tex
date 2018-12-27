@@ -47,8 +47,8 @@ For example, the following code will generate the longword
 \code{0x00000104}:
 
 \begin{lstlisting}
-    org     0x100
-    dd      label
+org     0x100
+dd      label
 label:
 \end{lstlisting}
 
@@ -473,9 +473,9 @@ module \code{foo} is actually defined in). So to access the contents of
 \code{foo} you will usually need to do something like
 
 \begin{lstlisting}
-    mov     ax,seg foo      ; get preferred segment base
-    mov     es,ax           ; move it into ES
-    mov     ax,[es:foo]     ; and use offset `foo' from it
+mov     ax,seg foo      ; get preferred segment base
+mov     es,ax           ; move it into ES
+mov     ax,[es:foo]     ; and use offset `foo' from it
 \end{lstlisting}
 
 This is a little unwieldy, particularly if you know that an external
@@ -484,7 +484,7 @@ is going to be accessible from a given segment or group, say
 you could simply code
 
 \begin{lstlisting}
-    mov     ax,[foo wrt dgroup]
+mov     ax,[foo wrt dgroup]
 \end{lstlisting}
 
 However, having to type this every time you want to access \code{foo}
@@ -824,10 +824,10 @@ It should be noted that \code{wrt ..imagebase} is defined as 32-bit
 operand only:
 
 \begin{lstlisting}
-        dd      label wrt ..imagebase           ; ok
-        dq      label wrt ..imagebase           ; bad
-        mov     eax,label wrt ..imagebase       ; ok
-        mov     rax,label wrt ..imagebase       ; bad
+dd      label wrt ..imagebase           ; ok
+dq      label wrt ..imagebase           ; bad
+mov     eax,label wrt ..imagebase       ; ok
+mov     rax,label wrt ..imagebase       ; bad
 \end{lstlisting}
 
 \subsection{\code{win64}: Structured Exception Handling}

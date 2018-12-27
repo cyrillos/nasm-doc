@@ -28,7 +28,7 @@ segment is a 32-bit one. However, it must be assembled in a 16-bit
 segment, so just coding, for example,
 
 \begin{lstlisting}
-    jmp 0x1234:0x56789ABC           ; wrong!
+jmp 0x1234:0x56789ABC           ; wrong!
 \end{lstlisting}
 
 will not work, since the offset part of the address will be
@@ -41,7 +41,7 @@ generate the required instruction by coding it manually, using
 generating the right instruction itself. Here's how to do it right:
 
 \begin{lstlisting}
-    jmp     dword 0x1234:0x56789ABC ; right
+jmp     dword 0x1234:0x56789ABC ; right
 \end{lstlisting}
 
 \indexcode{JMP DWORD}The \code{DWORD} prefix (strictly speaking,
@@ -55,7 +55,7 @@ You can do the reverse operation, jumping from a 32-bit segment to a
 16-bit one, by means of the \code{WORD} prefix:
 
 \begin{lstlisting}
-    jmp     word 0x8765:0x4321  ; 32 to 16 bit
+jmp     word 0x8765:0x4321  ; 32 to 16 bit
 \end{lstlisting}
 
 If the \code{WORD} prefix is specified in 16-bit mode, or the
@@ -82,8 +82,8 @@ the address, since any effective address containing a 32-bit
 register is forced to be a 32-bit address. So you can do
 
 \begin{lstlisting}
-    mov     eax,offset_into_32_bit_segment_specified_by_fs
-    mov     dword [fs:eax],0x11223344
+mov     eax,offset_into_32_bit_segment_specified_by_fs
+mov     dword [fs:eax],0x11223344
 \end{lstlisting}
 
 This is fine, but slightly cumbersome (since it wastes an
@@ -97,7 +97,7 @@ with the \code{DWORD} keyword, and it will be forced to be a 32-bit
 address:
 
 \begin{lstlisting}
-    mov     dword [fs:dword my_offset],0x11223344
+mov     dword [fs:dword my_offset],0x11223344
 \end{lstlisting}
 
 Also as in \fullref{subsec:mixjump}, NASM is not fussy about whether the
@@ -105,7 +105,7 @@ Also as in \fullref{subsec:mixjump}, NASM is not fussy about whether the
 arguably a nicer-looking way to code the above instruction is
 
 \begin{lstlisting}
-    mov     dword [dword fs:my_offset],0x11223344
+mov     dword [dword fs:my_offset],0x11223344
 \end{lstlisting}
 
 Don't confuse the \code{DWORD} prefix \emph{outside} the square brackets,
@@ -114,7 +114,7 @@ one \code{inside} the square brackets which controls the length of the
 address itself. The two can quite easily be different:
 
 \begin{lstlisting}
-    mov     word [dword 0x12345678],0x9ABC
+mov     word [dword 0x12345678],0x9ABC
 \end{lstlisting}
 
 This moves 16 bits of data to an address specified by a 32-bit
@@ -124,7 +124,7 @@ You can also specify \code{WORD} or \code{DWORD} prefixes along with the
 \code{FAR} prefix to indirect far jumps or calls. For example:
 
 \begin{lstlisting}
-    call    dword far [fs:word 0x4321]
+call    dword far [fs:word 0x4321]
 \end{lstlisting}
 
 This instruction contains an address specified by a 16-bit offset;
@@ -145,7 +145,7 @@ segment but it is supposed to be accessing a string in a 32-bit segment,
 you should load the desired address into \code{ESI} and then code
 
 \begin{lstlisting}
-    a32     lodsb
+a32     lodsb
 \end{lstlisting}
 
 The prefix forces the addressing size to 32 bits, meaning that
@@ -173,8 +173,8 @@ the 16-bit behaviour of segment-register push and pop instructions,
 you can use the operand-size prefix \codeindex{o16}:
 
 \begin{lstlisting}
-    o16 push    ss
-    o16 push    ds
+o16 push    ss
+o16 push    ds
 \end{lstlisting}
 
 This code saves a doubleword of stack space by fitting two segment

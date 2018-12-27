@@ -72,8 +72,8 @@ Like Unix compilers and assemblers, NASM is silent unless it
 goes wrong: you won't see any output at all, unless it gives error
 messages.
 
-\subsection{The \codeindex{-o} Option: Specifying the \textindexlc{Output File Name}}
-\label{subsec:opt-o}
+\xsubsection{opt-o}{The \codeindex{-o} Option: Specifying the
+\textindexlc{Output File Name}}
 
 NASM will normally choose the name of your output file for you;
 precisely how it does this is dependent on the object file format.
@@ -110,8 +110,8 @@ Note that this is a small \code{-o}, and is different from a capital
 \code{-O}, which is used to specify the number of optimisation passes
 required. See \fullref{subsec:opt-O-cap}.
 
-\subsection{The \codeindex{-f} Option: Specifying the \textindexlc{Output File Format}}
-\label{subsec:opt-f}
+\xsubsection{opt-f}{The \codeindex{-f} Option: Specifying the
+\textindexlc{Output File Format}}
 
 If you do not supply the \code{-f} option to NASM, it will choose an
 output file format for you itself. In the distribution versions of
@@ -125,8 +125,7 @@ file format is optional; so \code{-f elf} and \code{-felf} are both valid.
 A complete list of the available output file formats can be given by
 issuing the command \codeindex{nasm -hf}.
 
-\subsection{The \codeindex{-l} Option: Generating a \textindexlc{Listing File}}
-\label{subsec:opt-l}
+\xsubsection{opt-l}{The \codeindex{-l} Option: Generating a \textindexlc{Listing File}}
 
 If you supply the \code{-l} option to NASM, followed (with the usual
 optional space) by a file name, NASM will generate a \textindex{source-listing file}
@@ -145,8 +144,8 @@ source with \code{[list -]}, and turn it back on with \code{[list +]},
 This can be used to list only sections of interest, avoiding excessively
 long listings.
 
-\subsection{The \codeindex{-M} Option: Generate \textindexlc{Makefile Dependencies}}
-\label{subsec:opt-M-cap}
+\xsubsection{opt-M-cap}{The \codeindex{-M} Option: Generate
+\textindexlc{Makefile Dependencies}}
 
 This option can be used to generate makefile dependencies on stdout.
 This can be redirected to a file for further processing. For example:
@@ -155,16 +154,15 @@ This can be redirected to a file for further processing. For example:
 nasm -M myfile.asm > myfile.dep
 \end{lstlisting}
 
-\subsection{The \codeindex{-MG} Option: Generate \textindexlc{Makefile Dependencies}}
-\label{subsec:opt-MG-cap}
+\xsubsection{opt-MG-cap}{The \codeindex{-MG} Option: Generate
+\textindexlc{Makefile Dependencies}}
 
 This option can be used to generate makefile dependencies on stdout.
 This differs from the \code{-M} option in that if a nonexisting file is
 encountered, it is assumed to be a generated file and is added to the
 dependency list without a prefix.
 
-\subsection{The \codeindex{-MF} Option: Set Makefile Dependency File}
-\label{subsec:opt-MF-cap}
+\xsubsection{opt-MF-cap}{The \codeindex{-MF} Option: Set Makefile Dependency File}
 
 This option can be used with the \code{-M} or \code{-MG} options
 to send the output to a file, rather than to stdout. For example:
@@ -173,8 +171,8 @@ to send the output to a file, rather than to stdout. For example:
 nasm -M -MF myfile.dep myfile.asm
 \end{lstlisting}
 
-\subsection{The \codeindex{-MD} Option: Assemble and Generate Dependencies}
-\label{subsec:opt-MD-cap}
+\xsubsection{opt-MD-cap}{The \codeindex{-MD} Option: Assemble
+and Generate Dependencies}
 
 The \code{-MD} option acts as the combination of the \code{-M}
 and \code{-MF} options (i.e. a filename has to be specified).
@@ -187,15 +185,15 @@ every assembly session. For example:
 nasm -f elf -o myfile.o -MD myfile.dep myfile.asm
 \end{lstlisting}
 
-\subsection{The \codeindex{-MT} Option: Dependency Target Name}
-\label{subsec:opt-MT-cap}
+\xsubsection{opt-MT-cap}{The \codeindex{-MT} Option:
+Dependency Target Name}
 
 The \code{-MT} option can be used to override the default name of the
 dependency target. This is normally the same as the output filename,
 specified by the \code{-o} option.
 
-\subsection{The \codeindex{-MQ} Option: Dependency Target Name (Quoted)}
-\label{subsec:opt-MQ-cap}
+\xsubsection{opt-MQ-cap}{The \codeindex{-MQ} Option:
+Dependency Target Name (Quoted)}
 
 The \code{-MQ} option acts as the \code{-MT} option, except
 it tries to quote characters that have special meaning in Makefile
@@ -203,44 +201,44 @@ syntax. This is not foolproof, as not all characters with special
 meaning are quotable in Make. The default output (if no \code{-MT} or
 \code{-MQ} option is specified) is automatically quoted.
 
-\subsection{The \codeindex{-MP} Option: Emit phony targets}
-\label{subsec:opt-MP-cap}
+\xsubsection{opt-MP-cap}{The \codeindex{-MP} Option:
+Emit phony targets}
 
 When used with any of the dependency generation options, the
 \code{-MP} option causes NASM to emit a phony target without
 dependencies for each header file. This prevents Make from
 complaining if a header file has been removed.
 
-\subsection{The \codeindex{-F} Option: Selecting a \textindexlc{Debug Information Format}}
-\label{subsec:opt-F-cap}
+\xsubsection{opt-F-cap}{The \codeindex{-F} Option:
+Selecting a \textindexlc{Debug Information Format}}
 
 This option is used to select the format of the debug information
 emitted into the output file, to be used by a debugger (or \emph{will}
 be). Prior to version 2.03.01, the use of this switch did \emph{not}
 enable output of the selected debug info format. Use \codeindex{-g},
-see \fullref{subsec:opt-g}, to enable output. Versions 2.03.01 and later
+see \fullref{opt-g}, to enable output. Versions 2.03.01 and later
 automatically enable \code{-g} if \code{-F} is specified.
 
 A complete list of the available debug file formats for an output
 format can be seen by issuing the command \code{nasm -f <format> -y}.
 Not all output formats currently support debugging output.
-See \fullref{subsec:opt-y}.
+See \fullref{opt-y}.
 
 This should not be confused with the \code{-f dbg} output format
 option which is not built into NASM by default. For information on how
 to enable it when building from the sources, see \fullref{sec:dbgfmt}.
 
-\subsection{The \codeindex{-g} Option: Enabling \textindexlc{Debug Information}}
-\label{subsec:opt-g}
+\xsubsection{opt-g}{The \codeindex{-g} Option:
+Enabling \textindexlc{Debug Information}}
 
 This option can be used to generate debugging information in the specified
-format. See \fullref{subsec:opt-F-cap}. Using \code{-g} without \code{-F}
+format. See \fullref{opt-F-cap}. Using \code{-g} without \code{-F}
 results in emitting debug info in the default format, if any, for the
 selected output format. If no debug information is currently implemented
 in the selected output format, \code{-g} is \emph{silently ignored}.
 
-\subsection{The \codeindex{-X} Option: Selecting an \textindexlc{Error Reporting Format}}
-\label{subsec:opt-X-cap}
+\xsubsection{opt-X-cap}{The \codeindex{-X} Option:
+Selecting an \textindexlc{Error Reporting Format}}
 
 This option can be used to select an error reporting format for any
 error messages that might be produced by NASM.
@@ -272,8 +270,8 @@ instead of being delimited by colons.
 
 See also the \code{Visual C++} output format, \fullref{sec:win32fmt}.
 
-\subsection{The \codeindex{-Z} Option: Send Errors to a File}
-\label{subsec:opt-Z-cap}
+\xsubsection{opt-Z-cap}{The \codeindex{-Z} Option:
+Send Errors to a File}
 
 Under ``MS-\textindex{DOS}'' it can be difficult (though there are
 ways) to redirect the standard-error output of a program to a file.
@@ -295,8 +293,8 @@ but it was changed since \code{-E} is an option conventionally
 used for preprocessing only, with disastrous results.
 See \fullref{subsec:opt-E-cap}.
 
-\subsection{The \codeindex{-s} Option: Send Errors to \codeindex{stdout}}
-\label{subsec:opt-s}
+\xsubsection{opt-s}{The \codeindex{-s} Option:
+Send Errors to \codeindex{stdout}}
 
 The \code{-s} option redirects \textindexlc{error messages} to
 \code{stdout} rather than \code{stderr}, so it can be redirected
@@ -309,8 +307,8 @@ nasm -s -f obj myfile.asm | more
 
 See also the \code{-Z} option, \fullref{subsec:opt-Z-cap}.
 
-\subsection{The \codeindex{-i}\indexcode{-I} Option: Include File Search Directories}
-\label{subsec:opt-i}
+\xsubsection{opt-i}{The \codeindex{-i}\indexcode{-I} Option:
+Include File Search Directories}
 
 When NASM sees the \codeindex{\%include} or \codeindex{\%pathsearch} directive
 in a source file (see \fullref{sec:include}, \fullref{sec:pathsearch} or

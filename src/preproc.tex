@@ -179,15 +179,15 @@ names other macros. For example, if you have a set of macros named
 \code{Foo16}, \code{Foo32} and \code{Foo64}, you could write:
 
 \begin{lstlisting}
-mov ax,Foo%[__BITS__]	; The Foo value
+mov ax,Foo%[__BITS__]       ; The Foo value
 \end{lstlisting}
 
 to use the builtin macro \code{\_\_BITS\_\_} (see \fullref{sec:bitsm})
 to automatically select between them. Similarly, the two statements:
 
 \begin{lstlisting}
-%xdefine Bar		Quux	; Expands due to %xdefine
-%define  Bar		%[Quux]	; Expands due to %[...]
+%xdefine Bar        Quux    ; Expands due to %xdefine
+%define  Bar        %[Quux] ; Expands due to %[...]
 \end{lstlisting}
 
 have, in fact, exactly the same effect.
@@ -281,7 +281,7 @@ can be used to make a keyword ``disappear'', for example in case a new
 instruction has been used as a label in older code.  For example:
 
 \begin{lstlisting}
-%idefine pause $%?		; Hide the PAUSE instruction
+%idefine pause $%?      ; Hide the PAUSE instruction
 \end{lstlisting}
 
 \xsubsection{undef}{Undefining Single-Line Macros: \codeindex{\%undef}}

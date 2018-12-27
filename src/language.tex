@@ -351,8 +351,8 @@ When broadcasting decorator is used, the opsize keyword should match
 the size of each element.
 
 \begin{lstlisting}
-VDIVPS zmm4, zmm5, dword [rbx]{1to16}   ; single-precision float
-VDIVPS zmm4, zmm5, zword [rbx]          ; packed 512 bit memory
+vdivps zmm4, zmm5, dword [rbx]{1to16}   ; single-precision float
+vdivps zmm4, zmm5, zword [rbx]          ; packed 512 bit memory
 \end{lstlisting}
 
 \xsection{const}{\textindexlc{Constants}}
@@ -861,18 +861,18 @@ label. So, for example:
 label1  ; some code
 
 .loop
-        ; some more code
+    ; some more code
 
-        jne     .loop
-        ret
+    jne     .loop
+    ret
 
 label2  ; some code
 
 .loop
-        ; some more code
+    ; some more code
 
-        jne     .loop
-        ret
+    jne     .loop
+    ret
 \end{lstlisting}
 
 In the above code fragment, each \code{JNE} instruction jumps to the
@@ -891,9 +891,9 @@ to, you could write
 
 \begin{lstlisting}
 label3  ; some more code
-        ; and some more
+    ; and some more
 
-        jmp label1.loop
+    jmp label1.loop
 \end{lstlisting}
 
 Sometimes it is useful - in a macro, for instance - to be able to
@@ -908,13 +908,13 @@ the \index{label prefix}special prefix \codeindex{..@}, then it
 does nothing to the local label mechanism. So you could code
 
 \begin{lstlisting}
-label1:                         ; a non-local label
-.local:                         ; this is really label1.local
-..@foo:                         ; this is a special symbol
-label2:                         ; another non-local label
-.local:                         ; this is really label2.local
+label1:             ; a non-local label
+.local:             ; this is really label1.local
+..@foo:             ; this is a special symbol
+label2:             ; another non-local label
+.local:             ; this is really label2.local
 
-        jmp     ..@foo          ; this will jump three lines up
+    jmp     ..@foo  ; this will jump three lines up
 \end{lstlisting}
 
 NASM has the capacity to define other special symbols beginning with
