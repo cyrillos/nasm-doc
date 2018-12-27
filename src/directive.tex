@@ -85,8 +85,8 @@ form is a macro which has no function other than to call the primitive form.
 
 Note that the space is neccessary, e.g. \code{BITS32} will \emph{not} work!
 
-\subsection{\codeindex{USE16}, \codeindex{USE32} and \codeindex{USE64}: Aliases for BITS}
-\label{subsec:use163264}
+\xsubsection{use163264}{\codeindex{USE16}, \codeindex{USE32}
+and \codeindex{USE64}: Aliases for BITS}
 
 The \code{USE16}, \code{USE32} and \code{USE64} directives can be used
 in place of \code{BITS 16}, \code{BITS 32} and \code{BITS 64}, for
@@ -102,8 +102,7 @@ as the explicit form is pretty much the only one one wishes to use.
 Currently, \code{DEFAULT} can be set to \code{REL}, \code{ABS}, \code{BND}
 and \code{NOBND}.
 
-\subsection{\codeindex{REL} and \codeindex{ABS}: RIP-relative addressing}
-\label{subsec:relabs}
+\xsubsection{relabs}{\codeindex{REL} and \codeindex{ABS}: RIP-relative addressing}
 
 This sets whether registerless instructions in 64-bit mode are
 \code{RIP}-relative or not. By default, they are absolute unless
@@ -119,8 +118,7 @@ other special functions in 64-bit mode, and generating
 
 \code{DEFAULT REL} is disabled with \code{DEFAULT ABS}.
 
-\subsection{\codeindex{BND} and \codeindex{NOBND}: \code{BND} prefix}
-\label{subsec:bndnobnd}
+\xsubsection{bndnobnd}{\codeindex{BND} and \codeindex{NOBND}: \code{BND} prefix}
 
 If \code{DEFAULT BND} is set, all bnd-prefix available instructions
 following this directive are prefixed with bnd. To override it,
@@ -158,8 +156,7 @@ data and uninitialized-data sections. The \code{obj} format, by contrast,
 does not recognize these section names as being special, and indeed will
 strip off the leading period of any section name that has one.
 
-\subsection{The \codeindex{\_\_SECT\_\_} Macro}
-\label{subsec:sectmac}
+\xsubsection{sectmac}{The \codeindex{\_\_SECT\_\_} Macro}
 
 The \code{SECTION} directive is unusual in that its user-level form
 functions differently from its primitive form. The primitive form,

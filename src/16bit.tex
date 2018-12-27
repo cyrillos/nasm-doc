@@ -28,8 +28,7 @@ Yann Guidon for contributing the code for this.
 NASM may also support \code{.EXE} natively as another output format in
 future releases.
 
-\subsection{Using the \code{obj} Format To Generate \code{.EXE} Files}
-\label{subsec:objexe}
+\xsubsection{objexe}{Using the \code{obj} Format To Generate \code{.EXE} Files}
 
 This section describes the usual method of generating \code{.EXE} files
 by linking \code{.OBJ} files together.
@@ -133,8 +132,7 @@ The above file, when assembled into a \code{.OBJ} file, will link on
 its own to a valid \code{.EXE} file, which when run will print `hello,
 world' and then exit.
 
-\subsection{Using the \code{bin} Format To Generate \code{.EXE} Files}
-\label{subsec:binexe}
+\xsubsection{binexe}{Using the \code{bin} Format To Generate \code{.EXE} Files}
 
 The \code{.EXE} file format is simple enough that it's possible to
 build a \code{.EXE} file by writing a pure-binary program and sticking
@@ -188,8 +186,7 @@ ones are often better written as \code{.COM} files. \code{.COM} files are
 pure binary, and therefore most easily produced using the \code{bin}
 output format.
 
-\subsection{Using the \code{bin} Format To Generate \code{.COM} Files}
-\label{subsec:combinfmt}
+\xsubsection{combinfmt}{Using the \code{bin} Format To Generate \code{.COM} Files}
 
 \code{.COM} files expect to be loaded at offset \code{100h} into their
 segment (though the segment may change). Execution then begins at
@@ -233,8 +230,7 @@ The \code{bin} format would produce a file called \code{myprog} if no
 explicit output file name were specified, so you have to override it
 and give the desired file name.
 
-\subsection{Using the \code{obj} Format To Generate \code{.COM} Files}
-\label{subsec:comobjfmt}
+\xsubsection{comobjfmt}{Using the \code{obj} Format To Generate \code{.COM} Files}
 
 If you are writing a \code{.COM} program as more than one module, you
 may wish to assemble several \code{.OBJ} files and link them together
@@ -290,8 +286,7 @@ call, or are called from, C programs. To do this, you would
 typically write an assembly module as a \code{.OBJ} file, and link it
 with your C modules to produce a \textindex{mixed-language program}.
 
-\subsection{External Symbol Names}
-\label{subsec:16cunder}
+\xsubsection{16cunder}{External Symbol Names}
 
 \index{C symbol names}\index{underscore!in C symbols}C compilers have the
 convention that the names of all global symbols (functions or data)
@@ -342,8 +337,7 @@ that anyway if you used \code{GLOBAL}.
 
 Also see \fullref{opt-pfix}.
 
-\subsection{\textindexlc{Memory Models}}
-\label{subsec:16cmodels}
+\xsubsection{16cmodels}{\textindexlc{Memory Models}}
 
 NASM contains no mechanism to support the various C memory models
 directly; you have to keep track yourself of which one you are
@@ -405,8 +399,7 @@ so your code segment must also go by this name in order to be linked into the
 same place as the main code segment. In models with a single data segment,
 or with a default data segment, it is called \codeindex{\_DATA}.
 
-\subsection{Function Definitions and Function Calls}
-\label{subsec:16cfunc}
+\xsubsection{16cfunc}{Function Definitions and Function Calls}
 
 \index{functions!C calling convention}The \textindex{C calling convention}
 in 16-bit programs is as follows. In the following description, the
@@ -617,8 +610,7 @@ feature tends to be a configurable option in the C compiler, either
 using command-line options or \code{\#pragma} lines, so you have to find
 out how your own compiler does it.
 
-\subsection{\codeindex{c16.mac}: Helper Macros for the 16-bit C Interface}
-\label{subsec:16cmacro}
+\xsubsection{16cmacro}{\codeindex{c16.mac}: Helper Macros for the 16-bit C Interface}
 
 Included in the NASM archives, in the \index{misc subdirectory}\code{misc}
 directory, is a file \code{c16.mac} of macros. It defines three macros:

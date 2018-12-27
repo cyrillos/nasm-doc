@@ -23,8 +23,7 @@ sequence.
 
 \xsection{slmacro}{\textindexlc{Single-Line Macros}}
 
-\subsection{The Normal Way: \indexcode{\%idefine}\codeindex{\%define}}
-\label{subsec:define}
+\xsubsection{define}{The Normal Way: \indexcode{\%idefine}\codeindex{\%define}}
 
 Single-line macros are defined using the \code{\%define} preprocessor
 directive. The definitions work in a similar way to C; so you can do
@@ -123,8 +122,7 @@ when defining single-line macros with \code{\%assign}
 You can \textindex{pre-define} single-line macros using the \code{-d}
 option on the NASM command line: see \fullref{subsec:opt-d}.
 
-\subsection{Resolving \code{\%define}: \indexcode{\%ixdefine}\codeindex{\%xdefine}}
-\label{subsec:xdefine}
+\xsubsection{xdefine}{Resolving \code{\%define}: \indexcode{\%ixdefine}\codeindex{\%xdefine}}
 
 To have a reference to an embedded single-line macro resolved at the
 time that the embedding macro is \emph{defined}, as opposed to when the
@@ -173,8 +171,7 @@ as that is what the embedded macro \code{isTrue} expanded to at
 the time that \code{isFalse} was defined.
 
 % FIXME the keys
-\subsection{\textindexlc{Macro Indirection}: \indexcode{\%[}\code{\%[...]}}
-\label{subsec:indmacro}
+\xsubsection{indmacro}{\textindexlc{Macro Indirection}: \indexcode{\%[}\code{\%[...]}}
 
 The \code{\%[...]} construct can be used to expand macros in contexts
 where macro expansion would otherwise not occur, including in the
@@ -199,8 +196,7 @@ have, in fact, exactly the same effect.
 multi-line macro parameters do, see \fullref{sec:concat} for details.
 
 % FIXME concatmacro key
-\subsection{Concatenating Single Line Macro Tokens: \codeindex{\%+}}
-\label{subsec:concatmacro}
+\xsubsection{concatmacro}{Concatenating Single Line Macro Tokens: \codeindex{\%+}}
 
 Individual tokens in single line macros can be concatenated, to produce
 longer tokens for later processing. This can be useful if there are
@@ -249,8 +245,7 @@ Using this feature, we can simplify references to a lot of macros
 (and, in turn, reduce typing errors).
 
 % FIXME they key
-\subsection{The Macro Name Itself: \codeindex{\%?} and \codeindex{\%??}}
-\label{subsec:selfref}
+\xsubsection{selfref}{The Macro Name Itself: \codeindex{\%?} and \codeindex{\%??}}
 
 The special symbols \code{\%?} and \code{\%??} can be used to
 reference the macro name itself inside a macro expansion,
@@ -289,8 +284,7 @@ instruction has been used as a label in older code.  For example:
 %idefine pause $%?		; Hide the PAUSE instruction
 \end{lstlisting}
 
-\subsection{Undefining Single-Line Macros: \codeindex{\%undef}}
-\label{subsec:undef}
+\xsubsection{undef}{Undefining Single-Line Macros: \codeindex{\%undef}}
 
 Single-line macros can be removed with the \code{\%undef} directive.
 For example, the following sequence:
@@ -309,8 +303,7 @@ Macros that would otherwise be pre-defined can be undefined on the
 command-line using the \code{-u} option on the NASM command line:
 see \fullref{subsec:opt-u}.
 
-\subsection{\textindex{Preprocessor Variables}: \codeindex{\%assign}}
-\label{subsec:assign}
+\xsubsection{assign}{\textindex{Preprocessor Variables}: \codeindex{\%assign}}
 
 An alternative way to define single-line macros is by means of the
 \code{\%assign} command (and its \index{case sensitive}case-insensitive
@@ -341,8 +334,7 @@ The expression passed to \code{\%assign} is a \textindex{critical expression}
 (rather than a relocatable reference such as a code or data address,
 or anything involving a register).
 
-\subsection{Defining Strings: \indexcode{\%idefstr}\codeindex{\%defstr}}
-\label{subsec:defstr}
+\xsubsection{defstr}{Defining Strings: \indexcode{\%idefstr}\codeindex{\%defstr}}
 
 \code{\%defstr}, and its case-insensitive counterpart \code{\%idefstr},
 define or redefine a single-line macro without parameters but converts
@@ -368,8 +360,7 @@ This can be used, for example, with the \code{\%!} construct
 %defstr PATH %!PATH          ; The operating system PATH variable
 \end{lstlisting}
 
-\subsection{Defining Tokens: \indexcode{\%ideftok}\codeindex{\%deftok}}
-\label{subsec:deftok}
+\xsubsection{deftok}{Defining Tokens: \indexcode{\%ideftok}\codeindex{\%deftok}}
 
 \code{\%deftok}, and its case-insensitive counterpart \code{\%ideftok},
 define or redefine a single-line macro without parameters but converts
@@ -399,8 +390,7 @@ value, it may change the style of quoting of the input string or
 strings, and possibly use \code{\textbackslash}-escapes inside
 \code{`}-quoted strings.
 
-\subsection{\textindexlc{Concatenating Strings}: \codeindex{\%strcat}}
-\label{subsec:strcat}
+\xsubsection{strcat}{\textindexlc{Concatenating Strings}: \codeindex{\%strcat}}
 
 The \code{\%strcat} operator concatenates quoted strings and assign
 them to a single-line macro.
@@ -423,8 +413,7 @@ to \code{beta}.
 
 The use of commas to separate strings is permitted but optional.
 
-\subsection{\textindexlc{String Length}: \codeindex{\%strlen}}
-\label{subsec:strlen}
+\xsubsection{strlen}{\textindexlc{String Length}: \codeindex{\%strlen}}
 
 The \code{\%strlen} operator assigns the length of a string to a macro.
 For example:

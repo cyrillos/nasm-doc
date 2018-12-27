@@ -110,15 +110,14 @@ their \textindex{uninitialized} counterparts \codeindex{RESB},
 \codeindex{RESZ}; the \codeindex{INCBIN} command, the \codeindex{EQU}
 command, and the \codeindex{TIMES} prefix.
 
-\subsection{DB and Friends: Declaring Initialized Data}
-\label{subsec:db}
+\xsubsection{db}{DB and Friends: Declaring Initialized Data}
 
 \codeindex{DB}, \codeindex{DW}, \codeindex{DD}, \codeindex{DQ},
 \codeindex{DT}, \codeindex{DO}, \codeindex{DY} and \codeindex{DZ}
 are used, much as in MASM, to declare initialized data in
 the output file. They can be invoked in a wide range of ways:
 \index{floating-point!constants}\index{character!constants}\index{string!constants}
- 
+
 \begin{lstlisting}
 db    0x55                ; just the byte 0x55
 db    0x55,0x56,0x57      ; three bytes in succession
@@ -138,8 +137,7 @@ dt    1.234567e20         ; extended-precision float
 \code{DT}, \code{DO}, \code{DY} and \code{DZ} do not accept
 \textindex{numeric constants}\index{numeric!constants} as operands.
 
-\subsection{RESB and Friends: Declaring \textindexlc{Uninitialized} Data}
-\label{subsec:resb}
+\xsubsection{resb}{RESB and Friends: Declaring \textindexlc{Uninitialized} Data}
 
 \codeindex{RESB}, \codeindex{RESW}, \codeindex{RESD}, \codeindex{RESQ},
 \codeindex{REST}, \codeindex{RESO}, \codeindex{RESY} and \codeindex{RESZ}
@@ -162,8 +160,7 @@ ymmval:         resy    1               ; one YMM register
 zmmvals:        resz    32              ; 32 ZMM registers
 \end{lstlisting}
 
-\subsection{\codeindex{INCBIN}: Including External \textindexlc{Binary Files}}
-\label{subsec:incbin}
+\xsubsection{incbin}{\codeindex{INCBIN}: Including External \textindexlc{Binary Files}}
 
 \code{INCBIN} is borrowed from the old Amiga assembler \textindex{DevPac}:
 it includes a binary file verbatim into the output file. This can be handy
@@ -182,8 +179,7 @@ macro version searches for the file in the include file search path
 and adds the file to the dependency lists. This macro can be
 overridden if desired.
 
-\subsection{\codeindex{EQU}: Defining Constants}
-\label{subsec:equ}
+\xsubsection{equ}{\codeindex{EQU}: Defining Constants}
 
 \code{EQU} defines a symbol to a given constant value: when \code{EQU} is
 used, the source line must contain a label. The action of \code{EQU} is
@@ -204,8 +200,7 @@ of \code{\$}) at the point of definition, rather than being evaluated
 wherever it is referenced and using the value of \code{\$} at
 the point of reference.
 
-\subsection{\codeindex{TIMES}: \textindexlc{Repeating} Instructions or Data}
-\label{subsec:times}
+\xsubsection{times}{\codeindex{TIMES}: \textindexlc{Repeating} Instructions or Data}
 
 The \code{TIMES} prefix causes the instruction to be assembled multiple
 times. This is partly present as NASM's equivalent of the \codeindex{DUP}
@@ -365,8 +360,7 @@ VDIVPS zmm4, zmm5, zword [rbx]          ; packed 512 bit memory
 NASM understands four different types of constant: numeric,
 character, string and floating-point.
 
-\subsection{\textindexlc{Numeric Constants}}
-\label{subsec:numconst}
+\xsubsection{numconst}{\textindexlc{Numeric Constants}}
 
 A numeric constant is simply a number. NASM allows you to specify
 numbers in a variety of number bases, in a variety of ways: you can
@@ -409,8 +403,7 @@ mov     ax,0b1100_1000  ; same binary constant yet again
 mov     ax,0y1100_1000  ; same binary constant yet again
 \end{lstlisting}
 
-\subsection{\index{Strings}\textindexlc{Character Strings}}
-\label{subsec:strings}
+\xsubsection{strings}{\index{Strings}\textindexlc{Character Strings}}
 
 A character string consists of up to eight characters enclosed in
 either single quotes (\code{'...'}), double quotes (\code{"..."}) or
@@ -457,8 +450,7 @@ db `\xe2\x98\xba`      ; UTF-8 smiley face
 db 0E2h, 098h, 0BAh    ; UTF-8 smiley face
 \end{lstlisting}
 
-\subsection{\textindexlc{Character Constants}}
-\label{subsec:chrconst}
+\xsubsection{chrconst}{\textindexlc{Character Constants}}
 
 A character constant consists of a string up to eight bytes long, used
 in an expression context. It is treated as if it was an integer.
@@ -475,8 +467,7 @@ so that if you were then to store the value into memory, it would read
 \code{abcd} rather than \code{dcba}. This is also the sense of character
 constants understood by the Pentium's \codeindex{CPUID} instruction.
 
-\subsection{\textindexlc{String Constants}}
-\label{subsec:strconst}
+\xsubsection{strconst}{\textindexlc{String Constants}}
 
 String constants are character strings used in the context of some
 pseudo-instructions, namely the \indexcode{DW}\indexcode{DD}\indexcode{DQ}
@@ -508,8 +499,7 @@ effect as \code{db 'a'}, which would be silly. Similarly, three-character
 or four-character constants are treated as strings when they are
 operands to \code{DW}, and so forth.
 
-\subsection{\index{UTF-16}\index{UTF-32}\textindexlc{Unicode} Constants}
-\label{subsec:unicode}
+\xsubsection{unicode}{\index{UTF-16}\index{UTF-32}\textindexlc{Unicode} Constants}
 
 The special operators \codeindex{\_\_utf16\_\_}, \codeindex{\_\_utf16le\_\_},
 \codeindex{\_\_utf16be\_\_}, \codeindex{\_\_utf32\_\_}, \codeindex{\_\_utf32le\_\_}
@@ -532,8 +522,7 @@ The UTF operators can be applied either to strings passed to the
 \code{DB} family instructions, or to character constants in an expression
 context.
 
-\subsection{\index{floating-point!constants}Floating-Point Constants}
-\label{subsec:fltconst}
+\xsubsection{fltconst}{\index{floating-point!constants}Floating-Point Constants}
 
 \textindexlc{Floating-point} constants are acceptable only as arguments to
 \codeindex{DB}, \codeindex{DW}, \codeindex{DD}, \codeindex{DQ}, \codeindex{DT},
@@ -628,8 +617,7 @@ respectively. These are normally used as macros:
 The \code{\%use fp} standard macro package contains a set of convenience
 macros. See \fullref{sec:pkg_fp}.
 
-\subsection{\index{floating-point!packed BCD constants}Packed BCD Constants}
-\label{subsec:bcdconst}
+\xsubsection{bcdconst}{\index{floating-point!packed BCD constants}Packed BCD Constants}
 
 x87-style packed BCD constants can be used in the same contexts as
 80-bit floating-point numbers. They are suffixed with \code{p} or
@@ -665,25 +653,21 @@ tell how far into the section you are by using \code{(\$-\$\$)}.
 The arithmetic \textindex{operators} provided by NASM are listed here,
 in increasing order of \textindex{precedence}.
 
-\subsection{\codeindex{|}: \textindexlc{Bitwise OR} Operator}
-\label{subsec:expor}
+\xsubsection{expor}{\codeindex{|}: \textindexlc{Bitwise OR} Operator}
 
 The \code{|} operator gives a bitwise OR, exactly as performed by the
 \code{OR} machine instruction. Bitwise OR is the lowest-priority
 arithmetic operator supported by NASM.
 
-\subsection{\codeindex{\textasciicircum}: \textindexlc{Bitwise XOR} Operator}
-\label{subsec:expxor}
+\xsubsection{expxor}{\codeindex{\textasciicircum}: \textindexlc{Bitwise XOR} Operator}
 
 The \code{\textasciicircum} operator provides the bitwise XOR operation.
 
-\subsection{\codeindex{\&}: \textindexlc{Bitwise AND} Operator}
-\label{subsec:expand}
+\xsubsection{expand}{\codeindex{\&}: \textindexlc{Bitwise AND} Operator}
 
 The \code{\&} operator provides the bitwise AND operation.
 
-\subsection{\codeindex{<<} and \codeindex{>>}: \textindexlc{Bit Shift} Operators}
-\label{subsec:expshift}
+\xsubsection{expshift}{\codeindex{<<} and \codeindex{>>}: \textindexlc{Bit Shift} Operators}
 
 \code{<<} gives a bit-shift to the left, just as it does in C.
 So \code{5<<3} evaluates to 5 times 8, or 40. \code{>>} gives
@@ -692,16 +676,16 @@ unsigned, so that the bits shifted in from the left-hand end
 are filled with zero rather than a sign-extension of the
 previous highest bit.
 
-\subsection{\index{+ opaddition}\codeindex{+} and \index{- opsubtraction}\codeindex{-}:
+\xsubsection{expplmi}{\index{+ opaddition}\codeindex{+} and
+\index{- opsubtraction}\codeindex{-}:
 \textindexlc{Addition} and \textindexlc{Subtraction} Operators}
-\label{subsec:expplmi}
 
 The \code{+} and \code{-} operators do perfectly ordinary addition
 and subtraction.
 
-\subsection{\codeindex{*}, \codeindex{/}, \codeindex{//} and \codeindex{\%\%}:
+\xsubsection{expmul}{\codeindex{*}, \codeindex{/},
+\codeindex{//} and \codeindex{\%\%}:
 \textindexlc{Multiplication} and \textindexlc{Division}}
-\label{subsec:expmul}
 
 \code{*} is the multiplication operator. \code{/} and \code{//} are both
 division operators: \code{/} is \textindex{unsigned division} and
@@ -717,8 +701,7 @@ Since the \code{\%} character is used extensively by the macro
 and unsigned modulo operators are followed by white space wherever
 they appear.
 
-\subsection{\textindex{Unary Operators}}
-\label{subsec:expmul}
+\xsubsection{expmul}{\textindex{Unary Operators}}
 
 The highest-priority operators in NASM's expression grammar are those
 which only apply to one argument. These are \index{+ opunary}\code{+},
