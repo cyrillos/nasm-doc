@@ -35,8 +35,7 @@ leaves your file name as it is once the original extension has been
 removed. Thus, the default is for NASM to assemble \code{binprog.asm}
 into a binary file called \code{binprog}.
 
-\subsection{\codeindex{ORG}: Binary File \textindexlc{Program Origin}}
-\label{subsec:binfmt}
+\xsubsection{binfmt}{\codeindex{ORG}: Binary File \textindexlc{Program Origin}}
 
 The \code{bin} format provides an additional directive to the list
 given in \fullref{sec:directive}: \code{ORG}. The function of the
@@ -60,8 +59,7 @@ offset which is added to all internal address references within the
 section; it does not permit any of the trickery that MASM's version
 does. See \fullref{sec:proborg} for further comments.
 
-\subsection{\code{bin} Extensions to the \code{SECTION} Directive}
-\label{subsec:binseg}
+\xsubsection{binseg}{\code{bin} Extensions to the \code{SECTION} Directive}
 \index{section!bin extensions to}
 
 The \code{bin} output format extends the \code{SECTION} (or \code{SEGMENT})
@@ -83,8 +81,7 @@ given may be any power of two.
 \index{segment alignment!in bin}
 \index{alignment!in bin sections}
 
-\subsection{\textindexlc{Multisection} Support for the \code{bin} Format}
-\label{subsec:multisec}
+\xsubsection{multisec}{\textindexlc{Multisection} Support for the \code{bin} Format}
 \index{bin!multisection}
 
 The \code{bin} format allows the use of multiple sections, of arbitrary names,
@@ -130,8 +127,7 @@ besides the ``known'' \code{.text}, \code{.data}, and \code{.bss} names.
         which may be used in your code.}
 \end{itemize}
 
-\subsection{\textindexlc{Map Files}}
-\label{subsec:map}
+\xsubsection{map}{\textindexlc{Map Files}}
 \index{file extension!map}
 
 Map files can be generated in \code{-f bin} format by means of the \code{[map]}
@@ -225,8 +221,7 @@ extern  foo
     mov     [es:foo wrt data],bx    ; so does this
 \end{lstlisting}
 
-\subsection{\code{obj} Extensions to the \code{SEGMENT} Directive}
-\label{subsec:objseg}
+\xsubsection{objseg}{\code{obj} Extensions to the \code{SEGMENT} Directive}
 \index{SEGMENT!obj extensions to}
 
 The \code{obj} output format extends the \code{SEGMENT} (or \code{SECTION})
@@ -312,8 +307,7 @@ The available qualifiers are:
 NASM's default segment attributes are \code{PUBLIC}, \code{ALIGN=1}, no
 class, no overlay, and \code{USE16}.
 
-\subsection{\codeindex{GROUP}: Defining Groups of Segments}
-\label{subsec:group}
+\xsubsection{group}{\codeindex{GROUP}: Defining Groups of Segments}
 \index{segments!groups of}
 
 The \code{obj} format also allows segments to be grouped, so that a
@@ -352,8 +346,7 @@ A group does not have to contain any segments; you can still make
 you are referring to. OS/2, for example, defines the special group
 \code{FLAT} with no segments in it.
 
-\subsection{\codeindex{UPPERCASE}: Disabling Case Sensitivity in Output}
-\label{subsec:uppercase}
+\xsubsection{uppercase}{\codeindex{UPPERCASE}: Disabling Case Sensitivity in Output}
 
 Although NASM itself is \textindex{case sensitive}, some OMF linkers are
 not; therefore it can be useful for NASM to output single-case
@@ -365,8 +358,7 @@ be written entirely in upper case if desired.
 
 \code{UPPERCASE} is used alone on a line; it requires no parameters.
 
-\subsection{\codeindex{IMPORT}: Importing DLL Symbols}
-\label{subsec:import}
+\xsubsection{import}{\codeindex{IMPORT}: Importing DLL Symbols}
 \index{DLL symbols!importing}
 \index{symbols!importing from DLLs}
 
@@ -394,8 +386,7 @@ once you have imported it. For example:
 import  asyncsel wsock32.dll WSAAsyncSelect
 \end{lstlisting}
 
-\subsection{\codeindex{EXPORT}: Exporting DLL Symbols}
-\label{subsec:export}
+\xsubsection{export}{\codeindex{EXPORT}: Exporting DLL Symbols}
 \index{DLL symbols!exporting}
 \index{symbols!exporting from DLLs}
 
@@ -447,8 +438,7 @@ export  myfunc myfunc 1234  ; export by ordinal
 export  myfunc myfunc resident parm=23 nodata
 \end{lstlisting}
 
-\subsection{\codeindex{..start}: Defining the \textindexlc{Program Entry Point}}
-\label{subsec:dotdotstart}
+\xsubsection{dotdotstart}{\codeindex{..start}: Defining the \textindexlc{Program Entry Point}}
 
 \code{OMF} linkers require exactly one of the object files being linked to
 define the program entry point, where execution will begin when the
@@ -457,8 +447,7 @@ assembled using NASM, you specify the entry point by declaring the
 special symbol \code{..start} at the point where you wish execution to
 begin.
 
-\subsection{\code{obj} Extensions to the \code{EXTERN} Directive}
-\label{subsec:objextern}
+\xsubsection{objextern}{\code{obj} Extensions to the \code{EXTERN} Directive}
 \index{EXTERN!obj extensions to}
 
 If you declare an external symbol with the directive
@@ -505,8 +494,7 @@ to make externals appear to be relative to any group or segment in
 your program. It can also be applied to common variables: see
 \fullref{subsec:objcommon}.
 
-\subsection{\code{obj} Extensions to the \code{COMMON} Directive}
-\label{subsec:objcommon}
+\xsubsection{objcommon}{\code{obj} Extensions to the \code{COMMON} Directive}
 \index{COMMON!obj extensions to}
 
 The \code{obj} format allows common variables to be either near
@@ -576,8 +564,7 @@ suitable for DJGPP, use NASM's \code{coff} output format; conversely,
 the \code{coff} format does not produce object files that Win32 linkers
 can generate correct output from.
 
-\subsection{\code{win32} Extensions to the \code{SECTION} Directive}
-\label{subsec:win32sect}
+\xsubsection{win32sect}{\code{win32} Extensions to the \code{SECTION} Directive}
 \index{SECTION!win32 extensions to}
 
 Like the \code{obj} format, \code{win32} allows you to specify additional
@@ -636,8 +623,7 @@ section .bss    bss     align=4
 
 Any other section name is treated by default like \code{.text}.
 
-\subsection{\code{win32} Safe Structured Exception Handling}
-\label{subsec:win32safeseh}
+\xsubsection{win32safeseh}{\code{win32} Safe Structured Exception Handling}
 
 Among other improvements in Windows XP SP2 and Windows Server 2003
 Microsoft has introduced concept of "safe structured exception
@@ -732,8 +718,7 @@ data for "safe exception handler table" causes no backward
 incompatibilities and "safeseh" modules generated by NASM 2.03 and
 later can still be linked by earlier versions or non-Microsoft linkers.
 
-\subsection{Debugging formats for Windows}
-\label{subsec:codeview}
+\xsubsection{codeview}{Debugging formats for Windows}
 \index{Windows debugging formats}
 
 The \code{win32} and \code{win64} formats support the Microsoft CodeView
@@ -749,8 +734,7 @@ which is nearly 100\% identical to the \code{win32} object format
 64-bit code and the x86-64 platform altogether. This object file is used
 exactly the same as the \code{win32} object format, in NASM, with regard to this exception.
 
-\subsection{\code{win64}: Writing Position-Independent Code}
-\label{subsec:win64pic}
+\xsubsection{win64pic}{\code{win64}: Writing Position-Independent Code}
 
 While \code{REL} takes good care of RIP-relative addressing, there is one
 aspect that is easy to overlook for a Win64 programmer: indirect
@@ -830,8 +814,7 @@ mov     eax,label wrt ..imagebase       ; ok
 mov     rax,label wrt ..imagebase       ; bad
 \end{lstlisting}
 
-\subsection{\code{win64}: Structured Exception Handling}
-\label{subsec:win64seh}
+\xsubsection{win64seh}{\code{win64}: Structured Exception Handling}
 
 Structured exception handing in Win64 is completely different matter
 from Win32. Upon exception program counter value is noted, and
@@ -1041,8 +1024,7 @@ object files suitable for linking with the \textindex{MacOS X} linker.
 
 \code{macho} provides a default output file-name extension of \code{.o}.
 
-\subsection{\code{macho} extensions to the \code{SECTION} Directive}
-\label{subsec:machosect}
+\xsubsection{machosect}{\code{macho} extensions to the \code{SECTION} Directive}
 \index{SECTION!macho extensions to}
 
 The \code{macho} output format specifies section names in the format
@@ -1080,9 +1062,8 @@ into the \code{\_\_TEXT,\_\_const} section unless this section has already
 been specified explicitly. However, it is probably better to specify
 \code{\_\_TEXT,\_\_const} and \code{\_\_DATA,\_\_const} explicitly as appropriate.
 
-\subsection{\textindexlc{Thread Local Storage in Mach-O}\index{TLS}:
+\xsubsection{machotls}{\textindexlc{Thread Local Storage in Mach-O}\index{TLS}:
 \code{macho} special symbols and \codeindex{WRT}}
-\label{subsec:machotls}
 
 Mach-O defines the following special symbols that can be used on the
 right-hand side of the \code{WRT} operator:
@@ -1093,8 +1074,7 @@ right-hand side of the \code{WRT} operator:
         The GOT is supported in the \code{macho64} format only.}
 \end{itemize}
 
-\subsection{\code{macho} specfic directive \codeindex{subsections\_via\_symbols}}
-\label{subsec:macho-ssvs}
+\xsubsection{macho-ssvs}{\code{macho} specfic directive \codeindex{subsections\_via\_symbols}}
 
 The directive \code{subsections\_via\_symbols} sets the
 \code{MH\_SUBSECTIONS\_VIA\_SYMBOLS} flag in the Mach-O header, which tells
@@ -1111,8 +1091,7 @@ non-Mach-O builds of the same source code:
 %pragma macho subsections_via_symbols
 \end{lstlisting}
 
-\subsection{\code{macho} specfic directive \codeindex{no\_dead\_strip}}
-\label{subsec:macho-ssvs}
+\xsubsection{macho-ssvs}{\code{macho} specfic directive \codeindex{no\_dead\_strip}}
 
 The directive \code{no\_dead\_strip} sets the Mach-O \code{SH\_NO\_DEAD\_STRIP}
 section flag on the section containing a a specific symbol. This directive takes
@@ -1140,8 +1119,7 @@ as used by Linux as well as \textindex{Unix System V}, including
 The \code{elfx32} format is used for the \textindex{x32} ABI, which is
 a 32-bit ABI with the CPU in 64-bit mode.
 
-\subsection{ELF specific directive \codeindex{osabi}}
-\label{subsec:abisect}
+\xsubsection{abisect}{ELF specific directive \codeindex{osabi}}
 
 The ELF header specifies the application binary interface for the
 target operating system (OSABI). This field can be set by using the
@@ -1149,8 +1127,7 @@ target operating system (OSABI). This field can be set by using the
 system. If this directive is not used, the default value will be "UNIX
 System V ABI" (0) which will work on most systems which support ELF.
 
-\subsection{\code{elf} extensions to the \code{SECTION} Directive}
-\label{subsec:elfsect}
+\xsubsection{elfsect}{\code{elf} extensions to the \code{SECTION} Directive}
 \index{SECTION!elf extensions to}
 
 Like the \code{obj} format, \code{elf} allows you to specify additional
@@ -1212,9 +1189,8 @@ section other    progbits  alloc   noexec  nowrite  align=1
 default like \code{other} in the above. Please note that section
 names are case sensitive.)
 
-\subsection{\textindexlc{Position-Independent Code}: \code{elf}
+\xsubsection{elfwrt}{\textindexlc{Position-Independent Code}: \code{elf}
 Special Symbols and \codeindex{WRT}}
-\label{subsec:elfwrt}
 \index{PIC}
 
 Since \code{ELF} does not support segment-base references, the \code{WRT}
@@ -1266,9 +1242,8 @@ types. They are \codeindex{..gotpc}, \codeindex{..gotoff}, \codeindex{..got},
 A fuller explanation of how to use these relocation types to write
 shared libraries entirely in NASM is given in \fullref{sec:picdll}.
 
-\subsection{\textindexlc{Thread Local Storage in ELF}:
+\xsubsection{elftls}{\textindexlc{Thread Local Storage in ELF}:
 \code{elf} Special Symbols and \codeindex{WRT}}
-\label{subsec:elftls}
 \index{TLS}
 
 In ELF32 mode, referring to an external or global symbol using
@@ -1292,8 +1267,7 @@ mov rax,[rel tid wrt ..gottpoff]
 mov rcx,[fs:rax]
 \end{lstlisting}
 
-\subsection{\code{elf} Extensions to the \code{GLOBAL} Directive}
-\label{subsec:elfglob}
+\xsubsection{elfglob}{\code{elf} Extensions to the \code{GLOBAL} Directive}
 \index{GLOBAL!elf extensions to}
 
 \code{ELF} object files can contain more information about a global symbol
@@ -1345,8 +1319,7 @@ Declaring the type and size of global symbols is necessary when
 writing shared library code. For more information, see
 \fullref{sec:picglobal}.
 
-\subsection{\code{elf} Extensions to the \code{COMMON} Directive}
-\label{subsec:elfcomm}
+\xsubsection{elfcomm}{\code{elf} Extensions to the \code{COMMON} Directive}
 \index{COMMON!elf extensions to}
 
 \code{ELF} also allows you to specify alignment requirements
@@ -1364,8 +1337,7 @@ common dwordarray 128:4
 This declares the total size of the array to be 128 bytes, and
 requires that it be aligned on a 4-byte boundary.
 
-\subsection{16-bit code and ELF}
-\label{subsec:elf16}
+\xsubsection{elf16}{16-bit code and ELF}
 \index{ELF!16-bit code and}
 
 The \code{ELF32} specification doesn't provide relocations for 8- and
@@ -1375,8 +1347,7 @@ be linked as ELF using GNU \code{ld}. If NASM is used with the
 \code{-w+gnu-elf-extensions} option, a warning is issued when one of
 these relocations is generated.
 
-\subsection{Debug formats and ELF}
-\label{subsec:elfdbg}
+\xsubsection{elfdbg}{Debug formats and ELF}
 \index{ELF!Debug formats}
 
 ELF provides debug information in \code{STABS} and \code{DWARF} formats.
@@ -1470,8 +1441,7 @@ which will load and execute an RDF executable under Linux.
 \code{rdf} supports only the \index{standard section names}
 \codeindex{.text}, \codeindex{.data} and \codeindex{.bss}.
 
-\subsection{Requiring a Library: The \codeindex{LIBRARY} Directive}
-\label{subsec:rdflib}
+\xsubsection{rdflib}{Requiring a Library: The \codeindex{LIBRARY} Directive}
 
 \code{RDOFF} contains a mechanism for an object file to demand a given
 library to be linked to the module, either at load time or run time.
@@ -1482,8 +1452,7 @@ which is the name of the module:
 library mylib.rdl
 \end{lstlisting}
 
-\subsection{Specifying a Module Name: The \codeindex{MODULE} Directive}
-\label{subsec:rdfmod}
+\xsubsection{rdfmod}{Specifying a Module Name: The \codeindex{MODULE} Directive}
 
 Special \code{RDOFF} header record is used to store the name of the module.
 It can be used, for example, by run-time loader to perform dynamic
@@ -1503,8 +1472,7 @@ like:
 module $kernel.core
 \end{lstlisting}
 
-\subsection{\code{rdf} Extensions to the \code{GLOBAL} Directive}
-\label{subsec:rdfglob}
+\xsubsection{rdfglob}{\code{rdf} Extensions to the \code{GLOBAL} Directive}
 \index{GLOBAL!rdf extensions to}
 
 \code{RDOFF} global symbols can contain additional information needed by
@@ -1534,8 +1502,7 @@ or \codeindex{object} to the directive:
 global  kernel_ticks:export data
 \end{lstlisting}
 
-\subsection{\code{rdf} Extensions to the \code{EXTERN} Directive}
-\label{subsec:rdfimpt}
+\xsubsection{rdfimpt}{\code{rdf} Extensions to the \code{EXTERN} Directive}
 \index{EXTERN!rdf extensions to}
 
 By default the \code{EXTERN} directive in \code{RDOFF} declares a "pure external"
