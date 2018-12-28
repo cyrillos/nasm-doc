@@ -1914,9 +1914,9 @@ directive allows NASM to output messages which indicate the line
 number of the original source file, instead of the file that is being
 read by NASM.
 
-This preprocessor directive is not generally of use to programmers,
-by may be of interest to preprocessor authors. The usage of the
-\code{\%line} preprocessor directive is as follows:
+This preprocessor directive is not generally used directly by
+programmers, but may be of interest to preprocessor authors. The
+usage of the \code{\%line} preprocessor directive is as follows:
 
 \begin{lstlisting}
 %line nnn[+mmm] [filename]
@@ -1932,6 +1932,10 @@ specifies the file name of the original source file.
 After reading a \code{\%line} preprocessor directive, NASM will report
 all file name and line numbers relative to the values specified
 therein.
+
+If the command line option \codeindex{--no-line} is given, all \code{\%line}
+directives are ignored. This may be useful for debugging preprocessed
+code. See \nref{opt-no-line}.
 
 \xsubsection{getenv}{\codeindex{\%^^21\emph{variable}}: Read an Environment Variable}
 
@@ -2065,9 +2069,9 @@ useful for those who utilize mode-dependent macros.
 
 \xsubsection{ofmtm}{\codeindex{\_\_OUTPUT\_FORMAT\_\_}: Current Output Format}
 
-The \code{\_\_OUTPUT\_FORMAT\_\_} standard macro holds the current output format,
-as given by the \code{-f} option or NASM's default. Type \code{nasm -hf} for a
-list.
+The \c{\_\_OUTPUT\_FORMAT\_\_} standard macro holds the current output
+format name, as given by the \code{-f} option or NASM's default. Type
+\code{nasm -hf} for a list.
 
 \begin{lstlisting}
 %ifidn __OUTPUT_FORMAT__, win32
@@ -2076,6 +2080,18 @@ list.
     %define NEWLINE 10
 %endif
 \end{lstlisting}
+
+\xsubsection{dfmtm}{\codeindex{\_\_DEBUG\_FORMAT\_\_}:
+Current Debug Format}
+
+If debugging information generation is enabled, The
+\code{\_\_DEBUG\_FORMAT\_\_} standard macro holds the current
+debug format name as specified by the \code{-F} or \code{-g} option
+or the output format default. Type \code{nasm -f} \emph{output}
+\code{y} for a list.
+
+\code{\_\_DEBUG\_FORMAT\_\_} is not defined if debugging is not
+enabled, or if the debug format specified is \code{null}.
 
 \xsubsection{datetime}{Assembly Date and Time Macros}
 
