@@ -653,13 +653,87 @@ valid debug formats for 'elf32' output format are
   dwarf     elf32 (i386) dwarf debug format for Linux
 \end{lstlisting}
 
-\xsubsection{opt-pfix}{The \codeindex{--prefix} and \codeindex{--postfix} Options}
+\xsubsection{opt-pfix}{The \codeindex{--(g|l)prefix}, \codeindex{--(g|l)postfix} Options}
 
-The \code{--prefix} and \code{--postfix} options prepend or append
-(respectively) the given argument to all \code{global} or
-\code{extern} variables. E.g. \code{--prefix \_} will prepend the
-underscore to all global and external variables, as C requires it in
-some, but not all, system calling conventions.
+The \code{--(g)prefix} options prepend the given argument
+to all \code{extern}, \code{common}, \code{static}, and
+\code{global} symbols, and the \code{--lprefix} option prepends
+to all other symbols. Similarly, \code{--(g)postfix} and \code{--lpostfix}
+options append the argument in the exactly same way as the \code{--xxprefix}
+options does.
+
+Running this:
+
+\begin{lstlisting}
+nasm -f macho --gprefix _
+\end{lstlisting}
+
+is equivalent to place the directive with \code{\%pragma macho gprefix \_}
+at the start of the file (\nref{mangling}). It will prepend the underscore
+to all global and external variables, as C requires it in some, but not all,
+system calling conventions.
+
+\xsubsection{opt-pragma}{The \codeindex{--pragma} Option}
+
+NASM accepts an argument as \code{\%pragma} option, which is like placing
+a \code{\%pragma} preprocess statement at the beginning of the source.
+Running this:
+
+\begin{lstlisting}
+nasm -f macho --pragma "macho gprefix _"
+\end{lstlisting}
+
+is equivalent to the example in \nref{opt-pfix}.
+
+\xsubsection{opt-before}{The \codeindex{--before} Option}
+
+A preprocess statement can be accepted with this option. The example
+shown in \nref{opt-pragma} is the same as running this:
+
+\begin{lstlisting}
+nasm -f macho --before "%pragma macho gprefix _"
+\end{lstlisting}
+
+\xsubsection{opt-limit}{The \codeindex{--limit-X} Option}
+
+This option allows user to setup various maximum values for these:
+
+\begin{itemize}
+    \item{\code{--limit-passes}: Number of maximum allowed passes. Default is
+        effectively unlimited.}
+
+    \item{\code{--limit-stalled-passes}: Maximum number of allowed unfinished
+        passes. Default is 1000.}
+
+    \item{\code{--limit-macro-levels}: Define maximum depth of macro expansion
+        (in preprocess). Default is 1000000.}
+
+    \item{\code{--limit-rep}: Maximum number of allowed preprocessor loop, defined
+        under \code{\%rep}. Default is 1000000.}
+
+    \item{\code{--limit-eval}: This number sets the boundary condition of allowed
+        expression length. Default is 1000000.}
+
+    \item{\code{--limit-lines}: Total number of source lines as allowed to be
+        processed. Default is 2000000000.}
+\end{itemize}
+
+In example, running this limits the maximum line count to be 1000.
+
+\begin{lstlisting}
+nasm --limit-lines 1000
+\end{lstlisting}
+
+\xsubsection{opt-keep-all}{The \codeindex{--keep-all} Option}
+
+This option prevents NASM from deleting any output files even if an
+error happens.
+
+\xsubsection{opt-no-line}{The \codeindex{--no-line} Option}
+
+If this option is given, all \codeindex{\%line} directives in the source code
+are ignored. This can be useful for debugging already preprocessed
+code. See \nref{line}.
 
 \xsubsection{nasmenv}{The \codeindex{NASMENV} \textindex{Environment} Variable}
 
