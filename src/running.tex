@@ -244,9 +244,8 @@ format can be seen by issuing the command \code{nasm -f <format> -y}.
 Not all output formats currently support debugging output.
 See \nref{opt-y}.
 
-This should not be confused with the \code{-f dbg} output format
-option which is not built into NASM by default. For information on how
-to enable it when building from the sources, see \nref{dbgfmt}.
+This should not be confused with the \code{-f dbg} output format option,
+see \nref{dbgfmt}.
 
 \xsubsection{opt-g}{The \codeindex{-g} Option:
 Enabling \textindexlc{Debug Information}}
@@ -344,16 +343,12 @@ nasm -ic:\macrolib\ -f obj myfile.asm
 (As usual, a space between \code{-i} and the path name is allowed, and
 optional).
 
-NASM, in the interests of complete source-code portability, does not
-understand the file naming conventions of the OS it is running on;
-the string you provide as an argument to the \code{-i} option will be
-prepended exactly as written to the name of the include file.
-Therefore the trailing backslash in the above example is necessary.
-Under Unix, a trailing forward slash is similarly necessary.
-
-(You can use this to your advantage, if you're really \textindex{perverse},
-by noting that the option \code{-ifoo} will cause \code{\%include "bar.i"}
-to search for the file \code{foobar.i}...)
+Prior NASM 2.14 a path provided in the option has been considered as
+a verbatim copy and providing a path separator been up to a caller.
+One could implicitly concatenate a search path together with a filename.
+Still this was rather a trick than something useful. Now the trailing
+path separator is made to always present, thus \code{-ifoo} will be
+considered as the \code{-ifoo/} directory.
 
 If you want to define a \emph{standard} \textindex{include search path},
 similar to \code{/usr/include} on Unix systems, you should place one or
