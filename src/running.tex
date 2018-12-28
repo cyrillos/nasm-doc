@@ -462,7 +462,9 @@ with a \textindex{stub preprocessor} which does nothing.
 \textindexlc{Multipass Optimization}}
 
 Using the \code{-O} option, you can tell NASM to carry out different
-levels of optimization. The syntax is:
+levels of optimization. Multiple flags can be specified after the
+\code{-O} options, some of which can be combined in a single option,
+e.g. \code{-Oxv}.
 
 \begin{itemize}
     \item{\code{-O0}: No optimization. All operands take their
