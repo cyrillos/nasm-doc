@@ -24,10 +24,15 @@ platforms pass arguments in registers rather than on the stack.
 Furthermore, 64-bit platforms use SSE2 by default for floating point.
 Please see the ABI documentation for your platform.
 
-64-bit platforms differ in the sizes of the fundamental datatypes, not
-just from 32-bit platforms but from each other. If a specific size
-data type is desired, it is probably best to use the types defined in
-the Standard C header \code{<inttypes.h>}.
+64-bit platforms differ in the sizes of the C/C++ fundamental
+datatypes, not just from 32-bit platforms but from each other. If a
+specific size data type is desired, it is probably best to use the
+types defined in the standard C header \code{<inttypes.h>}.
+
+All known 64-bit platforms except some embedded platforms require that
+the stack is 16-byte aligned at the entry to a function. In order to
+enforce that, the stack pointer (\code{RSP}) needs to be aligned on an
+\code{odd} multiple of 8 bytes before the \code{CALL} instruction.
 
 In 64-bit mode, the default instruction size is still 32 bits. When
 loading a value into a 32-bit register (but not an 8- or 16-bit

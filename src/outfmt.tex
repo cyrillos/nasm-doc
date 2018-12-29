@@ -1042,13 +1042,14 @@ comma. The following flags can also be specified:
 
 \begin{itemize}
     \item{\code{data} - this section contains initialized data items}
-    \item{\code{text} - this section contains code exclusively}
+    \item{\code{code} - this section contains code exclusively}
     \item{\code{mixed} - this section contains both code and data}
     \item{\code{bss} - this section is uninitialized and filled with zero}
     \item{\code{zerofill} - same as \code{bss}}
     \item{\code{no\_dead\_strip} - inhibit dead code stripping for this section}
     \item{\code{live\_support} - set the live support flag for this section}
     \item{\code{strip\_static\_syms} - strip static symbols for this section}
+    \item{\code{debug} - this section contains debugging information}
     \item{\code{align=}\emph{alignment} - specify section alignment}
 \end{itemize}
 
@@ -1083,12 +1084,13 @@ right-hand side of the \code{WRT} operator:
         The GOT is supported in the \code{macho64} format only.}
 \end{itemize}
 
-\xsubsection{macho-ssvs}{\code{macho} specfic directive \codeindex{subsections\_via\_symbols}}
+\xsubsection{macho-ssvs}{\code{macho} specfic directive
+\codeindex{subsections\_via\_symbols}}
 
-The directive \code{subsections\_via\_symbols} sets the
-\code{MH\_SUBSECTIONS\_VIA\_SYMBOLS} flag in the Mach-O header, which tells
-the linker that the symbols in the file matches the conventions
-required to allow for link-time dead code elimination.
+The directive \c{subsections\_via\_symbols} sets the
+\c{MH\_SUBSECTIONS\_VIA\_SYMBOLS} flag in the Mach-O header, that effectively
+separates a block (or a subsection) based on a symbol. It is often used
+for eliminating dead codes by a linker.
 
 This directive takes no arguments.
 
@@ -1113,6 +1115,22 @@ non-Mach-O builds of the same source code:
 \begin{lstlisting}
 %pragma macho no_dead_strip symbol...
 \end{lstlisting}
+
+\xsubsection{macho-pext}{\code{macho} specific extensions to the
+\code{GLOBAL} Directive: \codeindex{private\_extern}}
+
+The directive extension to \code{GLOBAL} marks the symbol with limited
+global scope. For example, you can specify the global symbol with
+this extension:
+
+\begin{lstlisting}
+global foo:private_extern
+foo:
+    ; codes
+\end{lstlisting}
+
+Using with static linker will clear the private extern attribute.
+But linker option like \code{-keep\_private\_externs} can avoid it.
 
 \xsection{elffmt}{\codeindex{elf32}, \codeindex{elf64}, \codeindex{elfx32}:
 \textindexlc{Executable and Linkable Format} Object Files}
