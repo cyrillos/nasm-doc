@@ -1415,7 +1415,7 @@ For example,
 
 The \code{\%depend} directive takes a filename and adds it to the list of
 files to be emitted as dependency generation when the \code{-M} options
-and its relatives (see \nref{opt-M}) are used. It produces
+and its relatives (see \nref{opt-M-cap}) are used. It produces
 no output.
 
 This is generally used in conjunction with \code{\%pathsearch}. For
@@ -1454,7 +1454,7 @@ longer true. Thus, the following lines are equivalent:
 Standard macro packages are protected from multiple inclusion. When a
 standard macro package is used, a testable single-line macro of the
 form \code{\_\_USE\_\emph{package}\_\_} is also defined,
-see \nref{use-def}.
+see \nref{usedef}.
 
 \xsection{ctxstack}{The \textindexlc{Context Stack}}
 
@@ -2159,7 +2159,7 @@ then the macro \code{\_\_USE\_ALTREG\_\_} is defined.
 The macro \code{\_\_PASS\_\_} is defined to be \code{1} on preparatory passes,
 and \code{2} on the final pass.  In preprocess-only mode, it is set to
 \code{3}, and when running only to generate dependencies (due to the
-\code{-M} or \code{-MG} option, see \nref{optM}) it is set to \code{0}.
+\code{-M} or \code{-MG} option, see \nref{opt-M-cap}) it is set to \code{0}.
 
 \emph{Avoid using this macro if at all possible. It is tremendously easy
 to generate very strange errors by misusing it, and the semantics may
