@@ -68,7 +68,7 @@ immediates to 32 bits.
 The only instruction which takes a full \textindex{64-bit immediate} is:
 
 \begin{lstlisting}
-    mov reg64,imm64
+mov reg64,imm64
 \end{lstlisting}
 
 NASM will produce this instruction whenever the programmer uses
@@ -78,13 +78,33 @@ be automatically zero-extended by the processor, or specify the
 immediate as \code{DWORD}:
 
 \begin{lstlisting}
-    mov rax,foo         ; 64-bit immediate
-    mov rax,qword foo   ; (identical)
-    mov eax,foo         ; 32-bit immediate, zero-extended
-    mov rax,dword foo   ; 32-bit immediate, sign-extended
+mov rax,foo         ; 64-bit immediate
+mov rax,qword foo   ; (identical)
+mov eax,foo         ; 32-bit immediate, zero-extended
+mov rax,dword foo   ; 32-bit immediate, sign-extended
 \end{lstlisting}
 
 The length of these instructions are 10, 5 and 7 bytes, respectively.
+
+If optimization is enabled and NASM can determine at assembly time
+that a shorter instruction will suffice, the shorter instruction will
+be emitted unless of course \code{STRICT QWORD} or \code{STRICT DWORD}
+is specified (see \nref{strict}):
+
+\begin{lstlisting}
+mov rax,1               ; Assembles as "mov eax,1" (5 bytes)
+mov rax,strict qword 1  ; Full 10-byte instruction
+mov rax,strict dword 1  ; 7-byte instruction
+mov rax,symbol          ; 10 bytes, not known at assembly time
+lea rax,[rel symbol]    ; 7 bytes, usually preferred by the ABI
+\end{lstlisting}
+
+Note that \code{lea rax,[rel symbol]} is position-independent, whereas
+\code{mov rax,symbol} is not. Most ABIs prefer or even require
+position-independent code in 64-bit mode. However, the \code{MOV}
+instruction is able to reference a symbol anywhere in the 64-bit
+address space, whereas \code{LEA} is only able to access a symbol within
+within 2 GB of the instruction itself (see below.)
 
 The only instructions which take a full \textindex{64-bit displacement}
 is loading or storing, using \code{MOV}, \code{AL}, \code{AX}, \code{EAX}
@@ -94,18 +114,18 @@ generally uses relative addressing), the programmer has to explicitly
 declare the displacement size as \code{QWORD}:
 
 \begin{lstlisting}
-    default abs
+default abs
 
-    mov eax,[foo]           ; 32-bit absolute disp, sign-extended
-    mov eax,[a32 foo]       ; 32-bit absolute disp, zero-extended
-    mov eax,[qword foo]     ; 64-bit absolute disp
+mov eax,[foo]           ; 32-bit absolute disp, sign-extended
+mov eax,[a32 foo]       ; 32-bit absolute disp, zero-extended
+mov eax,[qword foo]     ; 64-bit absolute disp
 
-    default rel
+default rel
 
-    mov eax,[foo]           ; 32-bit relative disp
-    mov eax,[a32 foo]       ; d:o, address truncated to 32 bits(!)
-    mov eax,[qword foo]     ; error
-    mov eax,[abs qword foo] ; 64-bit absolute disp
+mov eax,[foo]           ; 32-bit relative disp
+mov eax,[a32 foo]       ; d:o, address truncated to 32 bits(!)
+mov eax,[qword foo]     ; error
+mov eax,[abs qword foo] ; 64-bit absolute disp
 \end{lstlisting}
 
 A sign-extended absolute displacement can access from -2 GB to +2 GB;
