@@ -35,7 +35,7 @@ leaves your file name as it is once the original extension has been
 removed. Thus, the default is for NASM to assemble \code{binprog.asm}
 into a binary file called \code{binprog}.
 
-\xsubsection{binfmt}{\codeindex{ORG}: Binary File \textindexlc{Program Origin}}
+\xsubsection{binorg}{\codeindex{ORG}: Binary File \textindexlc{Program Origin}}
 
 The \code{bin} format provides an additional directive to the list
 given in \nref{directive}: \code{ORG}. The function of the
@@ -1102,7 +1102,7 @@ non-Mach-O builds of the same source code:
 %pragma macho subsections_via_symbols
 \end{lstlisting}
 
-\xsubsection{macho-ssvs}{\code{macho} specfic directive \codeindex{no\_dead\_strip}}
+\xsubsection{macho-snds}{\code{macho} specfic directive \codeindex{no\_dead\_strip}}
 
 The directive \code{no\_dead\_strip} sets the Mach-O \code{SH\_NO\_DEAD\_STRIP}
 section flag on the section containing a a specific symbol. This directive takes
@@ -1401,7 +1401,7 @@ extensions to any standard directives. It supports only the three
 \textindexlc{standard section names} \codeindex{.text}, \codeindex{.data}
 and \codeindex{.bss}.
 
-\xsection{aoutfmt}{\codeindex{aoutb}: \textindex{NetBSD}/\textindex{FreeBSD}/\textindex{OpenBSD}
+\xsection{aoutbfmt}{\codeindex{aoutb}: \textindex{NetBSD}/\textindex{FreeBSD}/\textindex{OpenBSD}
 \code{a.out} Object Files}
 \index{a.out!BSD version}
 

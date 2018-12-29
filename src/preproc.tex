@@ -377,7 +377,7 @@ is equivalent to
 %define test TEST
 \end{lstlisting}
 
-\xsection{strlen}{\textindexlc{String Manipulation in Macros}}
+\xsection{strmanip}{\textindexlc{String Manipulation in Macros}}
 
 It's often useful to be able to handle strings in macros. NASM
 supports a few simple string handling macro operators from which
@@ -2154,7 +2154,7 @@ This allows testing if a particular package is invoked or not.
 For example, if the \code{altreg} package is included (see \nref{pkgaltreg}),
 then the macro \code{\_\_USE\_ALTREG\_\_} is defined.
 
-\xsubsection{usedef}{\codeindex{\_\_PASS\_\_}: Assembly Pass}
+\xsubsection{passdef}{\codeindex{\_\_PASS\_\_}: Assembly Pass}
 
 The macro \code{\_\_PASS\_\_} is defined to be \code{1} on preparatory passes,
 and \code{2} on the final pass.  In preprocess-only mode, it is set to
