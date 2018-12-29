@@ -1,0 +1,106 @@
+\b \i\c{bad-pragma} warns about a malformed or otherwise unparsable
+\c{%pragma} directive.
+Disabled by default.
+
+\b \i\c{bnd} warns about ineffective use of the \c{BND} prefix when the
+\c{JMP} instruction is converted to the \c{SHORT} form.
+This should be extremely rare since the short \c{JMP} only
+is applicable to jumps inside the same module, but if
+it is legitimate, it may be necessary to use
+\c{BND JMP DWORD}...
+Enabled by default.
+
+\b \i\c{float-denorm} warns about denormal floating point constants.
+Disabled by default.
+
+\b \i\c{float-overflow} warns about floating point underflow.
+Enabled by default.
+
+\b \i\c{float-toolong} warns about too many digits in floating-point numbers.
+Enabled by default.
+
+\b \i\c{float-underflow} warns about floating point underflow (a nonzero
+constant rounded to zero.)
+Disabled by default.
+
+\b \i\c{gnu-elf-extensions} warns if 8-bit or 16-bit relocations are used in the \c{elf32} output format.
+The GNU extensions allow this.
+Disabled by default.
+
+\b \i\c{hle} warns about invalid use of the HLE \c{XACQUIRE} or \c{XRELEASE}
+prefixes.
+Enabled by default.
+
+\b \i\c{label-redef} warns if a label is defined more than once, but the
+value is identical. It is an unconditional error to
+define the same label more than once to \e{different} values.
+Disabled by default.
+
+\b \i\c{label-redef-late} the value of a label changed during the final, code-generation
+pass. This may be the result of strange use of the
+preprocessor. This is very likely to produce incorrect code and
+may end up being an unconditional error in a future
+version of NASM.
+Enabled and promoted to error by default.
+
+\b \i\c{lock} warns about \c{LOCK} prefixes on unlockable instructions.
+Enabled by default.
+
+\b \i\c{macro-defaults} warns when a macro has more default parameters than optional parameters.
+See \k{mlmacdef} for why might want to disable this warning.
+Enabled by default.
+
+\b \i\c{macro-params} covers warnings about \i{multi-line macros} being invoked
+with the wrong number of parameters. See \k{mlmacover} for an
+example of why you might want to disable this warning.
+Enabled by default.
+
+\b \i\c{negative-rep} warns about negative counts given to the \c{%rep}
+preprocessor directive.
+Enabled by default.
+
+\b \i\c{not-my-pragma} warns about a \c{%pragma} directive which is not applicable to
+this particular assembly session.  This is not yet implemented.
+Disabled by default.
+
+\b \i\c{number-overflow} covers warnings about numeric constants which
+don't fit in 64 bits.
+Enabled by default.
+
+\b \i\c{orphan-labels} warns about source lines which contain no instruction but define
+a label without a trailing colon. This is most likely indicative
+of a typo, but is technically correct NASM syntax (see \k{syntax}.)
+Enabled by default.
+
+\b \i\c{phase} warns about symbols having changed values during
+the second-to-last assembly pass. This is not
+inherently fatal, but may be a source of bugs.
+Disabled by default.
+
+\b \i\c{ptr} warns about keywords used in other assemblers that might
+indicate a mistake in the source code.  Currently only the MASM
+\c{PTR} keyword is recognized.
+Enabled by default.
+
+\b \i\c{unknown-pragma} warns about an unknown \c{%pragma} directive.
+This is not yet implemented for most cases.
+Disabled by default.
+
+\b \i\c{unknown-warning} warns about a \c{-w} or \c{-W} option or a \c{[WARNING]} directive
+that contains an unknown warning name or is otherwise not possible to process.
+Disabled by default.
+
+\b \i\c{user} controls output of \c{%warning} directives (see \k{pperror}).
+Enabled by default.
+
+\b \i\c{zext-reloc} warns that a relocation has been zero-extended due
+to limitations in the output format.
+Enabled by default.
+
+\b \i\c{other} specifies any warning not included in any specific warning class.
+Enabled by default.
+
+\b \i\c{all} is an alias for \e{all} suppressible warning classes.
+Thus, \c{-w+all} enables all available warnings, and \c{-w-all}
+disables warnings entirely (since NASM 2.13).
+
