@@ -150,10 +150,12 @@ without saving.
 Integer return values are passed in \code{RAX} and \code{RDX},
 in that order.
 
-Floating point is done using SSE registers, except for \code{long double}.
-Floating-point arguments are passed in \code{XMM0} to \code{XMM7};
-return is \code{XMM0} and \code{XMM1}. \code{long double} are passed
-on the stack, and returned in \code{ST0} and \code{ST1}.
+Floating point is done using SSE registers, except for \code{long double},
+which is 80 bits (\code{TWORD}) on most platforms (Android is
+one exception; there \code{long double} is 64 bits and treated the same
+as \code{double}.) Floating-point arguments are passed in \code{XMM0} to
+\code{XMM7}; return is \code{XMM0} and \code{XMM1}. \code{long double}
+are passed on the stack, and returned in \code{ST0} and \code{ST1}.
 
 All SSE and x87 registers are destroyed by function calls.
 
