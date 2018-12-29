@@ -110,7 +110,7 @@ nasm -f bin driver.asm -o driver.sys
 
 Note that this is a small \code{-o}, and is different from a capital
 \code{-O}, which is used to specify the number of optimisation passes
-required. See \nref{opt-O-cap}.
+required. See \nref{opt-O}.
 
 \xsubsection{opt-f}{The \codeindex{-f} Option: Specifying the
 \textindexlc{Output File Format}}
@@ -146,7 +146,7 @@ source with \code{[list -]}, and turn it back on with \code{[list +]},
 This can be used to list only sections of interest, avoiding excessively
 long listings.
 
-\xsubsection{opt-M-cap}{The \codeindex{-M} Option: Generate
+\xsubsection{opt-M}{The \codeindex{-M} Option: Generate
 \textindexlc{Makefile Dependencies}}
 
 This option can be used to generate makefile dependencies on stdout.
@@ -156,7 +156,7 @@ This can be redirected to a file for further processing. For example:
 nasm -M myfile.asm > myfile.dep
 \end{lstlisting}
 
-\xsubsection{opt-MG-cap}{The \codeindex{-MG} Option: Generate
+\xsubsection{opt-MG}{The \codeindex{-MG} Option: Generate
 \textindexlc{Makefile Dependencies}}
 
 This option can be used to generate makefile dependencies on stdout.
@@ -164,7 +164,7 @@ This differs from the \code{-M} option in that if a nonexisting file is
 encountered, it is assumed to be a generated file and is added to the
 dependency list without a prefix.
 
-\xsubsection{opt-MF-cap}{The \codeindex{-MF} Option: Set Makefile Dependency File}
+\xsubsection{opt-MF}{The \codeindex{-MF} Option: Set Makefile Dependency File}
 
 This option can be used with the \code{-M} or \code{-MG} options
 to send the output to a file, rather than to stdout. For example:
@@ -173,7 +173,7 @@ to send the output to a file, rather than to stdout. For example:
 nasm -M -MF myfile.dep myfile.asm
 \end{lstlisting}
 
-\xsubsection{opt-MD-cap}{The \codeindex{-MD} Option: Assemble
+\xsubsection{opt-MD}{The \codeindex{-MD} Option: Assemble
 and Generate Dependencies}
 
 The \code{-MD} option acts as the combination of the \code{-M}
@@ -196,14 +196,14 @@ then the output filename is the first applicable one of:
     \item{the input filename with the extension set to \code{.d}.}
 \end{itemize}
 
-\xsubsection{opt-MT-cap}{The \codeindex{-MT} Option:
+\xsubsection{opt-MT}{The \codeindex{-MT} Option:
 Dependency Target Name}
 
 The \code{-MT} option can be used to override the default name of the
 dependency target. This is normally the same as the output filename,
 specified by the \code{-o} option.
 
-\xsubsection{opt-MQ-cap}{The \codeindex{-MQ} Option:
+\xsubsection{opt-MQ}{The \codeindex{-MQ} Option:
 Dependency Target Name (Quoted)}
 
 The \code{-MQ} option acts as the \code{-MT} option, except
@@ -212,7 +212,7 @@ syntax. This is not foolproof, as not all characters with special
 meaning are quotable in Make. The default output (if no \code{-MT} or
 \code{-MQ} option is specified) is automatically quoted.
 
-\xsubsection{opt-MP-cap}{The \codeindex{-MP} Option:
+\xsubsection{opt-MP}{The \codeindex{-MP} Option:
 Emit phony targets}
 
 When used with any of the dependency generation options, the
@@ -229,7 +229,7 @@ than \code{\textbackslash\#}, uses \code{\&} rather than \code{\textbackslash}
 for continuation lines, and encloses filenames containing whitespace in
 double quotes.
 
-\xsubsection{opt-F-cap}{The \codeindex{-F} Option:
+\xsubsection{opt-F}{The \codeindex{-F} Option:
 Selecting a \textindexlc{Debug Information Format}}
 
 This option is used to select the format of the debug information
@@ -251,12 +251,12 @@ see \nref{dbgfmt}.
 Enabling \textindexlc{Debug Information}}
 
 This option can be used to generate debugging information in the specified
-format. See \nref{opt-F-cap}. Using \code{-g} without \code{-F}
+format. See \nref{opt-F}. Using \code{-g} without \code{-F}
 results in emitting debug info in the default format, if any, for the
 selected output format. If no debug information is currently implemented
 in the selected output format, \code{-g} is \emph{silently ignored}.
 
-\xsubsection{opt-X-cap}{The \codeindex{-X} Option:
+\xsubsection{opt-X}{The \codeindex{-X} Option:
 Selecting an \textindexlc{Error Reporting Format}}
 
 This option can be used to select an error reporting format for any
@@ -289,7 +289,7 @@ instead of being delimited by colons.
 
 See also the \code{Visual C++} output format, \nref{win32fmt}.
 
-\xsubsection{opt-Z-cap}{The \codeindex{-Z} Option:
+\xsubsection{opt-Z}{The \codeindex{-Z} Option:
 Send Errors to a File}
 
 Under ``MS-\textindex{DOS}'' it can be difficult (though there are
@@ -310,7 +310,7 @@ nasm -Z myfile.err -f obj myfile.asm
 In earlier versions of NASM, this option was called \code{-E},
 but it was changed since \code{-E} is an option conventionally
 used for preprocessing only, with disastrous results.
-See \nref{opt-E-cap}.
+See \nref{opt-E}.
 
 \xsubsection{opt-s}{The \codeindex{-s} Option:
 Send Errors to \codeindex{stdout}}
@@ -324,7 +324,7 @@ and pipe its output to the \code{more} program, you can type:
 nasm -s -f obj myfile.asm | more
 \end{lstlisting}
 
-See also the \code{-Z} option, \nref{opt-Z-cap}.
+See also the \code{-Z} option, \nref{opt-Z}.
 
 \xsubsection{opt-i}{The \codeindex{-i}\indexcode{-I} Option:
 Include File Search Directories}
@@ -425,7 +425,7 @@ point in a Makefile.
 For Makefile compatibility with many C compilers, this option can also
 be specified as \code{-U}.
 
-\xsubsection{opt-E-cap}{The \codeindex{-E}\indexcode{-e} Option: Preprocess Only}
+\xsubsection{opt-E}{The \codeindex{-E}\indexcode{-e} Option: Preprocess Only}
 
 NASM allows the \textindex{preprocessor} to be run on its own, up to a
 point. Using the \code{-E} option (which requires no arguments) will
@@ -447,7 +447,7 @@ will cause an error in \textindex{preprocess-only mode}.
 
 For compatiblity with older version of NASM, this option can also be
 written \code{-e}. \code{-E} in older versions of NASM was the equivalent
-of the current \code{-Z} option, \nref{opt-Z-cap}.
+of the current \code{-Z} option, \nref{opt-Z}.
 
 \xsubsection{opt-a}{The \codeindex{-a} Option: Don't Preprocess At All}
 
@@ -458,7 +458,7 @@ and increase compilation speeds. The \code{-a} option, requiring no
 argument, instructs NASM to replace its powerful \textindex{preprocessor}
 with a \textindex{stub preprocessor} which does nothing.
 
-\xsubsection{opt-O-cap}{The \codeindex{-O} Option: Specifying
+\xsubsection{opt-O}{The \codeindex{-O} Option: Specifying
 \textindexlc{Multipass Optimization}}
 
 Using the \code{-O} option, you can tell NASM to carry out different

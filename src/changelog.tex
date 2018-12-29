@@ -36,9 +36,9 @@ since 2007.
 
     \item{Support \code{-MD} without a filename, for \code{gcc} compatibility.
         \code{-MF} can be used to set the dependencies output filename.
-        See \nref{opt-MD-cap}.}
+        See \nref{opt-MD}.}
 
-    \item{Fix \code{-E} in combination with \code{-MD}. See \nref{opt-E-cap}.}
+    \item{Fix \code{-E} in combination with \code{-MD}. See \nref{opt-E}.}
 
     \item{Fix missing errors on redefined labels; would cause convergence
         failure instead which is very slow and not easy to debug.}
@@ -779,7 +779,7 @@ vaddps ymm1,ymm0        ; AVX contracted form
 %\item{Tighten EA checks. We warn a user if there overflow in EA addressing.
 %
 %\item{Make \code{-Ox} the default optimization level. For the legacy
-%  behavior, specify \code{-O0} explicitly. See \nref{opt-O-cap}.
+%  behavior, specify \code{-O0} explicitly. See \nref{opt-O}.
 %
 %\item{Environment variables read with \code{%!} or tested with \code{%ifenv}
 %  can now contain non-identifier characters if surrounded by quotes.
@@ -937,7 +937,7 @@ vaddps ymm1,ymm0        ; AVX contracted form
 %\item{Fix redundant REX.W prefix on \code{JMP reg64}.
 %
 %\item{Make the behaviour of \code{-O0} match NASM 0.98 legacy behavior.
-%  See \nref{opt-O-cap}.
+%  See \nref{opt-O}.
 %
 %\item{\code{-w-user} can be used to suppress the output of \code{%warning} directives.
 %  See \nref{opt-w}.

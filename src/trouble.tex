@@ -19,7 +19,7 @@ instruction which leaves room for a 32-bit offset. You need to code
 \indexcode{BYTE}\code{ADD ESP,BYTE 8} if you want the space-efficient
 form of the instruction. This isn't a bug, it's user error: if you
 prefer to have NASM produce the more efficient code automatically enable
-optimization with the \code{-O} option (see \nref{opt-O-cap}).
+optimization with the \code{-O} option (see \nref{opt-O}).
 
 \xsubsection{jmprange}{My Jumps are Out of Range}
 \index{out of range!jumps}
@@ -40,7 +40,7 @@ over a \code{JMP NEAR}; this is a sensible solution for processors
 below a 386, but hardly efficient on processors which have good
 branch prediction \emph{and} could have used \code{JNE NEAR} instead. So,
 once again, it's up to the user, not the assembler, to decide what
-instructions should be generated. See \nref{opt-O-cap}.
+instructions should be generated. See \nref{opt-O}.
 
 \xsubsection{proborg}{\codeindex{ORG} Doesn't Work}
 
