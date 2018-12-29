@@ -296,10 +296,13 @@ The primitive form of \code{EXTERN} differs from the user-level form
 only in that it can take only one argument at a time: the support
 for multiple arguments is implemented at the preprocessor level.
 
-You can declare the same variable as \code{EXTERN} more than once:
-NASM will quietly ignore the second and later redeclarations.
-You can't declare a variable as \code{EXTERN} as well as something
-else, though.
+You can declare the same variable as \code{EXTERN} more than once: NASM
+will quietly ignore the second and later redeclarations.
+
+If a variable is declared both \code{GLOBAL} and \code{EXTERN}, or
+if it is declared as \code{EXTERN} and then defined, it will be
+treated as \code{GLOBAL}. If a variable is declared both as
+\code{COMMON} and \code{EXTERN}, it will be treated as \code{COMMON}.
 
 \xsection{global}{\codeindex{GLOBAL}: \textindexlc{Exporting Symbols} to Other Modules}
 
@@ -308,9 +311,6 @@ symbol as \code{EXTERN} and refers to it, then in order to prevent
 linker errors, some other module must actually \emph{define} the
 symbol and declare it as \code{GLOBAL}. Some assemblers use the name
 \codeindex{PUBLIC} for this purpose.
-
-The \code{GLOBAL} directive applying to a symbol must appear \emph{before}
-the definition of the symbol.
 
 \code{GLOBAL} uses the same syntax as \code{EXTERN}, except that it must
 refer to symbols which \emph{are} defined in the same module as the
@@ -373,6 +373,89 @@ common  intarray 100:4  ; works in ELF: 4 byte aligned
 Once again, like \code{EXTERN} and \code{GLOBAL}, the primitive form of
 \code{COMMON} differs from the user-level form only in that it can take
 only one argument at a time.
+
+\xsection{static}{\codeindex{STATIC}: Local Symbols within Modules}
+
+Opposite to \code{EXTERN} and \code{GLOBAL}, \code{STATIC} is local
+symbol, but should be named according to the global mangling rules
+(named by analogy with the C keyword \code{static} as applied to
+functions or global variables).
+
+\begin{lstlisting}
+static foo
+foo:
+    ; codes
+\end{lstlisting}
+
+Unlike \code{GLOBAL}, \code{STATIC} does not allow object formats
+to accept private extensions mentioned in \nref{global}.
+
+\xsection{mangling}{\codeindex{(G|L)PREFIX}, \codeindex{(G|L)POSTFIX}:
+Mangling Symbols}
+
+\code{PREFIX}, \code{GPREFIX}, \code{LPREFIX}, \code{POSTFIX},
+\code{GPOSTFIX}, and \code{LPOSTFIX} directives can prepend or
+append the given argument to a certain type of symbols. The directive
+should be as a preprocess statement. Each usage is:
+
+\begin{itemize}
+    \item{\code{PREFIX}|\code{GPREFIX}: Prepend the argument to all
+        \code{EXTERN} \code{COMMON}, \code{STATIC}, and
+        \code{GLOBAL} symbols}
+
+    \item{\code{LPREFIX}: Prepend the argument to all other symbols
+        such as Local Labels, and backend defined symbols}
+
+    \item{\code{POSTFIX}|\code{GPOSTFIX}: Append the argument to
+        all \code{EXTERN} \code{COMMON}, \code{STATIC}, and
+        \code{GLOBAL} symbols}
+
+    \item{\code{LPOSTFIX}: Append the argument to all other symbols
+        such as Local Labels, and backend defined symbols}
+\end{itemize}
+
+This is a macro implemented as a \code{\%pragma}:
+
+\begin{lstlisting}
+%pragma macho lprefix L_
+\end{lstlisting}
+
+Commandline option is also possible. See also \nref{opt-pfix}.
+
+Some toolchains is aware of a particular prefix for its own optimization
+options, such as code elimination. For instance, Mach-O backend has a
+linker that uses a simplistic naming scheme to chunk up sections into a
+meta section. When the \code{subsections\_via\_symbols} directive
+(\nref{macho-ssvs}) is declared, each symbol is the start of a
+separate block. The meta section is, then, defined to include sections
+before the one that starts with a 'L'. \code{LPREFIX} is useful here to
+mark all local symbols with the 'L' prefix to be excluded to the meta
+section. It converts local symbols compatible with the particular
+toolchain. Note that local symbols declared with \code{STATIC}
+(\nref{static}) are excluded from the symbol mangling and also
+not marked as global.
+
+\xsection{gen-namespace}{\codeindex{OUTPUT}, \codeindex{DEBUG}:
+Generic Namespaces}
+
+\code{OUTPUT} and \code{DEBUG} are generic \code{\%pragma} namespaces
+that are supposed to redirect to the current output and debug formats.
+For example, when mangling local symbols via the generic namespace:
+
+\begin{lstlisting}
+%pragma output gprefix _
+\end{lstlisting}
+
+This is useful when the directive is needed to be output format
+agnostic.
+
+The example is also euquivalent to this, when the output format is
+\code{elf}:
+
+\begin{lstlisting}
+%pragma elf gprefix _
+\end{lstlisting}
+
 
 \xsection{cpu}{\codeindex{CPU}: Defining CPU Dependencies}
 

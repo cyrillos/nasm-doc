@@ -546,6 +546,15 @@ common  bar     16:far 2:wrt data
 common  baz     24:wrt data:6
 \end{lstlisting}
 
+\xsubsection{objdepend}{Embedded File Dependency Information}
+
+Since NASM 2.13.02, \code{obj} files contain embedded dependency file
+information. To suppress the generation of dependencies, use
+
+\begin{lstlisting}
+%pragma obj nodepend
+\end{lstlisting}
+
 \xsection{win32fmt}{\codeindex{win32}: Microsoft Win32 Object Files}
 
 The \code{win32} output format generates Microsoft Win32 object files,
