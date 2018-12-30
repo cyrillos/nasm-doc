@@ -1182,648 +1182,584 @@ The 0.98 series was the production versions of NASM from 1999 to 2007.
     \item{Changed the NASM environment variable to NASMENV.}
 \end{itemize}
 
+\xsubsection{cl-0.98.30}{Version 0.98.30}
 
-%\xsubsection{cl-0.98.30} Version 0.98.30
-%
-%\item{Changed doc files a lot: completely removed old READMExx and
-%  Wishlist files, incorporating all information in CHANGES and TODO.
-%
-%\item{I waited a long time to rename zoutieee.c to (original) outieee.c
-%
-%\item{moved all output modules to output/ subdirectory.
-%
-%\item{Added 'make strip' target to strip debug info from nasm & ndisasm.
-%
-%\item{Added INSTALL file with installation instructions.
-%
-%\item{Added -v option description to nasm man.
-%
-%\item{Added dist makefile target to produce source distributions.
-%
-%\item{16-bit support for ELF output format (GNU extension, but useful.)
-%
-%
-%\xsubsection{cl-0.98.28} Version 0.98.28
-%
-%\item{Fastcooked this for Debian's Woody release:
-%Frank applied the INCBIN bug patch to 0.98.25alt and called
-%it 0.98.28 to not confuse poor little apt-get.
-%
-%
-%\xsubsection{cl-0.98.26} Version 0.98.26
-%
-%\item{Reorganised files even better from 0.98.25alt
-%
-%
-%\xsubsection{cl-0.98.25alt} Version 0.98.25alt
-%
-%\item{Prettified the source tree. Moved files to more reasonable places.
-%
-%\item{Added findleak.pl script to misc/ directory.
-%
-%\item{Attempted to fix doc.
-%
-%
-%\xsubsection{cl-0.98.25} Version 0.98.25
-%
-%\item{Line continuation character \code{\\}.
-%
-%\item{Docs inadvertantly reverted - "dos packaging".
-%
-%
-%\xsubsection{cl-0.98.24p1} Version 0.98.24p1
-%
-%\item{FIXME: Someone, document this please.
-%
-%
-%\xsubsection{cl-0.98.24} Version 0.98.24
-%
-%\item{Documentation - Ndisasm doc added to Nasm.doc.
-%
-%
-%\xsubsection{cl-0.98.23} Version 0.98.23
-%
-%\item{Attempted to remove rdoff version1
-%
-%\item{Lino Mastrodomenico's patches to preproc.c (%$$ bug?).
-%
-%
-%\xsubsection{cl-0.98.22} Version 0.98.22
-%
-%\item{Update rdoff2 - attempt to remove v1.
-%
-%
-%\xsubsection{cl-0.98.21} Version 0.98.21
-%
-%\item{Optimization fixes.
-%
-%
-%\xsubsection{cl-0.98.20} Version 0.98.20
-%
-%\item{Optimization fixes.
-%
-%
-%\xsubsection{cl-0.98.19} Version 0.98.19
-%
-%\item{H. J. Lu's patch back out.
-%
-%
-%\xsubsection{cl-0.98.18} Version 0.98.18
-%
-%\item{Added ".rdata" to "-f win32".
-%
-%
-%\xsubsection{cl-0.98.17} Version 0.98.17
-%
-%\item{H. J. Lu's "bogus elf" patch. (Red Hat problem?)
-%
-%
-%\xsubsection{cl-0.98.16} Version 0.98.16
-%
-%\item{Fix whitespace before "[section ..." bug.
-%
-%
-%\xsubsection{cl-0.98.15} Version 0.98.15
-%
-%\item{Rdoff changes (?).
-%
-%\item{Fix fixes to memory leaks.
-%
-%
-%\xsubsection{cl-0.98.14} Version 0.98.14
-%
-%\item{Fix memory leaks.
-%
-%
-%\xsubsection{cl-0.98.13} Version 0.98.13
-%
-%\item{There was no 0.98.13
-%
-%
-%\xsubsection{cl-0.98.12} Version 0.98.12
-%
-%\item{Update optimization (new function of "-O1")
-%
-%\item{Changes to test/bintest.asm (?).
-%
-%
-%\xsubsection{cl-0.98.11} Version 0.98.11
-%
-%\item{Optimization changes.
-%
-%\item{Ndisasm fixed.
-%
-%
-%\xsubsection{cl-0.98.10} Version 0.98.10
-%
-%\item{There was no 0.98.10
-%
-%
-%\xsubsection{cl-0.98.09} Version 0.98.09
-%
-%\item{Add multiple sections support to "-f bin".
-%
-%\item{Changed GLOBAL_TEMP_BASE in outelf.c from 6 to 15.
-%
-%\item{Add "-v" as an alias to the "-r" switch.
-%
-%\item{Remove "#ifdef" from Tasm compatibility options.
-%
-%\item{Remove redundant size-overrides on "mov ds, ex", etc.
-%
-%\item{Fixes to SSE2, other insns.dat (?).
-%
-%\item{Enable uppercase "I" and "P" switches.
-%
-%\item{Case insinsitive "seg" and "wrt".
-%
-%\item{Update install.sh (?).
-%
-%\item{Allocate tokens in blocks.
-%
-%\item{Improve "invalid effective address" messages.
-%
-%
-%\xsubsection{cl-0.98.08} Version 0.98.08
-%
-%\item{Add "\code{%strlen}" and "\code{%substr}" macro operators
-%
-%\item{Fixed broken c16.mac.
-%
-%\item{Unterminated string error reported.
-%
-%\item{Fixed bugs as per 0.98bf
-%
-%
-%\xsubsection{cl-0.98.09b with John Coffman patches released 28-Oct-2001} Version 0.98.09b with John Coffman patches released 28-Oct-2001
-%
-%Changes from 0.98.07 release to 98.09b as of 28-Oct-2001
-%
-%\item{More closely compatible with 0.98 when -O0 is implied
-%or specified. Not strictly identical, since backward
-%branches in range of short offsets are recognized, and signed
-%byte values with no explicit size specification will be
-%assembled as a single byte.
-%
-%\item{More forgiving with the PUSH instruction. 0.98 requires
-%a size to be specified always. 0.98.09b will imply the size
-%from the current BITS setting (16 or 32).
-%
-%\item{Changed definition of the optimization flag:
-%
-%\c    -O0     strict two-pass assembly, JMP and Jcc are
-%\c            handled more like 0.98, except that back-
-%\c            ward JMPs are short, if possible.
-%\c
-%\c    -O1     strict two-pass assembly, but forward
-%\c            branches are assembled with code guaranteed
-%\c            to reach; may produce larger code than
-%\c            -O0, but will produce successful assembly
-%\c            more often if branch offset sizes are not
-%\c            specified.
-%\c
-%\c    -O2     multi-pass optimization, minimize branch
-%\c            offsets; also will minimize signed immed-
-%\c            iate bytes, overriding size specification.
-%\c
-%\c    -O3     like -O2, but more passes taken, if needed
-%
-%
-%\xsubsection{cl-0.98.07 released 01/28/01} Version 0.98.07 released 01/28/01
-%
-%\item{     Added Stepane Denis' SSE2 instructions to a *working*
-%        version of the code - some earlier versions were based on
-%        broken code - sorry 'bout that. version "0.98.07"
-%
-%\item{      Cosmetic modifications to nasm.c, nasm.h,
-%        AUTHORS, MODIFIED
-%
-%
-%\xsubsection{cl-0.98.06f released 01/18/01} Version 0.98.06f released 01/18/01
-%
-%
-%\item{Add "metalbrain"s jecxz bug fix in insns.dat
-%
-%\item{Alter nasmdoc.src to match - version "0.98.06f"
-%
-%
-%\xsubsection{cl-0.98.06e released 01/09/01} Version 0.98.06e released 01/09/01
-%
-%
-%\item{      Removed the "outforms.h" file - it appears to be
-%        someone's old backup of "outform.h". version "0.98.06e"
-%
-%\item{fbk - finally added the fix for the "multiple %includes bug",
-%        known since 7/27/99 - reported originally (?) and sent to
-%        us by Austin Lunnen - he reports that John Fine had a fix
-%        within the day. Here it is...
-%
-%\item{Nelson Rush resigns from the group. Big thanks to Nelson for
-%  his leadership and enthusiasm in getting these changes
-%  incorporated into Nasm!
-%
-%\item{fbk - [list +], [list -] directives - ineptly implemented, should
-%        be re-written or removed, perhaps.
-%
-%\item{Brian Raiter / fbk - "elfso bug" fix - applied to aoutb format
-%                       as well - testing might be desirable...
-%
-%\item{James Seter - -postfix, -prefix command line switches.
-%
-%\item{Yuri Zaporozhets - rdoff utility changes.
-%
-%
-%\xsubsection{cl-0.98p1} Version 0.98p1
-%
-%\item{GAS-like palign (Panos Minos)
-%
-%\item{FIXME: Someone, fill this in with details
-%
-%
-%\xsubsection{cl-0.98bf (bug-fixed)} Version 0.98bf (bug-fixed)
-%
-%\item{Fixed - elf and aoutb bug - shared libraries
-%        - multiple "%include" bug in "-f obj"
-%        - jcxz, jecxz bug
-%        - unrecognized option bug in ndisasm
-%
-%\xsubsection{cl-0.98.03 with John Coffman's changes released 27-Jul-2000} Version 0.98.03 with John Coffman's changes released 27-Jul-2000
-%
-%\item{Added signed byte optimizations for the 0x81/0x83 class
-%of instructions: ADC, ADD, AND, CMP, OR, SBB, SUB, XOR:
-%when used as 'ADD reg16,imm' or 'ADD reg32,imm.'  Also
-%optimization of signed byte form of 'PUSH imm' and 'IMUL
-%reg,imm'/'IMUL reg,reg,imm.'  No size specification is needed.
-%
-%\item{Added multi-pass JMP and Jcc offset optimization. Offsets
-%on forward references will preferentially use the short form,
-%without the need to code a specific size (short or near) for
-%the branch. Added instructions for 'Jcc label' to use the
-%form 'Jnotcc $+3/JMP label', in cases where a short offset
-%is out of bounds. If compiling for a 386 or higher CPU, then
-%the 386 form of Jcc will be used instead.
-%
-%\> This feature is controlled by a new command-line switch: "O",
-%(upper case letter O). "-O0" reverts the assembler to no
-%extra optimization passes, "-O1" allows up to 5 extra passes,
-%and "-O2"(default), allows up to 10 extra optimization passes.
-%
-%\item{Added a new directive:  'cpu XXX', where XXX is any of:
-%8086, 186, 286, 386, 486, 586, pentium, 686, PPro, P2, P3 or
-%Katmai. All are case insensitive. All instructions will
-%be selected only if they apply to the selected cpu or lower.
-%Corrected a couple of bugs in cpu-dependence in 'insns.dat'.
-%
-%\item{Added to 'standard.mac', the "use16" and "use32" forms of
-%the "bits 16/32" directive. This is nothing new, just conforms
-%to a lot of other assemblers. (minor)
-%
-%\item{Changed label allocation from 320/32 (10000 labels @ 200K+)
-%to 32/37 (1000 labels); makes running under DOS much easier.
-%Since additional label space is allocated dynamically, this
-%should have no effect on large programs with lots of labels.
-%The 37 is a prime, believed to be better for hashing. (minor)
-%
-%
-%\xsubsection{cl-0.98.03} Version 0.98.03
-%
-%"Integrated patchfile 0.98-0.98.01. I call this version 0.98.03 for
-%historical reasons: 0.98.02 was trashed." --John Coffman
-%<johninsd@san.rr.com>, 27-Jul-2000
-%
-%\item{Kendall Bennett's SciTech MGL changes
-%
-%\item{Note that you must define "TASM_COMPAT" at compile-time
-%to get the Tasm Ideal Mode compatibility.
-%
-%\item{All changes can be compiled in and out using the TASM_COMPAT macros,
-%and when compiled without TASM_COMPAT defined we get the exact same
-%binary as the unmodified 0.98 sources.
-%
-%\item{standard.mac, macros.c: Added macros to ignore TASM directives before
-%first include
-%
-%\item{nasm.h: Added extern declaration for tasm_compatible_mode
-%
-%\item{nasm.c: Added global variable tasm_compatible_mode
-%
-%\item{Added command line switch for TASM compatible mode (-t)
-%
-%\item{Changed version command line to reflect when compiled with TASM additions
-%
-%\item{Added response file processing to allow all arguments on a single
-%line (response file is @resp rather than -@resp for NASM format).
-%
-%\item{labels.c: Changes islocal() macro to support TASM style @@local labels.
-%
-%\item{Added islocalchar() macro to support TASM style @@local labels.
-%
-%\item{parser.c: Added support for TASM style memory references (ie: mov
-%[DWORD eax],10 rather than the NASM style mov DWORD [eax],10).
-%
-%\item{preproc.c: Added new directives, \code{%arg}, \code{%local}, \code{%stacksize} to directives
-%table
-%
-%\item{Added support for TASM style directives without a leading % symbol.
-%
-%\item{Integrated a block of changes from Andrew Zabolotny <bit@eltech.ru>:
-%
-%\item{A new keyword \code{%xdefine} and its case-insensitive counterpart \code{%ixdefine}.
-%They work almost the same way as \code{%define} and \code{%idefine} but expand
-%the definition immediately, not on the invocation. Something like a cross
-%between \code{%define} and \code{%assign}. The "x" suffix stands for "eXpand", so
-%"xdefine" can be deciphered as "expand-and-define". Thus you can do
-%things like this:
-%
-%\c      %assign ofs     0
-%\c
-%\c      %macro  arg     1
-%\c              %xdefine %1 dword [esp+ofs]
-%\c              %assign ofs ofs+4
-%\c      %endmacro
-%
-%\item{Changed the place where the expansion of %$name macros are expanded.
-%Now they are converted into ..@ctxnum.name form when detokenizing, so
-%there are no quirks as before when using %$name arguments to macros,
-%in macros etc. For example:
-%
-%\c      %macro  abc     1
-%\c              %define %1 hello
-%\c      %endm
-%\c
-%\c      abc     %$here
-%\c      %$here
-%
-%\>    Now last line will be expanded into "hello" as expected. This also allows
-%    for lots of goodies, a good example are extended "proc" macros included
-%    in this archive.
-%
-%\item{Added a check for "cstk" in smacro_defined() before calling get_ctx() -
-%    this allows for things like:
-%
-%\c      %ifdef %$abc
-%\c      %endif
-%
-%\>    to work without warnings even in no context.
-%
-%\item{Added a check for "cstk" in %if*ctx and %elif*ctx directives -
-%    this allows to use \code{%ifctx} without excessive warnings. If there is
-%    no active context, \code{%ifctx} goes through "false" branch.
-%
-%\item{Removed "user error: " prefix with \code{%error} directive: it just clobbers the
-%    output and has absolutely no functionality. Besides, this allows to write
-%    macros that does not differ from built-in functions in any way.
-%
-%\item{Added expansion of string that is output by \code{%error} directive. Now you
-%    can do things like:
-%
-%\c      %define hello(x) Hello, x!
-%\c
-%\c      %define %$name andy
-%\c      %error "hello(%$name)"
-%
-%\> Same happened with \code{%include} directive.
-%
-%\item{Now all directives that expect an identifier will try to expand and
-%    concatenate everything without whitespaces in between before usage.
-%    For example, with "unfixed" nasm the commands
-%
-%\c      %define %$abc hello
-%\c      %define __%$abc goodbye
-%\c      __%$abc
-%
-%\>    would produce "incorrect" output: last line will expand to
-%
-%\c      hello goodbyehello
-%
-%\>    Not quite what you expected, eh? :-) The answer is that preprocessor
-%    treats the \code{%define} construct as if it would be
-%
-%\c      %define __ %$abc goodbye
-%
-%\>    (note the white space between __ and %$abc). After my "fix" it
-%    will "correctly" expand into
-%
-%\c      goodbye
-%
-%\>    as expected. Note that I use quotes around words "correct", "incorrect"
-%    etc because this is rather a feature not a bug; however current behaviour
-%    is more logical (and allows more advanced macro usage :-).
-%
-%    Same change was applied to:
-%        \code{%push},\code{%macro},\code{%imacro},\code{%define},\code{%idefine},\code{%xdefine},\code{%ixdefine},
-%        \code{%assign},\code{%iassign},\code{%undef}
-%
-%\item{A new directive [WARNING {+|-}warning-id] have been added. It works only
-%    if the assembly phase is enabled (i.e. it doesn't work with nasm -e).
-%
-%\item{A new warning type: macro-selfref. By default this warning is disabled;
-%    when enabled NASM warns when a macro self-references itself; for example
-%    the following source:
-%
-%\c        [WARNING macro-selfref]
-%\c
-%\c        %macro          push    1-*
-%\c                %rep    %0
-%\c                        push    %1
-%\c                        %rotate 1
-%\c                %endrep
-%\c        %endmacro
-%\c
-%\c                        push    eax,ebx,ecx
-%
-%\>  will produce a warning, but if we remove the first line we won't see it
-%    anymore (which is The Right Thing To Do {tm} IMHO since C preprocessor
-%    eats such constructs without warnings at all).
-%
-%\item{Added a "error" routine to preprocessor which always will set ERR_PASS1
-%    bit in severity_code. This removes annoying repeated errors on first
-%    and second passes from preprocessor.
-%
-%\item{Added the %+ operator in single-line macros for concatenating two
-%    identifiers. Usage example:
-%
-%\c        %define _myfunc _otherfunc
-%\c        %define cextern(x) _ %+ x
-%\c        cextern (myfunc)
-%
-%\>    After first expansion, third line will become "_myfunc". After this
-%    expansion is performed again so it becomes "_otherunc".
-%
-%\item{Now if preprocessor is in a non-emitting state, no warning or error
-%    will be emitted. Example:
-%
-%\c        %if 1
-%\c                mov     eax,ebx
-%\c        %else
-%\c                put anything you want between these two brackets,
-%\c                even macro-parameter references %1 or local
-%\c                labels %$zz or macro-local labels %%zz - no
-%\c                warning will be emitted.
-%\c        %endif
-%
-%\item{Context-local variables on expansion as a last resort are looked up
-%    in outer contexts. For example, the following piece:
-%
-%\c        %push   outer
-%\c        %define %$a [esp]
-%\c
-%\c                %push   inner
-%\c                %$a
-%\c                %pop
-%\c        %pop
-%
-%\>    will expand correctly the fourth line to [esp]; if we'll define another
-%    %$a inside the "inner" context, it will take precedence over outer
-%    definition. However, this modification has been applied only to
-%    expand_smacro and not to smacro_define: as a consequence expansion
-%    looks in outer contexts, but \code{%ifdef} won't look in outer contexts.
-%
-%\>    This behaviour is needed because we don't want nested contexts to
-%    act on already defined local macros. Example:
-%
-%\c        %define %$arg1  [esp+4]
-%\c        test    eax,eax
-%\c        if      nz
-%\c                mov     eax,%$arg1
-%\c        endif
-%
-%\>    In this example the "if" mmacro enters into the "if" context, so %$arg1
-%    is not valid anymore inside "if". Of course it could be worked around
-%    by using explicitely %$$arg1 but this is ugly IMHO.
-%
-%\item{Fixed memory leak in \code{%undef}. The origline wasn't freed before
-%    exiting on success.
-%
-%\item{Fixed trap in preprocessor when line expanded to empty set of tokens.
-%    This happens, for example, in the following case:
-%
-%\c        #define SOMETHING
-%\c        SOMETHING
-%
-%
-%\xsubsection{cl-0.98} Version 0.98
-%
-%All changes since NASM 0.98p3 have been produced by H. Peter Anvin <hpa@zytor.com>.
-%
-%\item{The documentation comment delimiter is \# not #.
-%
-%\item{Allow EQU definitions to refer to external labels; reported by
-%  Pedro Gimeno.
-%
-%\item{Re-enable support for RDOFF v1; reported by Pedro Gimeno.
-%
-%\item{Updated License file per OK from Simon and Julian.
-%
-%
-%\xsubsection{cl-0.98p9} Version 0.98p9
-%
-%\item{Update documentation (although the instruction set reference will
-%  have to wait; I don't want to hold up the 0.98 release for it.)
-%
-%\item{Verified that the NASM implementation of the PEXTRW and PMOVMSKB
-%  instructions is correct. The encoding differs from what the Intel
-%  manuals document, but the Pentium III behaviour matches NASM, not
-%  the Intel manuals.
-%
-%\item{Fix handling of implicit sizes in PSHUFW and PINSRW, reported by
-%  Stefan Hoffmeister.
-%
-%\item{Resurrect the -s option, which was removed when changing the
-%  diagnostic output to stdout.
-%
-%
-%\xsubsection{cl-0.98p8} Version 0.98p8
-%
-%\item{Fix for "DB" when NASM is running on a bigendian machine.
-%
-%\item{Invoke insns.pl once for each output script, making Makefile.in
-%  legal for "make -j".
-%
-%\item{Improve the Unix configure-based makefiles to make package
-%  creation easier.
-%
-%\item{Included an RPM .spec file for building RPM (RedHat Package Manager)
-%  packages on Linux or Unix systems.
-%
-%\item{Fix Makefile dependency problems.
-%
-%\item{Change src/rdsrc.pl to include sectioning information in info
-%  output; required for install-info to work.
-%
-%\item{Updated the RDOFF distribution to version 2 from Jules; minor
-%  massaging to make it compile in my environment.
-%
-%\item{Split doc files that can be built by anyone with a Perl interpreter off
-%  into a separate archive.
-%
-%\item{"Dress rehearsal" release!
-%
-%
-%\xsubsection{cl-0.98p7} Version 0.98p7
-%
-%\item{Fixed opcodes with a third byte-sized immediate argument to not
-%  complain if given "byte" on the immediate.
-%
-%\item{Allow \code{%undef} to remove single-line macros with arguments. This
-%  matches the behaviour of #undef in the C preprocessor.
-%
-%\item{Allow -d, -u, -i and -p to be specified as -D, -U, -I and -P for
-%  compatibility with most C compilers and preprocessors. This allows
-%  Makefile options to be shared between cc and nasm, for example.
-%
-%\item{Minor cleanups.
-%
-%\item{Went through the list of Katmai instructions and hopefully fixed the
-%  (rather few) mistakes in it.
-%
-%\item{(Hopefully) fixed a number of disassembler bugs related to ambiguous
-%  instructions (disambiguated by -p) and SSE instructions with REP.
-%
-%\item{Fix for bug reported by Mark Junger: "call dword 0x12345678" should
-%  work and may add an OSP (affected CALL, JMP, Jcc).
-%
-%\item{Fix for environments when "stderr" isn't a compile-time constant.
-%
-%
-%\xsubsection{cl-0.98p6} Version 0.98p6
-%
-%
-%\item{Took officially over coordination of the 0.98 release; so drop
-%  the p3.x notation. Skipped p4 and p5 to avoid confusion with John
-%  Fine's J4 and J5 releases.
-%
-%\item{Update the documentation; however, it still doesn't include
-%  documentation for the various new instructions. I somehow wonder if
-%  it makes sense to have an instruction set reference in the assembler
-%  manual when Intel et al have PDF versions of their manuals online.
-%
-%\item{Recognize "idt" or "centaur" for the -p option to ndisasm.
-%
-%\item{Changed error messages back to stderr where they belong, but add an
-%  -E option to redirect them elsewhere (the DOS shell cannot redirect
-%  stderr.)
-%
-%\item{-M option to generate Makefile dependencies (based on code from Alex
-%  Verstak.)
-%
-%\item{\code{%undef} preprocessor directive, and -u option, that undefines a
-%  single-line macro.
-%
-%\item{OS/2 Makefile (Mkfiles/Makefile.os2) for Borland under OS/2; from
-%  Chuck Crayne.
-%
-%\item{Various minor bugfixes (reported by):
-%  - Dangling \code{%s} in preproc.c (Martin Junker)
-%
-%\item{THERE ARE KNOWN BUGS IN SSE AND THE OTHER KATMAI INSTRUCTIONS. I am
-%  on a trip and didn't bring the Katmai instruction reference, so I
-%  can't work on them right now.
-%
-%\item{Updated the License file per agreement with Simon and Jules to
-%  include a GPL distribution clause.
-%
-%
+\begin{itemize}
+    \item{Changed doc files a lot: completely removed old READMExx and
+        Wishlist files, incorporating all information in CHANGES and TODO.}
+    \item{I waited a long time to rename zoutieee.c to (original) outieee.c}
+    \item{moved all output modules to output/ subdirectory.}
+    \item{Added 'make strip' target to strip debug info from nasm \& ndisasm.}
+    \item{Added INSTALL file with installation instructions.}
+    \item{Added -v option description to nasm man.}
+    \item{Added dist makefile target to produce source distributions.}
+    \item{16-bit support for ELF output format (GNU extension, but useful.)}
+\end{itemize}
+
+
+\xsubsection{cl-0.98.28}{Version 0.98.28}
+
+\begin{itemize}
+    \item{Fastcooked this for Debian's Woody release:
+        Frank applied the \code{INCBIN} bug patch to 0.98.25alt
+        and called it 0.98.28 to not confuse poor little apt-get.}
+\end{itemize}
+
+\xsubsection{cl-0.98.26}{Version 0.98.26}
+
+\begin{itemize}
+    \item{Reorganised files even better from 0.98.25alt}
+\end{itemize}
+
+
+\xsubsection{cl-0.98.25alt}{Version 0.98.25alt}
+
+\begin{itemize}
+    \item{Prettified the source tree. Moved files to more reasonable places.}
+    \item{Added findleak.pl script to misc/ directory.}
+    \item{Attempted to fix doc.}
+\end{itemize}
+
+\xsubsection{cl-0.98.25}{Version 0.98.25}
+
+\begin{itemize}
+    \item{Line continuation character \code{\\}.}
+    \item{Docs inadvertantly reverted - "dos packaging".}
+\end{itemize}
+
+
+\xsubsection{cl-0.98.24p1}{Version 0.98.24p1}
+
+\begin{itemize}
+    \item{FIXME: Someone, document this please.}
+\end{itemize}
+
+\xsubsection{cl-0.98.24}{Version 0.98.24}
+
+\begin{itemize}
+    \item{Documentation - Ndisasm doc added to Nasm.doc.}
+\end{itemize}
+
+\xsubsection{cl-0.98.23}{Version 0.98.23}
+
+\begin{itemize}
+    \item{Attempted to remove rdoff version1}
+    \item{Lino Mastrodomenico's patches to preproc.c (\%\$\$ bug?).}
+\end{itemize}
+
+
+\xsubsection{cl-0.98.22}{Version 0.98.22}
+
+\begin{itemize}
+    \item{Update rdoff2 - attempt to remove v1.}
+\end{itemize}
+
+\xsubsection{cl-0.98.21}{Version 0.98.21}
+
+\begin{itemize}
+    \item{Optimization fixes.}
+\end{itemize}
+
+\xsubsection{cl-0.98.20}{Version 0.98.20}
+
+\begin{itemize}
+    \item{Optimization fixes.}
+\end{itemize}
+
+\xsubsection{cl-0.98.19}{Version 0.98.19}
+
+\begin{itemize}
+    \item{H. J. Lu's patch back out.}
+\end{itemize}
+
+\xsubsection{cl-0.98.18}{Version 0.98.18}
+
+\begin{itemize}
+    \item{Added ".rdata" to "-f win32".}
+\end{itemize}
+
+\xsubsection{cl-0.98.17}{Version 0.98.17}
+
+\begin{itemize}
+    \item{H. J. Lu's "bogus elf" patch. (Red Hat problem?)}
+\end{itemize}
+
+
+\xsubsection{cl-0.98.16}{Version 0.98.16}
+
+\begin{itemize}
+    \item{Fix whitespace before \code{[section \dots]} bug.}
+\end{itemize}
+
+\xsubsection{cl-0.98.15}{Version 0.98.15}
+
+\begin{itemize}
+    \item{Rdoff changes (?).}
+    \item{Fix fixes to memory leaks.}
+\end{itemize}
+
+\xsubsection{cl-0.98.14}{Version 0.98.14}
+
+\begin{itemize}
+    \item{Fix memory leaks.}
+\end{itemize}
+
+\xsubsection{cl-0.98.13}{Version 0.98.13}
+
+\begin{itemize}
+    \item{There was no 0.98.13}
+\end{itemize}
+
+
+\xsubsection{cl-0.98.12}{Version 0.98.12}
+
+\begin{itemize}
+    \item{Update optimization (new function of \code{-O1}).}
+    \item{Changes to test/bintest.asm (?).}
+\end{itemize}
+
+\xsubsection{cl-0.98.11}{Version 0.98.11}
+
+\begin{itemize}
+    \item{Optimization changes.}
+    \item{Ndisasm fixed.}
+\end{itemize}
+
+\xsubsection{cl-0.98.10}{Version 0.98.10}
+
+\begin{itemize}
+    \item{There was no 0.98.10}
+\end{itemize}
+
+\xsubsection{cl-0.98.09}{Version 0.98.09}
+
+\begin{itemize}
+    \item{Add multiple sections support to \code{-f bin}.}
+    \item{Changed \code{GLOBAL\_TEMP\_BASE} in outelf.c from 6 to 15.}
+    \item{Add \code{-v} as an alias to the \code{-r} switch.}
+    \item{Remove \code{\#ifdef} from Tasm compatibility options.}
+    \item{Remove redundant size-overrides on \code{mov ds, ex}, etc.}
+    \item{Fixes to SSE2, other insns.dat (?).}
+    \item{Enable uppercase "I" and "P" switches.}
+    \item{Case insinsitive \code{seg} and \code{wrt}.}
+    \item{Update install.sh (?).}
+    \item{Allocate tokens in blocks.}
+    \item{Improve "invalid effective address" messages.}
+\end{itemize}
+
+\xsubsection{cl-0.98.08}{Version 0.98.08}
+
+\begin{itemize}
+    \item{Add \code{\%strlen} and \code{\%substr} macro operators.}
+    \item{Fixed broken c16.mac.}
+    \item{Unterminated string error reported.}
+    \item{Fixed bugs as per 0.98bf}
+\end{itemize}
+
+\xsubsection{cl-0.98.09b}{Version 0.98.09b with John Coffman patches released 28-Oct-2001}
+
+Changes from 0.98.07 release to 98.09b as of 28-Oct-2001
+
+\begin{itemize}
+    \item{More closely compatible with 0.98 when \code{-O0} is implied
+        or specified. Not strictly identical, since backward
+        branches in range of short offsets are recognized, and signed
+        byte values with no explicit size specification will be
+        assembled as a single byte.}
+    \item{More forgiving with the PUSH instruction. 0.98 requires
+        a size to be specified always. 0.98.09b will imply the size
+        from the current BITS setting (16 or 32).}
+    \item{Changed definition of the optimization flag
+        \begin{itemize}
+            \item{\code{-O0}: strict two-pass assembly, JMP and Jcc are
+                handled more like 0.98, except that back ward JMPs are
+                short, if possible.}
+            \item{\code{-O1}: strict two-pass assembly, but forward
+                branches are assembled with code guaranteed
+                to reach; may produce larger code than
+                \code{-O0}, but will produce successful assembly
+                more often if branch offset sizes are not
+                specified.}
+            \item{\code{-O2}: multi-pass optimization, minimize branch
+                offsets; also will minimize signed immediate bytes,
+                overriding size specification.}
+            \item{\code{-O3}: like \code{-O2}, but more passes taken,
+                if needed}
+        \end{itemize}}
+\end{itemize}
+
+\xsubsection{cl-0.98.07}{Version 0.98.07 released 01/28/01}
+
+\begin{itemize}
+    \item{Added Stepane Denis' SSE2 instructions to a \emph{working}
+        version of the code - some earlier versions were based on
+        broken code - sorry 'bout that. version "0.98.07"}
+    \item{Cosmetic modifications to nasm.c, nasm.h, AUTHORS, MODIFIED}
+\end{itemize}
+
+\xsubsection{cl-0.98.06f}{Version 0.98.06f released 01/18/01}
+
+\begin{itemize}
+    \item{Add "metalbrain"s jecxz bug fix in insns.dat}
+    \item{Alter nasmdoc.src to match - version "0.98.06f"}
+\end{itemize}
+
+\xsubsection{cl-0.98.06e}{Version 0.98.06e released 01/09/01}
+
+\begin{itemize}
+    \item{Removed the "outforms.h" file - it appears to be
+        someone's old backup of "outform.h". version "0.98.06e"}
+    \item{fbk - finally added the fix for the "multiple \code{\%include} bug",
+        known since 7/27/99 - reported originally (?) and sent to
+        us by Austin Lunnen - he reports that John Fine had a fix
+        within the day. Here it is...}
+    \item{Nelson Rush resigns from the group. Big thanks to Nelson for
+        his leadership and enthusiasm in getting these changes
+        incorporated into Nasm!}
+    \item{fbk - \code{[list +]}, \code{[list -]} directives - ineptly implemented,
+        should be re-written or removed, perhaps.}
+    \item{Brian Raiter / fbk - "elfso bug" fix - applied to aoutb format
+        as well - testing might be desirable...}
+    \item{James Seter - -postfix, -prefix command line switches.}
+    \item{Yuri Zaporozhets - rdoff utility changes.}
+\end{itemize}
+
+\xsubsection{cl-0.98p1}{Version 0.98p1}
+
+\begin{itemize}
+    \item{GAS-like palign (Panos Minos)}
+    \item{FIXME: Someone, fill this in with details}
+\end{itemize}
+
+\xsubsection{cl-0.98bf}{Version 0.98bf (bug-fixed)}
+
+\begin{itemize}
+    \item{Fixed - elf and aoutb bug - shared libraries}
+    \item{multiple \code{\%include} bug in "-f obj"}
+    \item{jcxz, jecxz bug}
+    \item{unrecognized option bug in ndisasm}
+\end{itemize}
+
+\xsubsection{cl-0.98.03}{Version 0.98.03 with John Coffman's changes released 27-Jul-2000}
+
+\begin{itemize}
+    \item{Added signed byte optimizations for the 0x81/0x83 class
+        of instructions: ADC, ADD, AND, CMP, OR, SBB, SUB, XOR:
+        when used as 'ADD reg16,imm' or 'ADD reg32,imm.'  Also
+        optimization of signed byte form of 'PUSH imm' and 'IMUL
+        reg,imm'/'IMUL reg,reg,imm.'  No size specification is needed.}
+    \item{Added multi-pass JMP and Jcc offset optimization. Offsets
+        on forward references will preferentially use the short form,
+        without the need to code a specific size (short or near) for
+        the branch. Added instructions for 'Jcc label' to use the
+        form 'Jnotcc \$+3/JMP label', in cases where a short offset
+        is out of bounds. If compiling for a 386 or higher CPU, then
+        the 386 form of Jcc will be used instead.
+
+        This feature is controlled by a new command-line switch: "O",
+        (upper case letter O). "-O0" reverts the assembler to no
+        extra optimization passes, "-O1" allows up to 5 extra passes,
+        and "-O2"(default), allows up to 10 extra optimization passes.}
+    \item{Added a new directive:  'cpu XXX', where XXX is any of:
+        8086, 186, 286, 386, 486, 586, pentium, 686, PPro, P2, P3 or
+        Katmai. All are case insensitive. All instructions will
+        be selected only if they apply to the selected cpu or lower.
+        Corrected a couple of bugs in cpu-dependence in 'insns.dat'.}
+    \item{Added to 'standard.mac', the "use16" and "use32" forms of
+        the "bits 16/32" directive. This is nothing new, just conforms
+        to a lot of other assemblers. (minor)}
+    \item{Changed label allocation from 320/32 (10000 labels @ 200K+)
+        to 32/37 (1000 labels); makes running under DOS much easier.
+        Since additional label space is allocated dynamically, this
+        should have no effect on large programs with lots of labels.
+        The 37 is a prime, believed to be better for hashing. (minor)}
+\end{itemize}
+
+\xsubsection{cl-0.98.03}{Version 0.98.03}
+
+"Integrated patchfile 0.98-0.98.01. I call this version 0.98.03 for
+historical reasons: 0.98.02 was trashed." --John Coffman
+<johninsd@san.rr.com>, 27-Jul-2000
+
+\begin{itemize}
+    \item{Kendall Bennett's SciTech MGL changes}
+    \item{Note that you must define "TASM\_COMPAT" at compile-time
+        to get the Tasm Ideal Mode compatibility.}
+    \item{All changes can be compiled in and out using the TASM\_COMPAT macros,
+        and when compiled without TASM\_COMPAT defined we get the exact same
+        binary as the unmodified 0.98 sources.}
+    \item{standard.mac, macros.c: Added macros to ignore TASM directives before
+        first include}
+    \item{nasm.h: Added extern declaration for tasm\_compatible\_mode}
+    \item{nasm.c: Added global variable tasm\_compatible\_mode}
+    \item{Added command line switch for TASM compatible mode (-t)}
+    \item{Changed version command line to reflect when compiled with TASM additions}
+    \item{Added response file processing to allow all arguments on a single
+        line (response file is @resp rather than -@resp for NASM format).}
+    \item{labels.c: Changes islocal() macro to support TASM style @@local labels.}
+    \item{Added islocalchar() macro to support TASM style @@local labels.}
+    \item{parser.c: Added support for TASM style memory references (ie: mov
+        [DWORD eax],10 rather than the NASM style mov DWORD [eax],10).}
+    \item{preproc.c: Added new directives, \code{\%arg}, \code{\%local},
+        \code{\%stacksize} to directives table}
+    \item{Added support for TASM style directives without a leading \% symbol.}
+    \item{Integrated a block of changes from Andrew Zabolotny <bit@eltech.ru>:}
+    \item{A new keyword \code{\%xdefine} and its case-insensitive counterpart
+        \code{\%ixdefine}. They work almost the same way as \code{\%define} and
+        \code{\%idefine} but expand the definition immediately, not on the invocation.
+        Something like a cross between \code{\%define} and \code{\%assign}. The "x"
+        suffix stands for "eXpand", so "xdefine" can be deciphered as "expand-and-define".
+        Thus you can do things like this:
+\begin{lstlisting}
+%assign ofs     0
+
+%macro  arg     1
+    %xdefine %1 dword [esp+ofs]
+    %assign ofs ofs+4
+%endmacro
+\end{lstlisting}}
+    \item{Changed the place where the expansion of \%\$name macros are expanded.
+        Now they are converted into ..@ctxnum.name form when detokenizing, so
+        there are no quirks as before when using \%\$name arguments to macros,
+        in macros etc. For example:
+\begin{lstlisting}
+%macro  abc     1
+    %define %1 hello
+%endm
+    abc     %$here
+%$here
+\end{lstlisting}
+        Now last line will be expanded into "hello" as expected. This also allows
+        for lots of goodies, a good example are extended "proc" macros included
+        in this archive.}
+
+    \item{Added a check for "cstk" in smacro\_defined() before calling get\_ctx() -
+        this allows for things like:
+\begin{lstlisting}
+%ifdef %$abc
+%endif
+\end{lstlisting}
+        work without warnings even in no context.}
+    \item{Added a check for "cstk" in \%if*ctx and \%elif*ctx directives -
+        this allows to use \code{\%ifctx} without excessive warnings. If there is
+        no active context, \code{\%ifctx} goes through "false" branch.}
+    \item{Removed "user error: " prefix with \code{\%error} directive: it just clobbers the
+        output and has absolutely no functionality. Besides, this allows to write
+        macros that does not differ from built-in functions in any way.}
+    \item{Added expansion of string that is output by \code{\%error} directive. Now you
+        can do things like:
+\begin{lstlisting}
+%define hello(x) Hello, x!
+
+%define %$name andy
+%error "hello(%$name)"
+\end{lstlisting}
+        Same happened with \code{\%include} directive.}
+    \item{Now all directives that expect an identifier will try to expand and
+        concatenate everything without whitespaces in between before usage.
+        For example, with "unfixed" nasm the commands
+\begin{lstlisting}
+%define %$abc hello
+%define __%$abc goodbye
+__%$abc
+\end{lstlisting}
+        would produce "incorrect" output: last line will expand to
+\begin{lstlisting}
+hello goodbyehello
+\end{lstlisting}
+        Not quite what you expected, eh? :-) The answer is that preprocessor
+        treats the \code{\%define} construct as if it would be
+\begin{lstlisting}
+%define __ %$abc goodbye
+\end{lstlisting}
+        (note the white space between \_\_ and \%\$abc). After my "fix" it
+        will "correctly" expand into
+\begin{lstlisting}
+goodbye
+\end{lstlisting}
+        as expected. Note that I use quotes around words "correct", "incorrect"
+        etc because this is rather a feature not a bug; however current behaviour
+        is more logical (and allows more advanced macro usage :-).
+
+        Same change was applied to: \code{\%push},\code{\%macro},\code{\%imacro},
+        \code{\%define},\code{\%idefine},\code{\%xdefine},\code{\%ixdefine},
+        \code{\%assign},\code{\%iassign},\code{\%undef}}
+    \item{A new directive \code{[WARNING {+|-}warning-id]} have been added. It works only
+        if the assembly phase is enabled (i.e. it doesn't work with nasm -e).}
+    \item{A new warning type: macro-selfref. By default this warning is disabled;
+        when enabled NASM warns when a macro self-references itself; for example
+        the following source:
+\begin{lstlisting}
+[WARNING macro-selfref]
+%macro          push    1-*
+    %rep    %0
+        push    %1
+        %rotate 1
+    %endrep
+%endmacro
+
+        push    eax,ebx,ecx
+\end{lstlisting}
+        will produce a warning, but if we remove the first line we won't see it
+        anymore (which is The Right Thing To Do \texttrademark IMHO since C
+        preprocessor eats such constructs without warnings at all).}
+    \item{Added a "error" routine to preprocessor which always will set ERR\_PASS1
+        bit in severity\_code. This removes annoying repeated errors on first
+        and second passes from preprocessor.}
+    \item{Added the \%+ operator in single-line macros for concatenating two
+        identifiers. Usage example:
+\begin{lstlisting}
+%define _myfunc _otherfunc
+%define cextern(x) _ %+ x
+cextern (myfunc)
+\end{lstlisting}
+        After first expansion, third line will become "\_myfunc". After this
+        expansion is performed again so it becomes "\_otherunc".}
+    \item{Now if preprocessor is in a non-emitting state, no warning or error
+        will be emitted. Example:
+\begin{lstlisting}
+%if 1
+    mov eax,ebx
+%else
+    put anything you want between these two brackets,
+    even macro-parameter references %1 or local
+    labels %$zz or macro-local labels %%zz - no
+    warning will be emitted.
+%endif
+\end{lstlisting}}
+    \item{Context-local variables on expansion as a last resort are looked up
+        in outer contexts. For example, the following piece:
+\begin{lstlisting}
+%push   outer
+%define %$a [esp]
+
+    %push   inner
+    %$a
+    %pop
+%pop
+\end{lstlisting}
+        will expand correctly the fourth line to [esp]; if we'll define another
+        \%\$a inside the "inner" context, it will take precedence over outer
+        definition. However, this modification has been applied only to
+        expand\_smacro and not to smacro\_define: as a consequence expansion
+        looks in outer contexts, but \code{\%ifdef} won't look in outer contexts.
+
+        This behaviour is needed because we don't want nested contexts to
+        act on already defined local macros. Example:
+\begin{lstlisting}
+%define %$arg1  [esp+4]
+test    eax,eax
+if      nz
+    mov     eax,%$arg1
+endif
+\end{lstlisting}
+        In this example the "if" mmacro enters into the "if" context, so \%\$arg1
+        is not valid anymore inside "if". Of course it could be worked around
+        by using explicitely \%\$\$arg1 but this is ugly IMHO.}
+    \item{Fixed memory leak in \code{\%undef}. The origline wasn't freed before exiting on success.}
+    \item{Fixed trap in preprocessor when line expanded to empty set of tokens.
+        This happens, for example, in the following case:
+\begin{lstlisting}
+#define SOMETHING
+SOMETHING
+\end{lstlisting}}
+\end{itemize}
+
+\xsubsection{cl-0.98}{Version 0.98}
+
+All changes since NASM 0.98p3 have been produced by H. Peter Anvin <hpa@zytor.com>.
+
+\begin{itemize}
+    \item{The documentation comment delimiter is \code{\textbackslash \#}
+        not \code{\#}.}
+    \item{Allow EQU definitions to refer to external labels; reported by Pedro Gimeno.}
+    \item{Re-enable support for RDOFF v1; reported by Pedro Gimeno.}
+    \item{Updated License file per OK from Simon and Julian.}
+\end{itemize}
+
+\xsubsection{cl-0.98p9}{Version 0.98p9}
+
+\begin{itemize}
+    \item{Update documentation (although the instruction set reference will
+        have to wait; I don't want to hold up the 0.98 release for it.)}
+    \item{Verified that the NASM implementation of the PEXTRW and PMOVMSKB
+        instructions is correct. The encoding differs from what the Intel
+        manuals document, but the Pentium III behaviour matches NASM, not
+        the Intel manuals.}
+    \item{Fix handling of implicit sizes in PSHUFW and PINSRW, reported by
+        Stefan Hoffmeister.}
+    \item{Resurrect the -s option, which was removed when changing the
+        diagnostic output to stdout.}
+\end{itemize}
+
+\xsubsection{cl-0.98p8}{Version 0.98p8}
+
+\begin{itemize}
+    \item{Fix for "DB" when NASM is running on a bigendian machine.}
+    \item{Invoke insns.pl once for each output script, making Makefile.in
+        legal for "make -j".}
+    \item{Improve the Unix configure-based makefiles to make package
+        creation easier.}
+    \item{Included an RPM .spec file for building RPM (RedHat Package Manager)
+        packages on Linux or Unix systems.}
+    \item{Fix Makefile dependency problems.}
+    \item{Change src/rdsrc.pl to include sectioning information in info
+        output; required for install-info to work.}
+    \item{Updated the RDOFF distribution to version 2 from Jules; minor
+        massaging to make it compile in my environment.}
+    \item{Split doc files that can be built by anyone with a Perl interpreter off
+        into a separate archive.}
+    \item{"Dress rehearsal" release!}
+\end{itemize}
+
+\xsubsection{cl-0.98p7}{Version 0.98p7}
+
+\begin{itemize}
+    \item{Fixed opcodes with a third byte-sized immediate argument to not
+        complain if given "byte" on the immediate.}
+    \item{Allow \code{\%undef} to remove single-line macros with arguments. This
+        matches the behaviour of \#undef in the C preprocessor.}
+    \item{Allow -d, -u, -i and -p to be specified as -D, -U, -I and -P for
+        compatibility with most C compilers and preprocessors. This allows
+        Makefile options to be shared between cc and nasm, for example.}
+    \item{Minor cleanups.}
+    \item{Went through the list of Katmai instructions and hopefully fixed the
+        (rather few) mistakes in it.}
+    \item{(Hopefully) fixed a number of disassembler bugs related to ambiguous
+        instructions (disambiguated by -p) and SSE instructions with REP.}
+    \item{Fix for bug reported by Mark Junger: "call dword 0x12345678" should
+        work and may add an OSP (affected CALL, JMP, Jcc).}
+    \item{Fix for environments when "stderr" isn't a compile-time constant.}
+\end{itemize}
+
+\xsubsection{cl-0.98p6}{Version 0.98p6}
+
+\begin{itemize}
+    \item{Took officially over coordination of the 0.98 release; so drop
+        the p3.x notation. Skipped p4 and p5 to avoid confusion with John
+        Fine's J4 and J5 releases.}
+    \item{Update the documentation; however, it still doesn't include
+        documentation for the various new instructions. I somehow wonder if
+        it makes sense to have an instruction set reference in the assembler
+        manual when Intel et al have PDF versions of their manuals online.}
+    \item{Recognize "idt" or "centaur" for the -p option to ndisasm.}
+    \item{Changed error messages back to stderr where they belong, but add an
+        -E option to redirect them elsewhere (the DOS shell cannot redirect
+        stderr.)}
+    \item{-M option to generate Makefile dependencies (based on code from Alex Verstak.)}
+    \item{\code{\%undef} preprocessor directive, and -u option, that undefines a
+        single-line macro.}
+    \item{OS/2 Makefile (Mkfiles/Makefile.os2) for Borland under OS/2; from
+        Chuck Crayne.}
+    \item{Various minor bugfixes (reported by):
+        - Dangling \code{\%s} in preproc.c (Martin Junker)}
+    \item{THERE ARE KNOWN BUGS IN SSE AND THE OTHER KATMAI INSTRUCTIONS. I am
+        on a trip and didn't bring the Katmai instruction reference, so I
+        can't work on them right now.}
+    \item{Updated the License file per agreement with Simon and Jules to
+        include a GPL distribution clause.}
+\end{itemize}
+
 %\xsubsection{cl-0.98p3.7} Version 0.98p3.7
 %
 %\item{(Hopefully) fixed the canned Makefiles to include the outrdf2 and
