@@ -288,77 +288,76 @@ vaddps ymm1,ymm0        ; AVX contracted form
     \item{Add the \code{RDPID} instruction.}
 \end{itemize}
 
-%\xsubsection{cl-2.12.02} Version 2.12.02
-%
-%\item{Fix preprocessor errors, especially \code{%error} and \code{%warning},
-%   inside \code{%if} statements.
-%
-%\item{Fix relative relocations in 32-bit Mach-O.
-%
-%\item{More Codeview debug format fixes.
-%
-%\item{If the MASM \code{PTR} keyword is encountered, issue a warning. This is
-%   much more likely to indicate a MASM-ism encountered in NASM than it
-%   is a valid label. This warning can be suppressed with \code{-w-ptr},
-%   the \code{[warning]} directive (see \nref{opt-w}) or by the macro
-%   definition \code{%idefine ptr $%?} (see \nref{selfref%?}).
-%
-%\item{When an error or a warning comes from the expansion of a multi-line
-%   macro, display the file and line numbers for the expanded macros.
-%   Macros defined with \code{.nolist} do not get displayed.
-%
-%\item{Add macros \code{ilog2fw()} and \code{ilog2cw()} to the \code{ifunc} macro
-%   package. See \nref{ilog2}.
-%
-%
-%\xsubsection{cl-2.12.01} Version 2.12.01
-%
-%\item{Portability fixes for some platforms.
-%
-%\item{Fix error when not specifying a list file.
-%
-%\item{Correct the handling of macro-local labels in the Codeview
-%   debugging format.
-%
-%\item{Add \code{CLZERO}, \code{MONITORX} and \code{MWAITX} instructions.
-%
-%
-%\xsubsection{cl-2.12} Version 2.12
-%
-%\item{Major fixes to the \code{macho} backend (\nref{machofmt}); earlier versions
-%   would produce invalid symbols and relocations on a regular basis.
-%
-%\item{Support for thread-local storage in Mach-O.
-%
-%\item{Support for arbitrary sections in Mach-O.
-%
-%\item{Fix wrong negative size treated as a big positive value passed into
-%   backend causing NASM to crash.
-%
-%\item{Fix handling of zero-extending unsigned relocations, we have been printing
-%   wrong message and forgot to assign segment with predefined value before
-%   passing it into output format.
-%
-%\item{Fix potential write of oversized (with size greater than allowed in
-%   output format) relative relocations.
-%
-%\item{Portability fixes for building NASM with the LLVM compiler.
-%
-%\item{Add support of Codeview version 8 (\code{cv8}) debug format for
-%   \code{win32} and \code{win64} formats in the \code{COFF} backend,
-%   see \nref{codeview}.
-%
-%\item{Allow 64-bit outputs in 16/32-bit only backends. Unsigned 64-bit
-%   relocations are zero-extended from 32-bits with a warning
-%   (suppressible via \code{-w-zext-reloc}); signed 64-bit relocations are
-%   an error.
-%
-%\item{Line numbers in list files now correspond to the lines in the source
-%   files, instead of simply being sequential.
-%
-%\item{There is now an official 64-bit (x64 a.k.a. x86-64) build for Windows.
-%
-%
+\xsubsection{cl-2.12.02}{Version 2.12.02}
+
+\begin{itemize}
+    \item{Fix preprocessor errors, especially \code{\%error} and
+        \code{\%warning}, inside \code{\%if} statements.}
+
+    \item{Fix relative relocations in 32-bit Mach-O.}
+
+    \item{More Codeview debug format fixes.}
+
+    \item{If the MASM \code{PTR} keyword is encountered, issue a warning. This is
+        much more likely to indicate a MASM-ism encountered in NASM than it
+        is a valid label. This warning can be suppressed with \code{-w-ptr},
+        the \code{[warning]} directive (see \nref{opt-w}) or by the macro
+        definition \code{\%idefine ptr \$\%} (see \nref{selfref}).}
+
+    \item{When an error or a warning comes from the expansion of a multi-line
+        macro, display the file and line numbers for the expanded macros.
+        Macros defined with \code{.nolist} do not get displayed.}
+
+    \item{Add macros \code{ilog2fw()} and \code{ilog2cw()} to the \code{ifunc} macro
+        package. See \nref{ilog2}.}
+\end{itemize}
+
+\xsubsection{cl-2.12.01}{Version 2.12.01}
+
+\begin{itemize}
+    \item{Portability fixes for some platforms.}
+    \item{Fix error when not specifying a list file.}
+    \item{Correct the handling of macro-local labels in the Codeview debugging format.}
+    \item{Add \code{CLZERO}, \code{MONITORX} and \code{MWAITX} instructions.}
+\end{itemize}
+
+\xsubsection{cl-2.12}{Version 2.12}
+
+\begin{itemize}
+    \item{Major fixes to the \code{macho} backend (\nref{machofmt}); earlier versions
+        would produce invalid symbols and relocations on a regular basis.}
+
+    \item{Support for thread-local storage in Mach-O.}
+
+    \item{Support for arbitrary sections in Mach-O.}
+
+    \item{Fix wrong negative size treated as a big positive value passed into
+        backend causing NASM to crash.}
+
+    \item{Fix handling of zero-extending unsigned relocations, we have been printing
+        wrong message and forgot to assign segment with predefined value before
+        passing it into output format.}
+
+    \item{Fix potential write of oversized (with size greater than allowed in
+        output format) relative relocations.}
+
+    \item{Portability fixes for building NASM with the LLVM compiler.}
+
+    \item{Add support of Codeview version 8 (\code{cv8}) debug format for
+        \code{win32} and \code{win64} formats in the \code{COFF} backend,
+        see \nref{codeview}.}
+
+    \item{Allow 64-bit outputs in 16/32-bit only backends. Unsigned 64-bit
+        relocations are zero-extended from 32-bits with a warning
+        (suppressible via \code{-w-zext-reloc}); signed 64-bit relocations are
+        an error.}
+
+    \item{Line numbers in list files now correspond to the lines in the source
+        files, instead of simply being sequential.}
+
+    \item{There is now an official 64-bit (x64 a.k.a. x86-64) build for Windows.}
+\end{itemize}
+
 %\xsubsection{cl-2.11.09} Version 2.11.09
 %
 %\item{Fix potential stack overwrite in \code{macho32} backend.
