@@ -205,12 +205,10 @@ since 2007.
     \item{Allow self-segment-relative expressions in immediates and
         displacements, even when combined with an external or otherwise
         out-of-segment special symbol, e.g.:
-
 \begin{lstlisting}
 extern foo
 mov eax,[foo - $ + ebx] ; Now legal
-\end{lstlisting}
-        }
+\end{lstlisting}}
 
     \item{Handle a 64-bit origin in NDISASM.}
 
@@ -267,13 +265,11 @@ mov eax,[foo - $ + ebx] ; Now legal
         supports omitting that source register, using the destination
         register as that value. This among other things makes it easier to
         convert SSE code to the equivalent AVX code:
-
 \begin{lstlisting}
 addps xmm1,xmm0         ; SSE instruction
 vaddps ymm1,ymm1,ymm0   ; AVX official long form
 vaddps ymm1,ymm0        ; AVX contracted form
-\end{lstlisting}
-        }
+\end{lstlisting}}
 
     \item{Fix Codeview malformed compiler version record.}
 
@@ -358,167 +354,189 @@ vaddps ymm1,ymm0        ; AVX contracted form
     \item{There is now an official 64-bit (x64 a.k.a. x86-64) build for Windows.}
 \end{itemize}
 
-%\xsubsection{cl-2.11.09} Version 2.11.09
-%
-%\item{Fix potential stack overwrite in \code{macho32} backend.
-%
-%\item{Fix relocation records in \code{macho64} backend.
-%
-%\item{Fix symbol lookup computation in \code{macho64} backend.
-%
-%\item{Adjust \code{.symtab} and \code{.rela.text} sections alignments to 8 bytes
-%   in \code{elf64} backed.
-%
-%\item{Fix section length computation in \code{bin} backend which leaded in incorrect
-%   relocation records.
-%
-%\xsubsection{cl-2.11.08} Version 2.11.08
-%
-%\item{Fix section length computation in \code{bin} backend which leaded in incorrect
-%   relocation records.
-%
-%\item{Add a warning for numeric preprocessor definitions passed via command
-%   line which might have unexpected results otherwise.
-%
-%\item{Add ability to specify a module name record in \code{rdoff} linker with
-%   \code{-mn} option.
-%
-%\item{Increase label length capacity up to 256 bytes in \code{rdoff} backend for
-%   FreePascal sake, which tends to generate very long labels for procedures.
-%
-%\item{Fix segmentation failure when rip addressing is used in \code{macho64} backend.
-%
-%\item{Fix access on out of memory when handling strings with a single
-%   grave. We have sixed similar problem in previous release but not
-%   all cases were covered.
-%
-%\item{Fix NULL dereference in disassembled on \code{BND} instruction.
-%
-%\xsubsection{cl-2.11.07} Version 2.11.07
-%
-%\item{Fix 256 bit \code{VMOVNTPS} instruction.
-%
-%\item{Fix \code{-MD} option handling, which was rather broken in previous
-%release changing command line api.
-%
-%\item{Fix access to unitialized space when handling strings with
-%a single grave.
-%
-%\item{Fix nil dereference in handling memory reference parsing.
-%
-%\xsubsection{cl-2.11.06} Version 2.11.06
-%
-%\item{Update AVX512 instructions based on the Extension Reference (319433-021 Sept
-%2014).
-%
-%\item{Fix the behavior of \code{-MF} and \code{-MD} options (Bugzilla 3392280)
-%
-%\item{Updated Win32 Makefile to fix issue with build
-%
-%\xsubsection{cl-2.11.05} Version 2.11.05
-%
-%\item{Add \code{--v} as an alias for \code{-v} (see \nref{opt-v}), for
-%command-line compatibility with Yasm.
-%
-%\item{Fix a bug introduced in 2.11.03 whereby certain instructions would
-%contain multiple REX prefixes, and thus be corrupt.
-%
-%\xsubsection{cl-2.11.04} Version 2.11.04
-%
-%\item{Removed an invalid error checking code. Sometimes a memref only with
-%a displacement can also set an evex flag. For example:
-%
-%\c       vmovdqu32 [0xabcd]{k1}, zmm0
-%
-%\item{Fixed a bug in disassembler that EVEX.L'L vector length was not matched
-%when EVEX.b was set because it was simply considered as EVEC.RC.
-%Separated EVEX.L'L case from EVEX.RC which is ignored in matching.
-%
-%\xsubsection{cl-2.11.03} Version 2.11.03
-%
-%\item{Fix a bug there REX prefixes were missing on instructions inside a
-%\code{TIMES} statement.
-%
-%\xsubsection{cl-2.11.02} Version 2.11.02
-%
-%\item{Add the \code{XSAVEC}, \code{XSAVES} and \code{XRSTORS} family instructions.
-%
-%\item{Add the \code{CLFLUSHOPT} instruction.
-%
-%\xsubsection{cl-2.11.01} Version 2.11.01
-%
-%\item{Allow instructions which implicitly uses \code{XMM0} (\code{VBLENDVPD},
-%\code{VBLENDVPS}, \code{PBLENDVB} and \code{SHA256RNDS2}) to be specified
-%without an explicit \code{xmm0} on the assembly line. In other words,
-%the following two lines produce the same output:
-%
-%\c      vblendvpd xmm2,xmm1,xmm0      ; Last operand is fixed xmm0
-%\c      vblendvpd xmm2,xmm1           ; Implicit xmm0 omitted
-%
-%\item{In the ELF backends, don't crash the assembler if \code{section align}
-%is specified without a value.
-%
-%\xsubsection{cl-2.11} Version 2.11
-%
-%\item{Add support for the Intel AVX-512 instruction set:
-%
-%\item{16 new, 512-bit SIMD registers. Total 32 \code{(ZMM0 ~ ZMM31)}
-%
-%\item{8 new opmask registers \code{(K0 ~ K7)}. One of 7 registers \code{(K1 ~ K7)} can
-%be used as an opmask for conditional execution.
-%
-%\item{A new EVEX encoding prefix. EVEX is based on VEX and provides more
-%capabilities: opmasks, broadcasting, embedded rounding and compressed
-%displacements.
-%
-%\c  - opmask
-%\c      VDIVPD zmm0{k1}{z}, zmm1, zmm3  ; conditional vector operation
-%\c                                      ; using opmask k1.
-%\c                                      ; {z} is for zero-masking
-%\c  - broadcasting
-%\c      VDIVPS zmm4, zmm5, [rbx]{1to16} ; load single-precision float and
-%\c                                      ; replicate it 16 times. 32 * 16 = 512
-%\c  - embedded rounding
-%\c      VCVTSI2SD xmm6, xmm7, {rz-sae}, rax ; round toward zero. note that it
-%\c                                       ; is used as if a separate operand.
-%\c                                       ; it comes after the last SIMD operand
-%
-%\item{Add support for \code{ZWORD} (512 bits), \code{DZ} and \code{RESZ}.
-%
-%\item{Add support for the MPX and SHA instruction sets.
-%
-%\item{Better handling of section redefinition.
-%
-%\item{Generate manpages when running \code{'make dist'}.
-%
-%\item{Handle all token chains in mmacro params range.
-%
-%\item{Support split [base,index] effective address:
-%
-%\c      mov eax,[eax+8,ecx*4]   ; eax=base, ecx=index, 4=scale, 8=disp
-%
-%This is expected to be most useful for the MPX instructions.
-%
-%\item{Support \code{BND} prefix for branch instructions (for MPX).
-%
-%\item{The \code{DEFAULT} directive can now take \code{BND} and \code{NOBND}
-%options to indicate whether all relevant branches should be getting
-%\code{BND} prefixes. This is expected to be the normal for use in MPX
-%code.
-%
-%\item{Add \code{{evex}}, \code{{vex3}} and \code{{vex2}} instruction prefixes to
-%have NASM encode the corresponding instruction, if possible, with an EVEX,
-%3-byte VEX, or 2-byte VEX prefix, respectively.
-%
-%\item{Support for section names longer than 8 bytes in Win32/Win64 COFF.
-%
-%\item{The \code{NOSPLIT} directive by itself no longer forces a single
-%register to become an index register, unless it has an explicit
-%multiplier.
-%
-%\c      mov eax,[nosplit eax]       ; eax as base register
-%\c      mov eax,[nosplit eax*1]     ; eax as index register
-%
+\xsubsection{cl-2.11.09}{Version 2.11.09}
+
+\begin{itemize}
+    \item{Fix potential stack overwrite in \code{macho32} backend.}
+
+    \item{Fix relocation records in \code{macho64} backend.}
+
+    \item{Fix symbol lookup computation in \code{macho64} backend.}
+
+    \item{Adjust \code{.symtab} and \code{.rela.text} sections alignments to 8 bytes
+        in \code{elf64} backed.}
+
+    \item{Fix section length computation in \code{bin} backend which leaded in incorrect
+        relocation records.}
+\end{itemize}
+
+\xsubsection{cl-2.11.08}{Version 2.11.08}
+
+\begin{itemize}
+    \item{Fix section length computation in \code{bin} backend which leaded in incorrect
+        relocation records.}
+
+    \item{Add a warning for numeric preprocessor definitions passed via command
+        line which might have unexpected results otherwise.}
+
+    \item{Add ability to specify a module name record in \code{rdoff} linker with
+        \code{-mn} option.}
+
+    \item{Increase label length capacity up to 256 bytes in \code{rdoff} backend for
+        FreePascal sake, which tends to generate very long labels for procedures.}
+
+    \item{Fix segmentation failure when rip addressing is used in \code{macho64} backend.}
+
+    \item{Fix access on out of memory when handling strings with a single
+        grave. We have sixed similar problem in previous release but not
+        all cases were covered.}
+
+    \item{Fix NULL dereference in disassembled on \code{BND} instruction.}
+\end{itemize}
+
+\xsubsection{cl-2.11.07}{Version 2.11.07}
+
+\begin{itemize}
+    \item{Fix 256 bit \code{VMOVNTPS} instruction.}
+
+    \item{Fix \code{-MD} option handling, which was rather broken in previous
+        release changing command line api.}
+
+    \item{Fix access to unitialized space when handling strings with
+        a single grave.}
+
+    \item{Fix nil dereference in handling memory reference parsing.}
+\end{itemize}
+
+\xsubsection{cl-2.11.06}{Version 2.11.06}
+
+\begin{itemize}
+    \item{Update AVX512 instructions based on the Extension Reference (319433-021 Sept 2014).}
+    \item{Fix the behavior of \code{-MF} and \code{-MD} options (Bugzilla 3392280)}
+    \item{Updated Win32 Makefile to fix issue with build}
+\end{itemize}
+
+\xsubsection{cl-2.11.05}{Version 2.11.05}
+
+\begin{itemize}
+    \item{Add \code{--v} as an alias for \code{-v} (see \nref{opt-v}), for
+        command-line compatibility with Yasm.}
+    \item{Fix a bug introduced in 2.11.03 whereby certain instructions would
+        contain multiple REX prefixes, and thus be corrupt.}
+\end{itemize}
+
+\xsubsection{cl-2.11.04}{Version 2.11.04}
+
+\begin{itemize}
+    \item{Removed an invalid error checking code. Sometimes a memref only with
+        a displacement can also set an evex flag. For example:
+\begin{lstlisting}
+vmovdqu32 [0xabcd]{k1}, zmm0
+\end{lstlisting}}
+
+    \item{Fixed a bug in disassembler that EVEX.L'L vector length was not matched
+        when EVEX.b was set because it was simply considered as EVEC.RC.
+        Separated EVEX.L'L case from EVEX.RC which is ignored in matching.}
+\end{itemize}
+
+\xsubsection{cl-2.11.03}{Version 2.11.03}
+
+\begin{itemize}
+    \item{Fix a bug there REX prefixes were missing on instructions
+        inside a \code{TIMES} statement.}
+\end{itemize}
+
+\xsubsection{cl-2.11.02}{Version 2.11.02}
+
+\begin{itemize}
+    \item{Add the \code{XSAVEC}, \code{XSAVES} and \code{XRSTORS} family instructions.}
+    \item{Add the \code{CLFLUSHOPT} instruction.}
+\end{itemize}
+
+\xsubsection{cl-2.11.01}{Version 2.11.01}
+
+\begin{itemize}
+    \item{Allow instructions which implicitly uses \code{XMM0} (\code{VBLENDVPD},
+        \code{VBLENDVPS}, \code{PBLENDVB} and \code{SHA256RNDS2}) to be specified
+        without an explicit \code{xmm0} on the assembly line. In other words,
+        the following two lines produce the same output:
+\begin{lstlisting}
+vblendvpd xmm2,xmm1,xmm0    ; Last operand is fixed xmm0
+vblendvpd xmm2,xmm1         ; Implicit xmm0 omitted
+\end{lstlisting}}
+
+    \item{In the ELF backends, don't crash the assembler if \code{section align}
+        is specified without a value.}
+\end{itemize}
+
+\xsubsection{cl-2.11}{Version 2.11}
+
+\begin{itemize}
+    \item{Add support for the Intel AVX-512 instruction set:}
+
+    \item{16 new, 512-bit SIMD registers. Total 32 \code{(ZMM0 \textasciitilde ZMM31)}}
+
+    \item{8 new opmask registers \code{(K0 \textasciitilde K7)}.
+        One of 7 registers \code{(K1 \textasciitilde K7)} can
+        be used as an opmask for conditional execution.}
+
+    \item{A new EVEX encoding prefix. EVEX is based on VEX and provides more
+        capabilities: opmasks, broadcasting, embedded rounding and compressed
+        displacements.
+\begin{lstlisting}
+; opmask: conditional vector operation
+; using opmask k1 and {z} is for zero-masking
+    VDIVPD zmm0{k1}{z}, zmm1, zmm3
+
+; broadcasting: load single-precision float and
+; replicate it 16 times. 32 * 16 = 512
+    VDIVPS zmm4, zmm5, [rbx]{1to16}
+
+; embedded rounding: round toward zero. note that
+: it is used as if a separate operand. it comes after
+; the last SIMD operand
+    VCVTSI2SD xmm6, xmm7, {rz-sae}, rax
+\end{lstlisting}}
+
+    \item{Add support for \code{ZWORD} (512 bits), \code{DZ} and \code{RESZ}.}
+
+    \item{Add support for the MPX and SHA instruction sets.}
+
+    \item{Better handling of section redefinition.}
+
+    \item{Generate manpages when running \code{'make dist'}.}
+
+    \item{Handle all token chains in mmacro params range.}
+
+    \item{Support split [base,index] effective address:
+\begin{lstlisting}
+; eax=base, ecx=index, 4=scale, 8=disp
+mov eax,[eax+8,ecx*4]
+\end{lstlisting}
+        This is expected to be most useful for the MPX instructions.}
+
+    \item{Support \code{BND} prefix for branch instructions (for MPX).}
+
+    \item{The \code{DEFAULT} directive can now take \code{BND} and \code{NOBND}
+        options to indicate whether all relevant branches should be getting
+        \code{BND} prefixes. This is expected to be the normal for use in MPX
+        code.}
+
+    \item{Add \code{{evex}}, \code{{vex3}} and \code{{vex2}} instruction prefixes to
+        have NASM encode the corresponding instruction, if possible, with an EVEX,
+        3-byte VEX, or 2-byte VEX prefix, respectively.}
+
+    \item{Support for section names longer than 8 bytes in Win32/Win64 COFF.}
+
+    \item{The \code{NOSPLIT} directive by itself no longer forces a single
+        register to become an index register, unless it has an explicit
+        multiplier.
+\begin{lstlisting}
+mov eax,[nosplit eax]   ; eax as base register
+mov eax,[nosplit eax*1] ; eax as index register
+\end{lstlisting}}
+\end{itemize}
+
 %\xsubsection{cl-2.10.09} Version 2.10.09
 %
 %\item{Pregenerate man pages.
