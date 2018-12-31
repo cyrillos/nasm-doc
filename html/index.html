@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+	<title>Running NASM</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/skeleton.css">
+
+	<link rel="icon" type="image/png" href="images/favicon.png">
+
+</head>
+<body>
+
+	<div class="container">
+		<div class="row">
+			<div class="eleven column">
+				<h4>Chapter 2: Running NASM</h4>
+				<h5>2.1 NASM Command-Line Syntax</h5>
+<p>
+To assemble a file, you issue a command of the form
+<pre>
+nasm -f <format> <filename> [-o <output>]
+</pre>
+For example,
+<pre>
+nasm -f elf myfile.asm
+</pre>
+will assemble <code>myfile.asm</code> into an ELF object file <code>myfile.o</code>. And
+<pre>
+nasm -f bin myfile.asm -o myfile.com
+</pre>
+will assemble myfile.asm into a raw binary file myfile.com.
+</p>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
