@@ -732,7 +732,7 @@ later can still be linked by earlier versions or non-Microsoft linkers.
 
 The \code{win32} and \code{win64} formats support the Microsoft CodeView
 debugging format. Currently CodeView version 8 format is supported
-(\i\c{cv8}), but newer versions of the CodeView debugger should be
+(\codeindex{cv8}), but newer versions of the CodeView debugger should be
 able to handle this format as well.
 
 \xsection{win64fmt}{\codeindex{win64}: Microsoft Win64 Object Files}
@@ -1087,10 +1087,10 @@ right-hand side of the \code{WRT} operator:
 \xsubsection{macho-ssvs}{\code{macho} specfic directive
 \codeindex{subsections\_via\_symbols}}
 
-The directive \c{subsections\_via\_symbols} sets the
-\c{MH\_SUBSECTIONS\_VIA\_SYMBOLS} flag in the Mach-O header, that effectively
-separates a block (or a subsection) based on a symbol. It is often used
-for eliminating dead codes by a linker.
+The directive \code{subsections\_via\_symbols} sets the
+\code{MH\_SUBSECTIONS\_VIA\_SYMBOLS} flag in the Mach-O header,
+that effectively separates a block (or a subsection) based on a symbol.
+It is often used for eliminating dead codes by a linker.
 
 This directive takes no arguments.
 
@@ -1595,8 +1595,7 @@ yourself (using \code{EXTERN}, for example) if you really need to get a
 \code{dbg} accepts any section name and any directives at all, and logs
 them all to its output file.
 
-\code{dbg} accepts and logs any \c{\%pragma}, but the specific
-\c{\%pragma}:
+\code{dbg} accepts and logs any \code{\%pragma}, but the specific \code{\%pragma}:
 
 \begin{lstlisting}
 %pragma dbg maxdump <size>
