@@ -82,8 +82,7 @@
 \newcommand{\code}[1]{{\texttt{#1}}\xspace}
 \newcommand{\indexcode}[1]{\index{#1@\texttt{#1}}\xspace}
 \newcommand{\codeindex}[1]{\texttt{#1}\index{#1@\texttt{#1}}\xspace}
-%\newcommand{\fullref}[1]{``\hyperref[{#1}]{\ref*{#1}\xspace\nameref*{#1}}''\xspace}
-\newcommand{\fullref}[1]{\textcolor{hcolor}{\hyperref[{#1}]{\ref*{#1}\xspace}}}
+\newcommand{\fullref}[1]{``\hyperref[{#1}]{\ref*{#1}\xspace\nameref*{#1}}''\xspace}
 \newcommand{\nref}[1]{\textcolor{hcolor}{\hyperref[{#1}]{\ref*{#1}\xspace}}}
 
 \newcommand{\xchapter}[2]{\chapter{#2}\label{#1}\xspace}
@@ -92,12 +91,9 @@
 %
 % Convertion table
 %
-% \C{name}              ->      \chapter{name}
-%                               \label{ch:name}
-% \H{name}              ->      \section{name}
-%                               \label{sec:name}
-% \S{name}              ->      \subsection{name}
-%                               \label{subsec:name}
+% \C{name}              ->      \xchapter{label}{name}
+% \H{name}              ->      \xsection{label}{name}
+% \S{name}              ->      \xsubsection{label}{name}
 % \c{name}              ->      \code{name}
 % \c name               ->      \begin{lstlisting}
 %                               name
