@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>NASM</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/web-fonts.css" rel="stylesheet">
+    <link href="css/nasm.css" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-id">
+                <span class="sr-only">Toggle</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="">NASM</a>
+        </div>
+
+        <div class="collapse navbar-collapse navbar-right" id="navbar-collapse-id">
+            <ul class="nav navbar-nav">
+                <li><a href=""> Chapter 1</a></li>
+                <li><a href="">Chapter 3</a></li>
+                <li><a href="">Contents</a></li>
+                <li><a href="">Index</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="container">
+        <div class="row nasm-info">
+            <h1 id="run">Chapter 2: Running NASM</h1>
+            <div class="col-md-12">
+                <h2 id="cmdline">2.1 NASM Command-Line Syntax</h2>
+
+<p>
+To assemble a file, you issue a command of the form
+For example,</P>
+<pre>nasm -f elf myfile.asm</pre>
+<p>will assemble <code>myfile.asm</code> into an ELF object file <code>myfile.o</code>.
+And</p>
+<pre>nasm -f bin myfile.asm -o myfile.com</pre>
+<p>will assemble <code>myfile.asm</code> into a raw binary file
+<code>myfile.com</code>.</p>
+
+<p>To produce a listing file, with the hex codes output from NASM displayed on the left of
+the original sources, use the <code>-l</code> option to give a listing file
+name, for example:</p>
+<pre>nasm -f coff myfile.asm -l myfile.lst</pre>
+
+<p>To get further usage instructions from NASM, try typing</p>
+<pre>nasm -h</pre>
+
+<p>The option <code>--help</code> is an alias for the -h option.</p>
+
+<p>The option <code>-hf</code> will also list the available output file formats,
+and what they are.</p>
+
+<p>If you use Linux but aren't sure whether your system is a.out or ELF, type</p>
+<pre>file nasm</pre>
+
+<p>(in the directory in which you put the NASM binary when
+you installed it). If it says something like</p>
+<pre>nasm: ELF 32-bit LSB executable i386 (386 and up) Version 1</pre>
+
+<p>then your system is ELF, and you should use the option <code>-f elf</code>
+when you want NASM to produce Linux object files. If it says</p>
+<pre>nasm: Linux/i386 demand-paged executable (QMAGIC)</pre>
+
+<p>or something similar, your system is a.out, and you should use
+<code>-f aout</code> instead (Linux a.out systems have long been obsolete,
+and are rare these days.)</p>
+
+<p>Like Unix compilers and assemblers, NASM is silent unless it goes wrong: you
+won't see any output at all, unless it gives error messages.
+</p>
+            </div>
+        </div>
+
+        <div class="row nasm-info">
+            <h3 id="opt-o">2.1.1 The <code>-o</code> Option: Specifying the Output File Name</h3>
+            <div class="col-md-12">
+
+<p>
+NASM will normally choose the name of your output file for you;
+precisely how it does this is dependent on the object file format.
+For Microsoft object file formats (<code>obj</code>, <code>win32</code>
+and <code>win64</code>), it will remove the '.asm' extension
+(or whatever extension you like to use - NASM doesn't care) from your
+source file name and substitute '.obj'. For Unix object file formats
+(<code>aout</code>, <code>as86</code>, <code>coff</code>,
+<code>elf32</code>, <code>elf64</code>, <code>elfx32</code>,
+<code>ieee</code>, <code>macho32</code> and <code>macho64</code>)
+it will substitute '.o'.</p>
+
+<p>For <code>dbg</code>, <code>rdf</code>, <code>ith</code> and
+<code>srec</code>, it will use '.dbg', '.rdf', '.ith' and '.srec',
+respectively, and for the <code>bin</code> format it will simply
+remove the extension, so that 'myfile.asm' produces the output
+file `myfile'.</p>
+
+<p>If the output file already exists, NASM will overwrite it, unless it
+has the same name as the input file, in which case it will give a
+warning and use 'nasm.out' as the output file name instead.</p>
+
+<p>For situations in which this behaviour is unacceptable, NASM
+provides the <code>-o</code> command-line option, which allows you to
+specify your desired output file name. You invoke <code>-o</code> by
+following it with the name you wish for the output file, either
+with or without an intervening space. For example:</p>
+
+<pre>
+nasm -f bin program.asm -o program.com
+nasm -f bin driver.asm -o driver.sys
+</pre>
+
+<p>
+Note that this is a small <code>-o</code>, and is different from a capital
+<code>-O</code>, which is used to specify the number of optimisation passes
+required. See <a href="index.html#cmdline">2.1.1</a>.
+</p>
+            </div>
+        </div>
+
+        <div class="row nasm-info">
+            <div class="col-md-12">
+            <h3 id="cpu">2.1.2 <code>CPU</code>: Defining CPU Dependencies</h3>
+
+<p> The <code>CPU</code> directive restricts assembly to those instructions which are available
+on the specified CPU.</p>
+<p>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>CPU 8086</code></td>
+      <td>Assemble only 8086 instruction set</td>
+    </tr>
+    <tr>
+      <td><code>CPU </code></td>
+      <td>Assemble instructions up to the 80186 instruction set</td>
+    </tr>
+    <tr>
+      <td><code>CPU 286</code></td>
+      <td>Assemble instructions up to the 286 instruction set</td>
+    </tr>
+    <tr>
+      <td><code>CPU 386</code></td>
+      <td>Assemble instructions up to the 386 instruction set</td>
+    </tr>
+    <tr>
+      <td><code>CPU 486</code></td>
+      <td>486 instruction set</td>
+    </tr>
+    <tr>
+      <td><code>CPU 586</code></td>
+      <td>Pentium instruction set</td>
+    </tr>
+    <tr>
+      <td><code>CPU PENTIUM</code></td>
+      <td>Same as 586</td>
+    </tr>
+    <tr>
+      <td><code>CPU 686</code></td>
+      <td>P6 instruction set</td>
+    </tr>
+    <tr>
+      <td><code>CPU PPRO</code></td>
+      <td>Same as 686</td>
+    </tr>
+    <tr>
+      <td><code>CPU P2</code></td>
+      <td>Same as 686</td>
+    </tr>
+    <tr>
+      <td><code>CPU P3</code></td>
+      <td>Pentium III (Katmai) instruction sets</td>
+    </tr>
+    <tr>
+      <td><code>CPU KATMAI</code></td>
+      <td>Same as P3</td>
+    </tr>
+    <tr>
+      <td><code>CPU P4</code></td>
+      <td>Pentium 4 (Willamette) instruction set</td>
+    </tr>
+    <tr>
+      <td><code>CPU WILLAMETTE</code></td>
+      <td>Same as P4</td>
+    </tr>
+    <tr>
+      <td><code>CPU WILLAMETTE</code></td>
+      <td>Same as P4</td>
+    </tr>
+    <tr>
+      <td><code>CPU PRESCOTT</code></td>
+      <td>Prescott instruction set</td>
+    </tr>
+    <tr>
+      <td><code>CPU X64</code></td>
+      <td>x86-64 (x64/AMD64/Intel 64) instruction set</td>
+    </tr>
+    <tr>
+      <td><code>CPU IA64</code></td>
+      <td>IA64 CPU (in x86 mode) instruction set</td>
+    </tr>
+  </tbody>
+</table>
+</p>
+<p>All options are case insensitive. All instructions will be selected
+only if they apply to the selected CPU or lower. By default, all instructions
+are available.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
