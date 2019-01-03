@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>NASM</title>
+    <title>NASM -- The Netwide Assember</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/web-fonts.css" rel="stylesheet">
     <link href="css/nasm.css" rel="stylesheet">
@@ -40,7 +40,7 @@
 
 <div class="container-fluid">
     <div class="container">
-        <div class="row nasm-info">
+        <div class="row">
             <h1 id="run">Chapter 2: Running NASM</h1>
             <div class="col-md-12">
                 <h2 id="cmdline">2.1 NASM Command-Line Syntax</h2>
@@ -89,9 +89,9 @@ won't see any output at all, unless it gives error messages.
             </div>
         </div>
 
-        <div class="row nasm-info">
-            <h3 id="opt-o">2.1.1 The <code>-o</code> Option: Specifying the Output File Name</h3>
+        <div class="row">
             <div class="col-md-12">
+            <h3 id="opt-o">2.1.1 The <code>-o</code> Option: Specifying the Output File Name</h3>
 
 <p>
 NASM will normally choose the name of your output file for you;
@@ -205,22 +205,10 @@ on the specified CPU.</p>
       <td><code>CPU WILLAMETTE</code></td>
       <td>Same as P4</td>
     </tr>
-    <tr>
-      <td><code>CPU WILLAMETTE</code></td>
-      <td>Same as P4</td>
-    </tr>
-    <tr>
-      <td><code>CPU PRESCOTT</code></td>
-      <td>Prescott instruction set</td>
-    </tr>
-    <tr>
-      <td><code>CPU X64</code></td>
-      <td>x86-64 (x64/AMD64/Intel 64) instruction set</td>
-    </tr>
-    <tr>
-      <td><code>CPU IA64</code></td>
-      <td>IA64 CPU (in x86 mode) instruction set</td>
-    </tr>
+    <tr> <td><code>CPU WILLAMETTE</code></td> <td>Same as P4</td> </tr>
+    <tr> <td><code>CPU PRESCOTT</code></td> <td>Prescott instruction set</td> </tr>
+    <tr> <td><code>CPU X64</code></td> <td>x86-64 (x64/AMD64/Intel 64) instruction set</td> </tr>
+    <tr> <td><code>CPU IA64</code></td> <td>IA64 CPU (in x86 mode) instruction set</td> </tr>
   </tbody>
 </table>
 </p>
